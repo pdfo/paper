@@ -1,0 +1,37 @@
+# .github/workflows/build.yml
+# GitHub Actions configuration file for latex
+# See https://github.com/xu-cheng/latex-action for details
+
+name: build
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  run:
+    name: Build LaTeX document
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+        with:
+          submodules: recursive
+
+      - name: Generate pdf document
+        uses: xu-cheng/latex-action@v2
+        with:
+          root_file: main.tex
+          args: -file-line-error -halt-on-error -interaction=nonstopmode
+          pre_compile: tlmgr update --self && tlmgr update --all
+          latexmk_shell_escape: true
+
+      - name: Store artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          path: main.pdf
+          if-no-files-found: error

@@ -1,0 +1,211 @@
+%% main.tex
+%% Copyright 2022 Tom M. Ragonneau and Zaikun Zhang
+%
+% This work may be distributed and/or modified under the
+% conditions of the LaTeX Project Public License, either version 1.3
+% of this license or (at your option) any later version.
+% The latest version of this license is in
+%   http://www.latex-project.org/lppl.txt
+% and version 1.3 or later is part of all distributions of LaTeX
+% version 2005/12/01 or later.
+%
+% This work has the LPPL maintenance status `maintained'.
+%
+% The Current Maintainer of this work is Tom M. Ragonneau.
+\documentclass[11pt,draft]{article}
+\usepackage[T1]{fontenc}
+\usepackage[american]{babel}
+\usepackage[a4paper]{geometry}
+\usepackage[final]{microtype}
+\usepackage{csquotes}
+\usepackage{lmodern}
+
+% Cross-referencing and colorization
+\usepackage[final]{hyperref}
+\usepackage[dvipsnames]{xcolor}
+\usepackage{url}
+\hypersetup{
+    colorlinks=true,
+    linkcolor=OliveGreen,
+    anchorcolor=black,
+    citecolor=MidnightBlue,
+    filecolor=black,
+    menucolor=black,
+    runcolor=black,
+    urlcolor=black,
+}
+
+% Bibliography information processing
+\usepackage[
+    style=numeric-comp,
+    sorting=nyt,
+    sortcites,
+]{biblatex}
+\addbibresource{ragonneau-bib/strings.bib}
+\addbibresource{ragonneau-bib/optim.bib}
+
+% Terms and acronyms processing
+\usepackage[acronym]{glossaries-extra}
+\glsdisablehyper
+\newabbreviation{dfo}{DFO}{derivative-free optimization}
+\newacronym{bobyqa}{\textsc{bobyqa}}{bound optimization by quadratic approximation}
+\newacronym{cobyla}{\textsc{cobyla}}{constrained optimization by linear approximation}
+\newacronym{lincoa}{\textsc{lincoa}}{linearly-constrained optimization algorithm}
+\newacronym{newuoa}{\textsc{newuoa}}{new unconstrained optimization algorithm}
+\newacronym{pdfo}{\textsc{pdfo}}{Powell's derivative-free optimization solvers}
+\newacronym{uobyqa}{\textsc{uobyqa}}{unconstrained optimization by quadratic approximation}
+
+% Automatic references
+\usepackage[noabbrev]{cleveref}
+\crefname{equation}{}{}
+\Crefname{equation}{}{}
+
+% Customize list environments
+\usepackage{enumitem}
+\setitemize{
+    topsep=\parsep,
+    itemsep=0pt,
+}
+\setenumerate{
+    topsep=\parsep,
+    itemsep=0pt,
+}
+
+% List of hyphenation exceptions for US English
+% Source: https://ctan.org/tex-archive/info/digests/tugboat/hyphenex
+\input{ushyphex}
+
+% General macros
+\def\cutest{\mbox{CUTEst}}
+\def\fortran{\mbox{Fortran}}
+\def\julia{\mbox{Julia}}
+\def\matlab{\mbox{MATLAB\textsuperscript{\textregistered}}}
+\def\matlabopt{\mbox{\matlab\ Optimization Library\textsuperscript{\texttrademark}}}
+\def\minqa{\mbox{minqa}}
+\def\nlopt{\mbox{\textsc{NLopt}}}
+\def\pybobyqa{\mbox{\textsc{PyBOBYQA}}}
+\def\python{\mbox{Python}}
+\def\R{\mbox{R}}
+\def\scipy{\mbox{SciPy}}
+
+% Drafting macros
+\usepackage{ifdraft}
+\ifdraft{
+    \usepackage{draftwatermark}
+    \SetWatermarkColor{Gray}
+    \SetWatermarkLightness{0.9}
+}{}
+
+% Article metadata
+\usepackage{titling}
+\title{PDFO --- Cross-Platform Package for Using Powell's Derivative-Free Optimization Solvers}
+\author{
+    Tom M. Ragonneau\thanks{
+        Department of Applied Mathematics,
+        The Hong Kong Polytechnic University,
+        Hung Hom, Kowloon, Hong Kong
+        (\href{mailto:tom.ragonneau@connect.polyu.hk}{\texttt{tom.ragonneau@connect.polyu.hk}}).
+        Support for this author was provided by the University Grants Committee of Hong Kong under the Hong Kong Ph.D. Fellowship Scheme (ref.\ PF18-24698).
+    }
+    \and Zaikun Zhang\thanks{
+        Department of Applied Mathematics,
+        The Hong Kong Polytechnic University,
+        Hung Hom, Kowloon, Hong Kong
+        (\href{mailto:zaikun.zhang@polyu.edu.hk}{\texttt{zaikun.zhang@polyu.edu.hk}}).
+        Support for this author was partially provided by the University Grants Committee of Hong Kong under the  Early Career Scheme (ref.\ PolyU 253012/17P and PolyU 153054/20P) and The Hong Kong Polytechnic University (ref.\ P0009767).
+    }
+}
+\date{\today}
+\hypersetup{
+    pdftitle=\thetitle,
+    pdfauthor=\texorpdfstring{\theauthor}{Tom M. Ragonneau and Zaikun Zhang},
+    pdfsubject={},
+    pdfkeywords={},
+}
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+    To do.
+\end{abstract}
+
+\section{Introduction}
+
+Most optimization algorithms rely on classical or generalized derivative information of the objective function and constraints.
+However, in many applications, such information is not available.
+This is the case, for example, if the objective function does not have an explicit formulation but can only be evaluated through complex simulations or experiments.
+Optimization problems of such kind arise from automatic error analysis~\cite{Higham_1993,Higham_2002}, machine learning~\cite{Ghanbari_Scheinberg_2017}, analog circuit design~\cite{Latorre_Etal_2019}, aircraft engineering~\cite{Gazaix_Etal_2019}, and chemical product design~\cite{Sun_Etal_2020}, to name but a few.
+These problems motivate the development of optimization algorithms that use only function values but not derivatives.
+
+Between~\citeyear{Powell_1994} and~\citeyear{Powell_2015}, Powell developed five solvers to tackle unconstrained and constrained problems without using derivatives, namely \gls{cobyla}, \gls{uobyqa}, \gls{newuoa}, \gls{bobyqa}, and \gls{lincoa}.
+These solvers were implemented by Powell, with particular attention paid to their numerical stability and algebraic complexity.
+Renowned for their robustness and efficiency, these solvers are extremely appealing to practitioners and widely used in applications, for instance, aeronautical engineering~\cite{Gallard_Etal_2018b}, astronomy~\cite{Biviano_Etal_2013,Mamon_Biviano_Boue_2013}, computer vision~\cite{Izadinia_Shan_Seitz_2017}, robotics~\cite{Mombaur_Truong_Laumond_2010}, and statistics~\cite{Bates_Etal_2015}.
+
+However, Powell coded in \fortran\ 77, an old-fashion language that damps the enthusiasm of many users to exploit these solvers in their projects.
+There have been a considerable demand from both researchers and practitioners for the availability of Powell's solvers in more user-friendly languages such as \python, \matlab, and \julia.
+Our aim is to wrap Powell's \fortran\ code into a package, namely \gls{pdfo}, which enables users of such languages to call Powell's solvers without any need of dealing with the \fortran\ code.
+For each supported language, \gls{pdfo} provides a simple subroutine that can invoke one of Powell's solvers according to the user's request (if any) or according to the type of the problem to solve. The current release (version 1.1) of \gls{pdfo} supports \python\ and \matlab, with more languages to be covered in the future.
+The signature of the \python\ subroutine is consistent with the \texttt{minimize} function of the \scipy\ optimization library;
+the signature of the \matlab\ subroutine is consistent with the \texttt{fmincon} function of the \matlabopt.
+The package is cross-platform, available on Linux, macOS, and Microsoft Windows at once.
+
+\Gls{pdfo} is not the first attempt to facilitate the usage of Powell's solvers in languages other than \fortran.
+Various efforts have been made in this direction in response to the continual demands from both researchers and practitioners: \pybobyqa~\cite{Cartis_Etal_2019} provides a \python\ implementation of \gls{bobyqa}; \nlopt~\cite{Johnson_2019} includes multi-language interfaces for \gls{cobyla}, \gls{newuoa}, and \gls{bobyqa}; \minqa~\cite{Bates_Etal_2014} wraps \gls{uobyqa}, \gls{newuoa}, and \gls{bobyqa} in \R; \scipy~\cite{Virtanen_Etal_2020} makes \gls{cobyla} available in \python\ under its optimization library. Nevertheless, \gls{pdfo} has several features that distinguishes itself from others.
+
+\begin{enumerate}
+    \item \emph{Comprehensiveness.}
+    To the best of our knowledge, \gls{pdfo} is the only package that provides all of \gls{cobyla}, \gls{uobyqa}, \gls{newuoa}, \gls{bobyqa}, and \gls{lincoa} with a uniform interface.
+    In addition to homogenizing the usage, such an interface eases the comparison between these solvers in case multiple of them are able to tackle a given problem.
+    Doing so, we may gain insights that cannot be obtained otherwise into the behavior of the solvers, as will be illustrated in~\cref{sec:fake}.
+
+    \item \emph{Solver selection.}
+    When using \gls{pdfo}, the user can specifically call one of Powell's solvers; nevertheless, if the user does not specify any solver, \gls{pdfo} will select automatically a solver according to the given problem.
+    The selection takes into consideration the performance of the solvers on the \cutest~\cite{Gould_Orban_Toint_2015} problem set.
+    Interestingly, it turns out that the solver with the best performance may not be the most intuitive one.
+    For example, \gls{newuoa} is not always the best choice for solving an unconstrained problem.
+    This will be elaborated in~\cref{sec:fake}
+
+    \item \emph{Code patching.}
+    During the development of \gls{pdfo}, we spotted in the original \fortran\ code some bugs, which led to infinite cycling or segmentation faults on some ill-conditioned problems.
+    The bugs have been patched in \gls{pdfo}.
+    Nevertheless, we provide an option that can enforce the package to use the original code of Powell without the patches, which is not recommended except for research.
+    In addition, \gls{pdfo} provides \gls{cobyla} in double precision, whereas Powell used single precision when he implemented it in the 1990s. See~\cref{sec:fake} for details.
+
+    \item \emph{Fault tolerance.}
+    \Gls{pdfo} takes care of failures in the evaluation of the objective or constraint functions when NaN or infinite values are returned.
+    In case of such failures, \gls{pdfo} will not exit but try to progress.
+    Moreover, \gls{pdfo} ensures that the returned solution is not a point where the evaluation fails, while the original code of Powell may return a point whose objective function value is numerically NaN. This is explained in~\cref{sec:fake}.
+
+    \item \emph{Problem preprocessing.}
+    \Gls{pdfo} preprocesses the inputs to simplify the problem and reformulate it to meet the requirements of Powell's solvers.
+    For instance, if the problem has linear constraints~$A x = b$, \gls{pdfo} can rewrite it into a problem on the null space of~$A$, eliminating such constraints and reducing the dimension.
+    Another example is that the starting point of a linearly-constrained problem is projected to the feasible region, because \gls{lincoa} needs a feasible starting point to work properly.
+
+    \item \emph{Additional options.}
+    \gls{pdfo} includes options for the user to control the solvers in some manners that are useful in practice.
+    For example, the user can request \gls{pdfo} to scale the problem according to the bounds of the variables before solving it.
+
+\end{enumerate}
+
+The organization of this paper is as follows: \cref{sec:powell} presents a brief description of the five Powell's \gls{dfo} algorithms and \cref{sec:pdfo} introduces \gls{pdfo}, a cross-platform package providing \matlab\ and \python\ interfaces for using the above-mentioned solvers.
+
+\section{A brief review of \glsfmtshort{dfo} methods}
+
+To do.
+
+\section{Powell's derivative-free methods}
+\label{sec:powell}
+
+To do.
+
+\section{An interface for the Powell's derivative-free solvers}
+\label{sec:pdfo}
+
+\section{Fake section}
+\label{sec:fake}
+
+\printbibliography
+
+\end{document}
