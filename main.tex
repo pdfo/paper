@@ -21,7 +21,7 @@
 \usepackage{lmodern}
 
 % Cross-referencing and colorization
-\usepackage[final]{hyperref}
+\usepackage[final,hyperfootnotes=false]{hyperref}
 \usepackage[dvipsnames]{xcolor}
 \usepackage{url}
 \hypersetup{
@@ -55,6 +55,14 @@
 \newacronym{pdfo}{\textsc{pdfo}}{Powell's derivative-free optimization solvers}
 \newacronym{uobyqa}{\textsc{uobyqa}}{unconstrained optimization by quadratic approximation}
 
+% Mathematical expressions
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{dsfont}
+\numberwithin{equation}{section}
+\DeclareMathOperator*\argmin{arg\,min}
+
 % Automatic references
 \usepackage[noabbrev]{cleveref}
 \crefname{equation}{}{}
@@ -70,6 +78,9 @@
     topsep=\parsep,
     itemsep=0pt,
 }
+
+% Spacing between lines
+\linespread{1.1}
 
 % List of hyphenation exceptions for US English
 % Source: https://ctan.org/tex-archive/info/digests/tugboat/hyphenex
