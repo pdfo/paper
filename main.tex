@@ -301,11 +301,77 @@ Consider a nonlinear optimization problem
 where~$\obj \colon \R^n \to \R$ is the objective function and~$\srchsp \subseteq \R^n$ refers to the feasible region of the problem.
 As summarized in~\cite{Conn_Scheinberg_Vicente_2009b}, two strategies have been developed to tackle the problem~\eqref{eq:nlc} without using derivatives, which we will sketch in the sequel.
 
-The first strategy, known as {direct search},\footnote{In some early papers (e.g.,~\cite{Powell_1994,Powell_1998}), Powell used the word "direct search" to mean what is known as "derivative-free optimization" today.} explores the objective function~$\obj$ and chooses iterates by simple comparisons of function values, examples including the Nelder-Mead algorithm~\cite{Nelder_Mead_1965}, the~\mads\ methods~\cite{Audet_Dennis_2006, Abramson_Audet_2006, Digabel_2011}, and~\bfo~\cite{Porcelli_Toint_2017,Porcelli_Toint_2020b,Porcelli_Toint_2021}.
-See~\cite{Kolda_Lewis_Torczon_2003},~\cite[Chapters~7 and~8]{Conn_Scheinberg_Vicente_2009b},~\cite[Part~3]{Audet_Hare_2017}, and~\cite[Section~2.1]{Larson_Menickelly_Wild_2019} for more discussions on this paradigm, and~\cite{Gratton_Etal_2015, Gratton_Etal_2019} for recent developments on randomized methods in this category.
+The first strategy, known as {direct search},\footnote{In some early papers
+(e.g.,~\cite{Powell_1994,Powell_1998}), Powell used the word ``direct search'' to mean what is known
+as ``derivative-free optimization'' today.} explores the objective function~$\obj$ and chooses
+iterates by simple comparisons of function values, examples including the Nelder-Mead
+algorithm~\cite{Nelder_Mead_1965}, the~\mads\ methods~\cite{Audet_Dennis_2006, Abramson_Audet_2006,
+Digabel_2011}, and~\bfo~\cite{Porcelli_Toint_2017,Porcelli_Toint_2020b,Porcelli_Toint_2021}.
+See~\cite{Kolda_Lewis_Torczon_2003},~\cite[Chapters~7
+and~8]{Conn_Scheinberg_Vicente_2009b},~\cite[Part~3]{Audet_Hare_2017},
+and~\cite[Section~2.1]{Larson_Menickelly_Wild_2019} for more discussions on this paradigm,
+and we refer to~\cite{Gratton_Etal_2015, Gratton_Etal_2019} for recent developments on randomized methods in
+this category.
 
 The second strategy approximates the original problem~\eqref{eq:nlc} by relatively simple models and locates the iterates according to such models.
-Algorithms with this strategy are referred to as model-based methods, and they often make use of the models within a trust-region framework~\cite{Conn_Gould_Toint_2000,Conn_Scheinberg_Vicente_2009a,Yuan_2015}, the~$k$th iteration of which locates a trial point by solving approximately
+Algorithms with this strategy are referred to as model-based methods, and they often make use of the
+models within a trust-region
+framework~\cite{Conn_Gould_Toint_2000,Conn_Scheinberg_Vicente_2009a,Yuan_2015}, but
+line search methods also exist~\cite{Berahas_Byrd_Nocedal_2019,Shi_Etal_2021}.
+Interpolation and regression are two common ways of establishing the
+models~\cite{Powell_2001,Powell_2004a,Conn_Scheinberg_Vicente_2008a,Conn_Scheinberg_Vicente_2008a,Wild_Regis_Shoemaker_2008,Bandeira_Scheinberg_Vicente_2012,Billups_Larson_Graf_2013,Regis_Wild_2017}.
+It is worth noting that algorithms using finite-difference approximations of gradients can also be
+regarded as model-based methods, because such approximations essentially come from linear (for
+forward and backward finite differences) or quadratic (for central finite difference) interpolation
+of the function under consideration over rather special interpolation sets.
+A crucial aspect of methods using interpolation models is the strategy
+they employ to update the interpolation set.
+The strategy should recycle points from previous iterations, at which the objective function has already been
+evaluated; meanwhile, it needs to maintain the well
+poisedness~\cite{Sauer_Xu_1995,Conn_Scheinberg_Vicente_2009b} of
+the interpolation set in order to guarantee the accuracy of the interpolants
+and ensure the convergence of the optimization algorithm~\cite{Conn_Scheinberg_Vicente_2008a,Conn_Scheinberg_Vicente_2008b,
+Fasano_Morales_Nocedal_2009,Scheinberg_Toint_2010}.
+Most model-based \gls{dfo} methods employ polynomial models that are linear or
+quadratic, examples including
+Powell's methods~\cite{Powell_1994,Powell_2002,Powell_2006,Powell_2009,Powell_2015},
+MNH~\cite{Wild_2008}, DFLS~\cite{Zhang_Conn_Scheinberg_2010},
+\mbox{DFO-TR}~\cite{Bandeira_Scheinberg_Vicente_2012},
+and \mbox{DFO-LS}~\cite{Cartis_Etal_2019},
+but there are also successful cases exploiting~\glspl{rbf},
+such as \orbit~\cite{Wild_Regis_Shoemaker_2008},
+\conorbit~\cite{Regis_Wild_2017}, and \boosters~\cite{Oeuvray_Bierlaire_2009}. Model-based
+\gls{dfo} is one of the motivations for studying trust-region or line search methods with
+randomized models, for which we refer
+to~\cite{Bandeira_Scheinberg_Vicente_2014,Gratton_Etal_2018,Cartis_Scheinberg_2018} as examples.
+
+Hybrids between direct search and model-based approaches exist, for example~\cite{Custodio_Vicente_2007}, \cite[Algorithm~4.7]{Kelley_2011}, and~\cite{Conn_Digabel_2013}. For more extensive discussions on \gls{dfo} methods and theory, see the monographs~\cite{Conn_Scheinberg_Vicente_2009b,Audet_Hare_2017}, the survey papers~\cite{Rios_Sahinidis_2013, Custodio_Scheinberg_Vicente_2017, Larson_Menickelly_Wild_2019}, and the references therein.
+
+\section{Powell's derivative-free methods}
+\label{sec:powell}
+
+Powell published hist first \gls{dfo} algorithm based on conjugate directions in
+1964~\cite{Powell_1964}.\footnote{According to Google Scholar, this is Powell's second published
+paper and also the second most cited work. The earliest and meanwhile most cited one is his paper on
+the DFP method~\cite{Fletcher_Powell_1963}, co-authored with Flethcer and published in 1963.} His
+code for this algorithm is contained in the HSL Mathematical Software Library~\cite{HSL} as
+subroutine \texttt{VA24}. It is not included in \gls{pdfo} because the code is not in the public
+domain, although open-source implementations are available~(see~\cite[footnote~4]{Conn_Scheinberg_Toint_1997b}).
+
+From the 1990s to the final days of his career, Powell developed five \gls{dfo} trust-region
+algorithms, namely \gls{cobyla}~\cite{Powell_1994}, \gls{uobyqa}~\cite{Powell_2002},
+\gls{newuoa}~\cite{Powell_2006}, \gls{bobyqa}~\cite{Powell_2009},
+and~\gls{lincoa}~\cite{Powell_2015}. In addition, Powell coded these algorithms into \fortran~solvers and made them publicly available. We provide a brief overview on these algorithms in the sequel.
+
+Powell's \gls{dfo} trust-region algorithms uses linear or quadratic interpolation models.
+At iteration~$k$, the algorithms determine a finite set~$\itpls \subseteq \R^n$ of interpolation
+points lying in a region around the iterate~$\iter$,
+construct a model~$\objmdl$ satisfying the interpolation conditions
+\begin{equation}
+    \label{eq:itpls}
+    \objmdl(y) = \obj(y), \quad y \in \itpls,
+\end{equation}
+and obtain a trial point by solving approximately
 \begin{subequations}
     \label{eq:trsp}
     \begin{align}
@@ -314,38 +380,10 @@ Algorithms with this strategy are referred to as model-based methods, and they o
     \end{align}
 \end{subequations}
 where~$\iter$ is the current iterate, $\objmdl$ stands for a model of the objective function~$\obj$,~$\trg$ denotes the trust-region radius,~$\norm{\cdot}$ is a norm in~$\R^n$, and~$\srchsp$ is replaced by a local approximation~$\srchspmdl \subseteq \R^n$, which can be~$\srchsp$ itself.
-The trial point is then accepted if it satisfies some sufficient decrease condition. The models can also be exploited within a line-search framework~\cite{Berahas_Byrd_Nocedal_2019,Shi_Etal_2021}. Interpolation and regression are two common ways of establishing the models~\cite{Powell_2001,Powell_2004a,Conn_Scheinberg_Vicente_2008a,Conn_Scheinberg_Vicente_2008a,Wild_Regis_Shoemaker_2008,Bandeira_Scheinberg_Vicente_2012,Billups_Larson_Graf_2013,Regis_Wild_2017}.
-It is worth noting that methods using finite-difference approximations of gradients can also be regarded as model-based methods, because such approximations essentially come from linear (for forward and backward finite differences) or quadratic (for central finite difference) interpolations of the function under consideration over rather special interpolation sets.
+The trial point is then accepted if it satisfies some sufficient decrease condition.
 
-Hybrids between direct search and model-based approaches exist, for example~\cite{Custodio_Vicente_2007}, \cite[Algorithm~4.7]{Kelley_2011}, and~\cite{Conn_Digabel_2013}. For more extensive discussions on \gls{dfo} methods and theory, see the monographs~\cite{Conn_Scheinberg_Vicente_2009b,Audet_Hare_2017}, the survey papers~\cite{Rios_Sahinidis_2013, Custodio_Scheinberg_Vicente_2017, Larson_Menickelly_Wild_2019}, and the references therein.
 
-\section{Powell's derivative-free methods}
-\label{sec:powell}
-
-Powell published hist first \gls{dfo} algorithm based on conjugate directions in 1964~\cite{Powell_1964}.\footnote{According to Google Scholar, this is Powell's second published paper and also the second most cited work. The earliest and meanwhile most cited one is his paper on the DFP method~\cite{Fletcher_Powell_1963} co-authored with Flethcer, published in 1963.} His code for this algorithm is contained in the HSL Mathematical Software Library~\cite{HSL} as subroutine \texttt{VA24}. It is not included in \gls{pdfo} because the code is not in the public domain, although open-source implementations exist~(see~\cite[footnote~4]{Conn_Scheinberg_Toint_1997b}).
-
-From the 1990s to the final days of his career, Powell developed five \gls{dfo} trust-region algorithms, namely \gls{cobyla}~\cite{Powell_1994}, \gls{uobyqa}~\cite{Powell_2002}, \gls{newuoa}~\cite{Powell_2006}, \gls{bobyqa}~\cite{Powell_2009}, and~\gls{lincoa}~\cite{Powell_2015}. In addition, Powell coded these algorithms into \fortran solvers and made them publicly available. We provide a brief overview on these algorithms in the sequel.
-
-Powell's \gls{dfo} trust-region algorithms are based on quadratic or linear models obtained by interpolation. Given a finite set~$\itpls \subseteq \R^n$ of points lying in a region around the iterate~$\iter$, the model~$\objmdl$ satisfies the interpolation conditions
-\begin{equation}
-    \label{eq:itpls}
-    \objmdl(y) = \obj(y), \quad y \in \itpls.
-\end{equation}
-A crucial aspect of derivative-free trust-region methods based on interpolation is the mechanism it employs to define the set~$\itpls[k + 1]$.
-It should recycle points from previous iterations, at which the objective function has already been evaluated; meanwhile, it need to maintain geometrical properties to maintain models with good-enough accuracy and ensure convergence~\cite{Conn_Scheinberg_Vicente_2008a,Conn_Scheinberg_Vicente_2008b, Fasano_Morales_Nocedal_2009,Scheinberg_Toint_2010}.
-Most of the existing trust-region methods use polynomial models at most quadratic, although some attempts have been made to employ \glspl{rbf}, such as \orbit~\cite{Wild_Regis_Shoemaker_2008}, \conorbit~\cite{Regis_Wild_2017}, and
-\boosters~\cite{Oeuvray_Bierlaire_2009}.
-We focus however our attention on polynomial models of the form
-\begin{equation}
-    \label{eq:polm}
-    \objmdl(x) \eqdef \grad^{\trps} (x - \iter) + (x - \iter)^{\trps} \hess (x - \iter),
-\end{equation}
-with~$\grad \in \R^n$ and~$\hess \in \R^{n \times n}$ being symmetric and may be zero for linear models, diagonal or general depending on the considered method.
-Such models admit respectively~$n + 1$,~$2n + 1$ and~$(n + 1)(n + 2) / 2$ coefficients, determined so that they satisfy the interpolation conditions~\eqref{eq:itpls}.
-Whenever the models are defined by underdetermined interpolations, the freedom bequeathed by the interpolation conditions is usually taken up by a variational problem whose constraints are the conditions~\eqref{eq:itpls}.
-Examples of such variational problems are the minimization of the Hessian of the models in Frobenius norm~\cite{Conn_Scheinberg_Toint_1998, Wild_2008}, or the minimization of a term involving~$\grad$ and~$\hess$ in~\eqref{eq:polm}~\cite{Conn_Toint_1996}.
-Powell employed another example of such variational problem, namely the symmetric Broyden formula~\cite{Powell_1970b, Powell_2004a}, which will be studied later in this paper in Section~\ref{sec:powell}.
-
+\subsection{\gls{cobyla}}
 
 At the dawn of the modern \gls{dfo}, Powell introduced in \citedate{Powell_1994} his solver \gls{cobyla}~\cite{Powell_1994}, named after \enquote{\glsxtrlong{cobyla}}.
 It attempts to solve the optimization problem~\eqref{eq:nlc} when the feasible region~$\srchsp$ is general and expressed as
@@ -371,6 +409,9 @@ However, the trust-region condition~\eqref{eq:trsp-tr} and the region~\eqref{eq:
 \end{align*}
 In doing so, the method attempts to reduce some violation of the constraint models while ensuring that the trial point lies in the trust region, as it is needed by most global convergence properties.
 
+
+\subsection{\gls{uobyqa}}
+
 Later on, in \citedate{Powell_2002}, Powell developed \gls{uobyqa}~\cite{Powell_2002}, named after \enquote{\glsxtrlong{uobyqa}}.
 It aims at solving the nonlinear optimization problem~\eqref{eq:nlc} in the unconstrained case, i.e., when~$\srchsp = \R^n$.
 To do so, at each iteration, it models the objective function with a quadratic of the form~\eqref{eq:polm}, obtained by fully-determined interpolation on the set~$\itpls$ containing~$N = (n + 1)(n + 2) / 2$ points.
@@ -389,6 +430,9 @@ It states that given a point~$\bar{y} \in \itpls$ to remove from the interpolati
 where~$\ell_{\bar{y}} \colon \R^n \to \R$ denotes the Lagrange function associated with~$\bar{y}$, defined by~$\ell_{\bar{y}}(y) = \delta_{\bar{y}, y}$ for each~$y \in \itpls$, where~$\delta_{\bar{y}, y}$ is the Kronecker delta.
 Since \gls{uobyqa} requires only a rough solution of the geometry-improvement subproblem~\eqref{eq:biglag}, Powell developed an algorithm that requires only~$\mathcal{O}(n^2)$ operations, based on an estimation of~$\abs{\ell_{\bar{y}}(\cdot)}$.
 Once such a point is calculated, the solver continues with a classical trust-region step, and the subproblem~\eqref{eq:trsp} is solved with the Mor{\'{e}}-Sorensen algorithm~\cite{More_Sorensen_1983}, as it controls the accuracy of the solution.
+
+
+\subsection{\gls{newuoa}, \gls{bobyqa}, and~\gls{lincoa}}
 
 The major flaw of \gls{uobyqa} is the amount of required interpolation points, which can become prohibitively huge when~$n$ increases.
 Therefore, Powell designed a mechanism to define quadratic models of the form~\eqref{eq:polm} that requires fewer interpolation points~\cite{Powell_2004a}.
@@ -418,6 +462,20 @@ This remark suggests that it can be much more efficient to update such \gls{kkt}
 Powell derived an updating formula in~\cite{Powell_2004b} that requires only~$\mathcal{O}(N^2)$ operations instead of~$\mathcal{O}(N^3)$ if the computation was made from scratch with no loss of accuracy, where~$N$ denotes the number of interpolation points.
 When it comes to solving the trust-region subproblems~\eqref{eq:trsp}, \gls{newuoa} employs the Steihaug-Toint truncated conjugate gradient algorithm~\cite{Steihaug_1983, Toint_1981}, and \gls{bobyqa} and \gls{lincoa} use an active-set variation of it.
 However, the trust-region subproblem solver of \gls{bobyqa} always respects the bounds, while the solver of \gls{lincoa} may visit point lying outside of the polyhedron of the constraints, and may even return points that are slightly infeasible.
+
+
+\subsection{Geometry steps}
+
+We focus however our attention on polynomial models of the form
+\begin{equation}
+    \label{eq:polm}
+    \objmdl(x) \eqdef \grad^{\trps} (x - \iter) + (x - \iter)^{\trps} \hess (x - \iter),
+\end{equation}
+with~$\grad \in \R^n$ and~$\hess \in \R^{n \times n}$ being symmetric and may be zero for linear models, diagonal or general depending on the considered method.
+Such models admit respectively~$n + 1$,~$2n + 1$ and~$(n + 1)(n + 2) / 2$ coefficients, determined so that they satisfy the interpolation conditions~\eqref{eq:itpls}.
+Whenever the models are defined by underdetermined interpolations, the freedom bequeathed by the interpolation conditions is usually taken up by a variational problem whose constraints are the conditions~\eqref{eq:itpls}.
+Examples of such variational problems are the minimization of the Hessian of the models in Frobenius norm~\cite{Conn_Scheinberg_Toint_1998, Wild_2008}, or the minimization of a term involving~$\grad$ and~$\hess$ in~\eqref{eq:polm}~\cite{Conn_Toint_1996}.
+Powell employed another example of such variational problem, namely the symmetric Broyden formula~\cite{Powell_1970b, Powell_2004a}, which will be studied later in this paper in Section~\ref{sec:powell}.
 
 \section{An interface for the Powell's derivative-free solvers}
 \label{sec:pdfo}
