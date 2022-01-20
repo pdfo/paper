@@ -68,8 +68,6 @@
 \newacronym{newuoa}{NEWUOA}{new unconstrained optimization algorithm}
 \newacronym{uobyqa}{UOBYQA}{unconstrained optimization by quadratic approximation}
 \newacronym{pdfo}{PDFO}{Powell's derivative-free optimization solvers}
-\newacronym{opt:classical}{\texttt{classical}}{Option `classical`}
-\newacronym{opt:scale}{\texttt{scale}}{Option `scale`}
 
 % Mathematical expressions
 \usepackage{amsmath}
@@ -79,16 +77,16 @@
 \usepackage{xargs}
 \numberwithin{equation}{section}
 
+\DeclareMathOperator*\argmin{arg\,min}
 \DeclareMathOperator\rank{rank}
 \DeclareMathOperator\range{\mathcal{R}}
-\DeclareMathOperator*\argmin{arg\,min}
+
+\def\defeq{\ensuremath{\mathrel{\stackrel{\text{\tiny\textsf{def}}}{=}}}}
+\def\sft{\ensuremath{\mathsf{T}}}
 \def\R{\ensuremath{\mathds{R}}}
-\def\trps{\ensuremath{\mathsf{T}}}
-\def\eqdef{\ensuremath{\mathrel{\stackrel{\text{\tiny\textsf{def}}}{=}}}}
 \newcommand\abs[2][]{#1|#2#1|}
 \newcommand\norm[2][]{#1\|#2#1\|}
 \newcommand\set[2][]{#1\{#2#1\}}
-\newcommandx\polsp[2][1=d,2=n]{\mathcal{P}_{#2,#1}}
 \def\obj{\ensuremath{f}}
 \def\srchsp{\ensuremath{\Omega}}
 \def\bl{\ensuremath{l}}
@@ -125,9 +123,10 @@
     itemsep=0pt,
 }
 
-\usepackage{listings}
+% Customize listings environments
+\usepackage[final]{listings}
 \usepackage{lstautogobble}
-\lstset{%
+\lstset{
     autogobble=true,
     basicstyle=\normalsize\ttfamily,
     breakautoindent=true,
@@ -144,11 +143,11 @@
     stringstyle=\color{OliveGreen},
     tabsize=4,
 }
-\lstnewenvironment{matlablst}[1][]{%
-    \lstset{%
+\lstnewenvironment{matlablst}[1][]{
+    \lstset{
         language=matlab,
         morekeywords={ones},
-        #1,%
+        #1,
     }
 }{}
 
@@ -160,36 +159,28 @@
 \input{ushyphex}
 
 % General macros
-%\def\cutest{\mbox{CUTEst}}
-%\def\fortran{\mbox{Fortran}}
-%\def\julia{\mbox{Julia}}
-%\def\matlab{\mbox{MATLAB\textsuperscript{\textregistered}}}
-\def\matlabopt{\mbox{\matlab\ Optimization Library\textsuperscript{\texttrademark}}}
-%\def\minqa{\mbox{minqa}}
-%\def\nlopt{\mbox{\textsc{NLopt}}}
-%\def\pybobyqa{\mbox{\textsc{PyBOBYQA}}}
-%\def\python{\mbox{Python}}
-\def\R{\mbox{R}}
-%\def\scipy{\mbox{SciPy}}
 \def\bfo{\mbox{BFO}}
 \def\boosters{\mbox{BOOSTERS}}
 \def\conorbit{\mbox{CONORBIT}}
 \def\cutest{\mbox{CUTEst}}
 \def\fortran{\mbox{Fortran}}
+\def\julia{\mbox{Julia}}
 \def\libsvm{\mbox{LIBSVM}}
 \def\mads{\mbox{MADS}}
 \def\matlab{\mbox{MATLAB\textsuperscript{\textregistered}}}
+\def\matlabopt{\mbox{\matlab\ Optimization Toolbox\textsuperscript{\texttrademark}}}
 \def\minqa{\mbox{\texttt{minqa}}}
 \def\nlopt{\mbox{NLopt}}
 \def\orbit{\mbox{ORBIT}}
 \def\pybobyqa{\mbox{Py-BOBYQA}}
 \def\python{\mbox{Python}}
-\def\julia{\mbox{Julia}}
+\def\rlang{\mbox{R}}
 \def\scipy{\mbox{SciPy}}
 \def\sklearn{\mbox{scikit-learn}}
 
 % Drafting macros
 \usepackage{ifdraft}
+\usepackage[obeyDraft]{todonotes}
 \ifdraft{
     \usepackage{draftwatermark}
     \SetWatermarkColor{Gray}
@@ -252,7 +243,7 @@ the signature of the \matlab\ subroutine is consistent with the \texttt{fmincon}
 The package is cross-platform, available on Linux, macOS, and Microsoft Windows at once.
 
 \gls{pdfo} is not the first attempt to facilitate the usage of Powell's solvers in languages other than \fortran.
-Various efforts have been made in this direction in response to the continual demands from both researchers and practitioners: \pybobyqa~\cite{Cartis_Etal_2019} provides a \python\ implementation of \gls{bobyqa}; \nlopt~\cite{Johnson_2019} includes multi-language interfaces for \gls{cobyla}, \gls{newuoa}, and \gls{bobyqa}; \minqa~\cite{Bates_Etal_2014} wraps \gls{uobyqa}, \gls{newuoa}, and \gls{bobyqa} in \R; \scipy~\cite{Virtanen_Etal_2020} makes \gls{cobyla} available in \python\ under its optimization library. Nevertheless, \gls{pdfo} has several features that distinguishes itself from others.
+Various efforts have been made in this direction in response to the continual demands from both researchers and practitioners: \pybobyqa~\cite{Cartis_Etal_2019} provides a \python\ implementation of \gls{bobyqa}; \nlopt~\cite{Johnson_2019} includes multi-language interfaces for \gls{cobyla}, \gls{newuoa}, and \gls{bobyqa}; \minqa~\cite{Bates_Etal_2014} wraps \gls{uobyqa}, \gls{newuoa}, and \gls{bobyqa} in \rlang; \scipy~\cite{Virtanen_Etal_2020} makes \gls{cobyla} available in \python\ under its optimization library. Nevertheless, \gls{pdfo} has several features that distinguishes itself from others.
 
 \begin{enumerate}
     \item \emph{Comprehensiveness.}
@@ -301,17 +292,8 @@ Consider a nonlinear optimization problem
 where~$\obj \colon \R^n \to \R$ is the objective function and~$\srchsp \subseteq \R^n$ refers to the feasible region of the problem.
 As summarized in~\cite{Conn_Scheinberg_Vicente_2009b}, two strategies have been developed to tackle the problem~\eqref{eq:nlc} without using derivatives, which we will sketch in the sequel.
 
-The first strategy, known as {direct search},\footnote{In some early papers
-(e.g.,~\cite{Powell_1994,Powell_1998}), Powell used the word ``direct search'' to mean what is known
-as ``derivative-free optimization'' today.} explores the objective function~$\obj$ and chooses
-iterates by simple comparisons of function values, examples including the Nelder-Mead
-algorithm~\cite{Nelder_Mead_1965}, the~\mads\ methods~\cite{Audet_Dennis_2006, Abramson_Audet_2006,
-Digabel_2011}, and~\bfo~\cite{Porcelli_Toint_2017,Porcelli_Toint_2020b,Porcelli_Toint_2021}.
-See~\cite{Kolda_Lewis_Torczon_2003},~\cite[Chapters~7
-and~8]{Conn_Scheinberg_Vicente_2009b},~\cite[Part~3]{Audet_Hare_2017},
-and~\cite[Section~2.1]{Larson_Menickelly_Wild_2019} for more discussions on this paradigm,
-and we refer to~\cite{Gratton_Etal_2015, Gratton_Etal_2019} for recent developments on randomized methods in
-this category.
+The first strategy, known as direct search,\footnote{In some early papers (e.g.,~\cite{Powell_1994,Powell_1998}), Powell used the word \enquote{direct search} to mean what is known as \enquote{\gls{dfo}} today.} explores the objective function~$\obj$ and chooses iterates by simple comparisons of function values, examples including the Nelder-Mead algorithm~\cite{Nelder_Mead_1965}, the \mads\ methods~\cite{Audet_Dennis_2006,Abramson_Audet_2006,Digabel_2011}, and \bfo~\cite{Porcelli_Toint_2017,Porcelli_Toint_2020,Porcelli_Toint_2021}.
+See~\cite{Kolda_Lewis_Torczon_2003},~\cite[Chapters~7 and~8]{Conn_Scheinberg_Vicente_2009b},~\cite[Part~3]{Audet_Hare_2017}, and~\cite[Section~2.1]{Larson_Menickelly_Wild_2019} for more discussions on this paradigm, and we refer to~\cite{Gratton_Etal_2015,Gratton_Etal_2019} for recent developments on randomized methods in this category.
 
 The second strategy approximates the original problem~\eqref{eq:nlc} by relatively simple models and locates the iterates according to such models.
 Algorithms with this strategy are referred to as model-based methods, and they often make use of the
@@ -383,12 +365,12 @@ where~$\iter$ is the current iterate, $\objmdl$ stands for a model of the object
 The trial point is then accepted if it satisfies some sufficient decrease condition.
 
 
-\subsection{\gls{cobyla}}
+\subsection{\glsfmtshort{cobyla}}
 
 At the dawn of the modern \gls{dfo}, Powell introduced in \citedate{Powell_1994} his solver \gls{cobyla}~\cite{Powell_1994}, named after \enquote{\glsxtrlong{cobyla}}.
 It attempts to solve the optimization problem~\eqref{eq:nlc} when the feasible region~$\srchsp$ is general and expressed as
 \[
-    \srchsp \eqdef \set{x \in \R^n \colon \cgen(x) \ge 0,\; i=1,...,m},
+    \srchsp \defeq \set{x \in \R^n \colon \cgen(x) \ge 0,\; i=1,...,m},
 \]
 where~$\cgen \colon \R^n \to \R$ denotes the~$i$th nonlinear constraint function, with~$i \in \set{1, 2, \dots, m}$.
 At each iteration, it approximates the objective and constraint functions with linear models obtained by fully-determined interpolations on~$\itpls$, whose cardinal is fixed to~$n + 1$.
@@ -396,7 +378,7 @@ In this context, the poisedness~\cite[\S 1]{Sauer_Xu_1995} of the interpolation 
 Once the linear models~$\cgenmdl$ of the constraint functions~$\cgen$ for~$i \in \set{1, 2, \dots, m}$ are built, an approximation~$\srchspmdl$ of~$\srchsp$ is obtained as the intersection of the half-spaces generated by the linear approximations of the constraint functions, that is
 \begin{equation}
     \label{eq:cobylarg}
-    \srchspmdl \eqdef \set{x \in \R^n \colon \cgenmdl(x) \ge 0,\; i=1,...,m},
+    \srchspmdl \defeq \set{x \in \R^n \colon \cgenmdl(x) \ge 0,\; i=1,...,m},
 \end{equation}
 and the trust-region subproblem~\eqref{eq:trsp} is then solved.
 As a linear programming problem, the trust-region subproblem is solved in the following way.
@@ -410,7 +392,7 @@ However, the trust-region condition~\eqref{eq:trsp-tr} and the region~\eqref{eq:
 In doing so, the method attempts to reduce some violation of the constraint models while ensuring that the trial point lies in the trust region, as it is needed by most global convergence properties.
 
 
-\subsection{\gls{uobyqa}}
+\subsection{\glsfmtshort{uobyqa}}
 
 Later on, in \citedate{Powell_2002}, Powell developed \gls{uobyqa}~\cite{Powell_2002}, named after \enquote{\glsxtrlong{uobyqa}}.
 It aims at solving the nonlinear optimization problem~\eqref{eq:nlc} in the unconstrained case, i.e., when~$\srchsp = \R^n$.
@@ -432,7 +414,7 @@ Since \gls{uobyqa} requires only a rough solution of the geometry-improvement su
 Once such a point is calculated, the solver continues with a classical trust-region step, and the subproblem~\eqref{eq:trsp} is solved with the Mor{\'{e}}-Sorensen algorithm~\cite{More_Sorensen_1983}, as it controls the accuracy of the solution.
 
 
-\subsection{\gls{newuoa}, \gls{bobyqa}, and~\gls{lincoa}}
+\subsection{\glsfmtshort{newuoa}, \glsfmtshort{bobyqa}, and~\glsfmtshort{lincoa}}
 
 The major flaw of \gls{uobyqa} is the amount of required interpolation points, which can become prohibitively huge when~$n$ increases.
 Therefore, Powell designed a mechanism to define quadratic models of the form~\eqref{eq:polm} that requires fewer interpolation points~\cite{Powell_2004a}.
@@ -440,11 +422,11 @@ Given the set~$\itpls$, containing typically~$\mathcal{O}(n)$ points (the defaul
 \begin{equation}
     \label{eq:varmod}
     \begin{aligned}
-        \objmdl \eqdef \argmin_{Q \in \polsp[2]}    & \quad \norm{\nabla^2 Q - \nabla^2 \objmdl[k - 1]}_{\mathsf{F}}\\
+        \objmdl \defeq \argmin_{Q \in \mathcal{P}_{n, 2}}    & \quad \norm{\nabla^2 Q - \nabla^2 \objmdl[k - 1]}_{\mathsf{F}}\\
         \text{s.t.}                                 & \quad Q(y) = \obj(y), \quad y \in \itpls,
     \end{aligned}
 \end{equation}
-where~$\polsp$ is the space of~$n$-variate polynomials of degree at most~$d$ and~$\nabla^2 \objmdl[-1]$ is set to be zero.
+where~$\mathcal{P}_{n, d}$ is the space of~$n$-variate polynomials of degree at most~$d$ and~$\nabla^2 \objmdl[-1]$ is set to be zero.
 If the number of interpolation points was less than or equal to~$n + 1$, the models would remain linear, so that Powell requires the number of points in~$\itpls$ to be at least~$n + 2$ and at most~$(n + 1)(n + 2) / 2$.
 As we mentioned earlier, the choice of the variational problem~\eqref{eq:varmod} is fostered by the fact that it occurs in the quasi-Newton update for unconstrained optimization when the first derivative of the objective function is available~\cite[\S 3.6]{Fletcher_1987}.
 As in the fully-determined case, the geometry of the interpolation set plays a crucial role, as it influences the accuracy of the quadratic models, and the geometry-improvement steps~\eqref{eq:biglag} should be also entertained.
@@ -469,7 +451,7 @@ However, the trust-region subproblem solver of \gls{bobyqa} always respects the 
 We focus however our attention on polynomial models of the form
 \begin{equation}
     \label{eq:polm}
-    \objmdl(x) \eqdef \grad^{\trps} (x - \iter) + (x - \iter)^{\trps} \hess (x - \iter),
+    \objmdl(x) \defeq \grad^{\sft} (x - \iter) + (x - \iter)^{\sft} \hess (x - \iter),
 \end{equation}
 with~$\grad \in \R^n$ and~$\hess \in \R^{n \times n}$ being symmetric and may be zero for linear models, diagonal or general depending on the considered method.
 Such models admit respectively~$n + 1$,~$2n + 1$ and~$(n + 1)(n + 2) / 2$ coefficients, determined so that they satisfy the interpolation conditions~\eqref{eq:itpls}.
