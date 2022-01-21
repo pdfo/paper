@@ -22,6 +22,7 @@
 \usepackage{booktabs}
 \usepackage{siunitx}
 
+\usepackage{refcheck}
 % Cross-referencing and colorization
 \usepackage[final,hyperfootnotes=false]{hyperref}
 \usepackage[dvipsnames]{xcolor}
@@ -47,6 +48,7 @@
 \usepackage[
     style=numeric-comp,
     sorting=nyt,
+    sortcites=false,
 ]{biblatex}
 \addbibresource{ragonneau-bib/strings.bib}
 \addbibresource{ragonneau-bib/optim.bib}
@@ -62,11 +64,11 @@
 \newabbreviation{rs}{RS}{random search}
 \newabbreviation{svm}{SVM}{support vector machine}
 \newabbreviation{tpe}{TPE}{tree of Parzen estimators}
-\newacronym{bobyqa}{BOBYQA}{bound optimization by quadratic approximation}
-\newacronym{cobyla}{COBYLA}{constrained optimization by linear approximation}
-\newacronym{lincoa}{LINCOA}{linearly-constrained optimization algorithm}
-\newacronym{newuoa}{NEWUOA}{new unconstrained optimization algorithm}
-\newacronym{uobyqa}{UOBYQA}{unconstrained optimization by quadratic approximation}
+\newacronym{bobyqa}{BOBYQA}{Bound Optimization BY Quadratic Approximation}
+\newacronym{cobyla}{COBYLA}{Constrained Optimization BY Linear Approximations}
+\newacronym{lincoa}{LINCOA}{LINearly Constrained Optimization Algorithm}
+\newacronym{newuoa}{NEWUOA}{NEW Unconstrained Optimization Algorithm}
+\newacronym{uobyqa}{UOBYQA}{Unconstrained Optimization BY Quadratic Approximation}
 \newacronym{pdfo}{PDFO}{Powell's derivative-free optimization solvers}
 
 % Mathematical expressions
@@ -83,7 +85,7 @@
 
 \def\defeq{\ensuremath{\mathrel{\stackrel{\text{\tiny\textsf{def}}}{=}}}}
 \def\sft{\ensuremath{\mathsf{T}}}
-\def\R{\ensuremath{\mathds{R}}}
+\def\R{\ensuremath{\mathbb{R}}}
 \newcommand\abs[2][]{#1|#2#1|}
 \newcommand\norm[2][]{#1\|#2#1\|}
 \newcommand\set[2][]{#1\{#2#1\}}
@@ -98,14 +100,18 @@
 \def\beq{\ensuremath{b_{\scriptscriptstyle\mathcal{E}}}}
 \def\aub{\ensuremath{A_{\scriptscriptstyle\mathcal{I}}}}
 \def\bub{\ensuremath{b_{\scriptscriptstyle\mathcal{I}}}}
-\newcommand\objmdl[1][k]{\smash{\widehat{f}_{#1}}}
+%\newcommand\objmdl[1][k]{\smash{\widehat{f}_{#1}}}
+\newcommand\objmdl[1][k]{\obj_{#1}}
 \newcommand\srchspmdl[1][k]{\Omega_{#1}}
-\newcommandx\cgenmdl[2][1=k,2=i]{\widehat{c}_{#2,#1}}
+%\newcommandx\cgenmdl[2][1=k,2=i]{\widehat{c}_{#2,#1}}
+\newcommandx\cgenmdl[2][1=k,2=i]{c_{#2,#1}}
 \newcommand\iter[1][k]{x_{#1}}
 \newcommand\trg[1][k]{\Delta_{#1}}
 \newcommand\itpls[1][k]{\mathcal{Y}_{#1}}
 \newcommand\grad[1][k]{g_{#1}}
 \newcommand\hess[1][k]{B_{#1}}
+\newcommand\trial{{\text{t}}}
+\newcommand\geo{{\text{g}}}
 
 % Automatic references
 \usepackage[noabbrev]{cleveref}
@@ -230,13 +236,14 @@ This is the case, for example, if the objective function does not have an explic
 Optimization problems of such kind arise from automatic error analysis~\cite{Higham_1993,Higham_2002}, machine learning~\cite{Ghanbari_Scheinberg_2017}, analog circuit design~\cite{Latorre_Etal_2019}, aircraft engineering~\cite{Gazaix_Etal_2019}, and chemical product design~\cite{Sun_Etal_2020}, to name but a few.
 These problems motivate the development of optimization algorithms that use only function values but not derivatives.
 
-Between~\citeyear{Powell_1994} and~\citeyear{Powell_2015}, Powell developed five solvers to tackle unconstrained and constrained problems without using derivatives, namely \gls{cobyla}, \gls{uobyqa}, \gls{newuoa}, \gls{bobyqa}, and \gls{lincoa}.
+Between~\citeyear{Powell_1994} and~\citeyear{Powell_2015}, Powell developed five solvers to tackle unconstrained and constrained problems without using derivatives,
+namely~\gls{cobyla}~\cite{Powell_1994}, \gls{uobyqa}~\cite{Powell_2002}, \gls{newuoa}~\cite{Powell_2006}, \gls{bobyqa}~\cite{Powell_2009}, and \gls{lincoa}.
 These solvers were implemented by Powell, with particular attention paid to their numerical stability and algebraic complexity.
 Renowned for their robustness and efficiency, these solvers are extremely appealing to practitioners and widely used in applications, for instance, aeronautical engineering~\cite{Gallard_Etal_2018b}, astronomy~\cite{Biviano_Etal_2013,Mamon_Biviano_Boue_2013}, computer vision~\cite{Izadinia_Shan_Seitz_2017}, robotics~\cite{Mombaur_Truong_Laumond_2010}, and statistics~\cite{Bates_Etal_2015}.
 
 However, Powell coded in \fortran\ 77, an old-fashion language that damps the enthusiasm of many users to exploit these solvers in their projects.
 There have been a considerable demand from both researchers and practitioners for the availability of Powell's solvers in more user-friendly languages such as \python, \matlab, and \julia.
-Our aim is to wrap Powell's \fortran\ code into a package, namely \gls{pdfo}, which enables users of such languages to call Powell's solvers without any need of dealing with the \fortran\ code.
+Our aim is to wrap Powell's \fortran\ code into a package named~\gls{pdfo}, which enables users of such languages to call Powell's solvers without any need of dealing with the \fortran\ code.
 For each supported language, \gls{pdfo} provides a simple subroutine that can invoke one of Powell's solvers according to the user's request (if any) or according to the type of the problem to solve. The current release (version 1.1) of \gls{pdfo} supports \python\ and \matlab, with more languages to be covered in the future.
 The signature of the \python\ subroutine is consistent with the \texttt{minimize} function of the \scipy\ optimization library;
 the signature of the \matlab\ subroutine is consistent with the \texttt{fmincon} function of the \matlabopt.
@@ -292,7 +299,9 @@ Consider a nonlinear optimization problem
 where~$\obj \colon \R^n \to \R$ is the objective function and~$\srchsp \subseteq \R^n$ refers to the feasible region of the problem.
 As summarized in~\cite{Conn_Scheinberg_Vicente_2009b}, two strategies have been developed to tackle the problem~\eqref{eq:nlc} without using derivatives, which we will sketch in the sequel.
 
-The first strategy, known as direct search,\footnote{In some early papers (e.g.,~\cite{Powell_1994,Powell_1998}), Powell used the word \enquote{direct search} to mean what is known as \enquote{\gls{dfo}} today.} explores the objective function~$\obj$ and chooses iterates by simple comparisons of function values, examples including the Nelder-Mead algorithm~\cite{Nelder_Mead_1965}, the \mads\ methods~\cite{Audet_Dennis_2006,Abramson_Audet_2006,Digabel_2011}, and \bfo~\cite{Porcelli_Toint_2017,Porcelli_Toint_2020,Porcelli_Toint_2021}.
+The first strategy, known as direct search,\footnote{\,In some early papers
+(e.g.,~\cite{Powell_1994,Powell_1998}), Powell used \enquote{direct search} to mean what is known as
+\enquote{derivative-free optimization} today.} explores the objective function~$\obj$ and chooses iterates by simple comparisons of function values, examples including the Nelder-Mead algorithm~\cite{Nelder_Mead_1965}, the \mads\ methods~\cite{Audet_Dennis_2006,Abramson_Audet_2006,Digabel_2011}, and \bfo~\cite{Porcelli_Toint_2017,Porcelli_Toint_2020,Porcelli_Toint_2021}.
 See~\cite{Kolda_Lewis_Torczon_2003},~\cite[Chapters~7 and~8]{Conn_Scheinberg_Vicente_2009b},~\cite[Part~3]{Audet_Hare_2017}, and~\cite[Section~2.1]{Larson_Menickelly_Wild_2019} for more discussions on this paradigm, and we refer to~\cite{Gratton_Etal_2015,Gratton_Etal_2019} for recent developments on randomized methods in this category.
 
 The second strategy approximates the original problem~\eqref{eq:nlc} by relatively simple models and locates the iterates according to such models.
@@ -302,58 +311,71 @@ framework~\cite{Conn_Gould_Toint_2000,Conn_Scheinberg_Vicente_2009a,Yuan_2015}, 
 line search methods also exist~\cite{Berahas_Byrd_Nocedal_2019,Shi_Etal_2021}.
 Interpolation and regression are two common ways of establishing the
 models~\cite{Powell_2001,Powell_2004a,Conn_Scheinberg_Vicente_2008a,Conn_Scheinberg_Vicente_2008a,Wild_Regis_Shoemaker_2008,Bandeira_Scheinberg_Vicente_2012,Billups_Larson_Graf_2013,Regis_Wild_2017}.
-It is worth noting that algorithms using finite-difference approximations of gradients can also be
+Algorithms using finite-difference approximations of gradients can also be
 regarded as model-based methods, because such approximations essentially come from linear (for
 forward and backward finite differences) or quadratic (for central finite difference) interpolation
 of the function under consideration over rather special interpolation sets.
-A crucial aspect of methods using interpolation models is the strategy
-they employ to update the interpolation set.
-The strategy should recycle points from previous iterations, at which the objective function has already been
-evaluated; meanwhile, it needs to maintain the well
-poisedness~\cite{Sauer_Xu_1995,Conn_Scheinberg_Vicente_2009b} of
-the interpolation set in order to guarantee the accuracy of the interpolants
-and ensure the convergence of the optimization algorithm~\cite{Conn_Scheinberg_Vicente_2008a,Conn_Scheinberg_Vicente_2008b,
-Fasano_Morales_Nocedal_2009,Scheinberg_Toint_2010}.
 Most model-based \gls{dfo} methods employ polynomial models that are linear or
 quadratic, examples including
-Powell's methods~\cite{Powell_1994,Powell_2002,Powell_2006,Powell_2009,Powell_2015},
+Powell's methods~\cite{Powell_1994,Powell_2002,Powell_2006,Powell_2009},
 MNH~\cite{Wild_2008}, DFLS~\cite{Zhang_Conn_Scheinberg_2010},
 \mbox{DFO-TR}~\cite{Bandeira_Scheinberg_Vicente_2012},
 and \mbox{DFO-LS}~\cite{Cartis_Etal_2019},
 but there are also successful cases exploiting~\glspl{rbf},
 such as \orbit~\cite{Wild_Regis_Shoemaker_2008},
 \conorbit~\cite{Regis_Wild_2017}, and \boosters~\cite{Oeuvray_Bierlaire_2009}. Model-based
-\gls{dfo} is one of the motivations for studying trust-region or line search methods with
+\gls{dfo} is one of the motivations for studying trust-region and line search methods with
 randomized models, for which we refer
 to~\cite{Bandeira_Scheinberg_Vicente_2014,Gratton_Etal_2018,Cartis_Scheinberg_2018} as examples.
 
-Hybrids between direct search and model-based approaches exist, for example~\cite{Custodio_Vicente_2007}, \cite[Algorithm~4.7]{Kelley_2011}, and~\cite{Conn_Digabel_2013}. For more extensive discussions on \gls{dfo} methods and theory, see the monographs~\cite{Conn_Scheinberg_Vicente_2009b,Audet_Hare_2017}, the survey papers~\cite{Rios_Sahinidis_2013, Custodio_Scheinberg_Vicente_2017, Larson_Menickelly_Wild_2019}, and the references therein.
+Hybrids between direct search and model-based approaches exist, for
+example~\cite{Custodio_Vicente_2007}, \cite[Algorithm~4.7]{Kelley_2011},
+and~\cite{Conn_Digabel_2013}. Theory of global convergence and convergence rate has been established
+for both direct search and model-based
+methods~\cite{Torczon_1997,Conn_Scheinberg_Toint_1997a,Kolda_Lewis_Torczon_2003,Conn_Scheinberg_Vicente_2009a,
+Powell_2012,Vicente_2013,Dodangeh_Vicente_2016,Garmanjani_Judice_Vicente_2016,Gratton_Royer_Vicente_2020}.
+It is worth noting that the performance of
+\gls{dfo} algorithms are measured in general by the number of function evaluations needed for solving
+a given problem, because the objective and constraint functions in \gls{dfo} problems are commonly
+expensive to evaluate. Therefore, the worst-case complexity in terms of function evaluations is a major
+theoretical aspect of~\gls{dfo} algorithms. Examples of such complexity analysis can be found
+in~\cite{Vicente_2013,Gratton_Etal_2015,Dodangeh_Vicente_2016,Dodangeh_Vicente_Zhang_2016}.
+For more extensive discussions on \gls{dfo} methods and theory, see the
+monographs~\cite{Conn_Scheinberg_Vicente_2009b,Audet_Hare_2017}, the survey
+papers~\cite{Rios_Sahinidis_2013, Custodio_Scheinberg_Vicente_2017, Larson_Menickelly_Wild_2019},
+and the references therein.
 
 \section{Powell's derivative-free methods}
 \label{sec:powell}
 
-Powell published hist first \gls{dfo} algorithm based on conjugate directions in
-1964~\cite{Powell_1964}.\footnote{According to Google Scholar, this is Powell's second published
+Powell published his first \gls{dfo} algorithm based on conjugate directions in
+1964~\cite{Powell_1964}.\footnote{\,According to Google Scholar, this is Powell's second published
 paper and also the second most cited work. The earliest and meanwhile most cited one is his paper on
-the DFP method~\cite{Fletcher_Powell_1963}, co-authored with Flethcer and published in 1963.} His
+the DFP method~\cite{Fletcher_Powell_1963}, co-authored with Fletcher and published in 1963.} His
 code for this algorithm is contained in the HSL Mathematical Software Library~\cite{HSL} as
 subroutine \texttt{VA24}. It is not included in \gls{pdfo} because the code is not in the public
 domain, although open-source implementations are available~(see~\cite[footnote~4]{Conn_Scheinberg_Toint_1997b}).
 
-From the 1990s to the final days of his career, Powell developed five \gls{dfo} trust-region
-algorithms, namely \gls{cobyla}~\cite{Powell_1994}, \gls{uobyqa}~\cite{Powell_2002},
-\gls{newuoa}~\cite{Powell_2006}, \gls{bobyqa}~\cite{Powell_2009},
-and~\gls{lincoa}~\cite{Powell_2015}. In addition, Powell coded these algorithms into \fortran~solvers and made them publicly available. We provide a brief overview on these algorithms in the sequel.
+From the 1990s to the final days of his career, Powell developed five model-based \gls{dfo} algorithms to
+solve~\eqref{eq:nlc}, namely
+\gls{cobyla}~\cite{Powell_1994}~(for nonlinearly constrained problems),
+\gls{uobyqa}~\cite{Powell_2002}~(for unconstrained problems),
+\gls{newuoa}~\cite{Powell_2006}~(for unconstrained problems),
+\gls{bobyqa}~\cite{Powell_2009}~(for bound constrained problems),
+and~\gls{lincoa} (for linearly constrained problems).
+In addition, Powell implemented these algorithms into \fortran~solvers and made
+the code publicly available. The solvers constitute the cornerstone of~\gls{pdfo}.
+In the sequel, we provide a brief overview on these five algorithms.
 
-Powell's \gls{dfo} trust-region algorithms uses linear or quadratic interpolation models.
-At iteration~$k$, the algorithms determine a finite set~$\itpls \subseteq \R^n$ of interpolation
-points lying in a region around the iterate~$\iter$,
-construct a model~$\objmdl$ satisfying the interpolation conditions
+Powell's model-based \gls{dfo} algorithms are trust-region methods with linear or quadratic interpolation models.
+At iteration~$k$, the algorithms maintain a finite set~$\itpls \subseteq \R^n$ of interpolation points,
+and construct a model~$\objmdl$ satisfying the interpolation conditions
 \begin{equation}
     \label{eq:itpls}
-    \objmdl(y) = \obj(y), \quad y \in \itpls,
+    \objmdl(y) = \obj(y), \quad y \in \itpls.
 \end{equation}
-and obtain a trial point by solving approximately
+The trust region center~$\iter$ is a point chosen from~$\itpls$ according to the value of a merit
+function or the objective function. A trial point~$\iter^{\trial}$ is then obtained by solving approximately
 \begin{subequations}
     \label{eq:trsp}
     \begin{align}
@@ -361,8 +383,24 @@ and obtain a trial point by solving approximately
         \text{s.t.}             & \quad \norm{x - \iter} \le \trg, \label{eq:trsp-tr}
     \end{align}
 \end{subequations}
-where~$\iter$ is the current iterate, $\objmdl$ stands for a model of the objective function~$\obj$,~$\trg$ denotes the trust-region radius,~$\norm{\cdot}$ is a norm in~$\R^n$, and~$\srchsp$ is replaced by a local approximation~$\srchspmdl \subseteq \R^n$, which can be~$\srchsp$ itself.
-The trial point is then accepted if it satisfies some sufficient decrease condition.
+where~$\trg$ is the trust-region radius,~$\norm{\cdot}$ is the~$2$-norm in~$\R^n$,
+and the feasible region~$\srchsp$ is modeled locally by a set~$\srchspmdl \subseteq \R^n$,
+which can be~$\srchsp$ itself.
+%A crucial aspect of methods using interpolation models is the strategy they employ to update the interpolation set.
+The strategy to update~$\itpls$ is crucial.
+It should recycle points from previous iterations, at which the objective function has already been
+evaluated; meanwhile, it needs to maintain the well
+poisedness~\cite{Sauer_Xu_1995,Conn_Scheinberg_Vicente_2009b} of
+the interpolation set in order to guarantee the accuracy of the interpolants.
+After the
+\[
+    \itpls[k+1] = \itpls \cup \{\iter^{\trial}\} \setminus\{y_k^{\trial}\}
+\]
+\[
+    \itpls[k+1] = \itpls \setminus\{y_k^{\geo}\} \cup \{\iter^{\geo}\}
+\]
+and ensure the convergence of the optimization algorithm~\cite{Conn_Scheinberg_Vicente_2008a,Conn_Scheinberg_Vicente_2008b, Fasano_Morales_Nocedal_2009,Scheinberg_Toint_2010}.
+%interpolation set~$\itpls$ is updated by including the trial point or
 
 
 \subsection{\glsfmtshort{cobyla}}
@@ -431,7 +469,8 @@ If the number of interpolation points was less than or equal to~$n + 1$, the mod
 As we mentioned earlier, the choice of the variational problem~\eqref{eq:varmod} is fostered by the fact that it occurs in the quasi-Newton update for unconstrained optimization when the first derivative of the objective function is available~\cite[\S 3.6]{Fletcher_1987}.
 As in the fully-determined case, the geometry of the interpolation set plays a crucial role, as it influences the accuracy of the quadratic models, and the geometry-improvement steps~\eqref{eq:biglag} should be also entertained.
 
-The last three \gls{dfo} solvers of Powell are \gls{newuoa}~\cite{Powell_2006, Powell_2008}, \gls{bobyqa}~\cite{Powell_2009}, and~\gls{lincoa}~\cite{Powell_2015}.
+The last three \gls{dfo} solvers of Powell are \gls{newuoa}~\cite{Powell_2006, Powell_2008},
+\gls{bobyqa}~\cite{Powell_2009}, and~\gls{lincoa}.
 \Gls{bobyqa} and \gls{lincoa} are named respectively after \enquote{\glsxtrlong{bobyqa}} and \enquote{\glsxtrlong{lincoa}}, but the meaning of the acronym \gls{newuoa} is not known (even though most people agree on \enquote{\glsxtrlong{newuoa}}).
 Powell never published a paper introducing \gls{lincoa}, and~\cite{Powell_2015} discusses only the resolution of its trust-region subproblem.
 As their names suggest, they aim at solving unconstrained, bound-constrained and linearly-constrained problems respectively, using quadratic models of the objective function of the form~\eqref{eq:polm}.
