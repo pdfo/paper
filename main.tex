@@ -13,10 +13,25 @@
 %
 % The Current Maintainer of this work is Tom M. Ragonneau.
 \documentclass[11pt,draft]{article}
+%\documentclass[11pt]{article}
 \usepackage[T1]{fontenc}
 \usepackage[american]{babel}
 \usepackage[a4paper]{geometry}
+
+% Fine tuning
 \usepackage[final]{microtype}
+\usepackage[nobottomtitles*]{titlesec} % No section title at the bottom of pages
+% Prevent footnote from running to the next page
+\interfootnotelinepenalty=10000
+% No line break in inline math
+\interdisplaylinepenalty=10000
+\relpenalty=10000
+\binoppenalty=10000
+% No widow or orphan lines
+\clubpenalty=10000
+\widowpenalty=10000
+\displaywidowpenalty=10000
+
 \usepackage{csquotes}
 \usepackage{lmodern}
 \usepackage{booktabs}
@@ -42,7 +57,7 @@
 \usepackage{graphicx}
 \usepackage[tableposition=top]{caption}
 \usepackage{subcaption}
-\graphicspath{{images/}}
+\graphicspath{{figures/}}
 
 % Bibliography information processing
 \usepackage[
@@ -111,7 +126,15 @@
 \newcommand\grad[1][k]{g_{#1}}
 \newcommand\hess[1][k]{B_{#1}}
 \newcommand\trial{{\text{t}}}
+\newcommand\tst{{\text{t}}}
 \newcommand\geo{{\text{g}}}
+\newcommand\drop{{\text{d}}}
+\newcommand\base{{\text{b}}}
+\newcommand\func{\mathcal{F}}
+\newcommand\qspace{\mathcal{Q}}
+\newcommand\st{\textnormal{s.t.}}
+\newcommand\fro{\mathsf{F}}
+\newcommand\red[1]{\textcolor{red}{#1}}
 
 % Automatic references
 \usepackage[noabbrev]{cleveref}
@@ -345,7 +368,7 @@ monographs~\cite{Conn_Scheinberg_Vicente_2009b,Audet_Hare_2017}, the survey
 papers~\cite{Rios_Sahinidis_2013, Custodio_Scheinberg_Vicente_2017, Larson_Menickelly_Wild_2019},
 and the references therein.
 
-\section{Powell's derivative-free methods}
+\section{Powell's derivative-free algorithms}
 \label{sec:powell}
 
 Powell published his first \gls{dfo} algorithm based on conjugate directions in
@@ -364,70 +387,212 @@ solve~\eqref{eq:nlc}, namely
 \gls{bobyqa}~\cite{Powell_2009}~(for bound constrained problems),
 and~\gls{lincoa} (for linearly constrained problems).
 In addition, Powell implemented these algorithms into \fortran~solvers and made
-the code publicly available. The solvers constitute the cornerstone of~\gls{pdfo}.
-In the sequel, we provide a brief overview on these five algorithms.
+the code publicly available. The solvers constitute the cornerstones of~\gls{pdfo}.
+In the sequel, we provide a brief overview on these five algorithms, starting with a sketch in
+Subsection~\ref{ssec:sketch} and then presenting more details in the subsections after.
 
-Powell's model-based \gls{dfo} algorithms are trust-region methods with linear or quadratic interpolation models.
-At iteration~$k$, the algorithms maintain a finite set~$\itpls \subseteq \R^n$ of interpolation points,
-and construct a model~$\objmdl$ satisfying the interpolation conditions
+\subsection{A sketch of the algorithms}
+\label{ssec:sketch}
+
+Powell's model-based \gls{dfo} algorithms are trust-region methods.
+%, and the trust-region models are obtained by linear or quadratic interpolation.
+At iteration~$k$, the algorithms construct a linear of quadratic trust-region model~$\objmdl$ for
+the objective function~$f$ to meet the interpolation condition
 \begin{equation}
     \label{eq:itpls}
-    \objmdl(y) = \obj(y), \quad y \in \itpls.
+    \objmdl(y) = \obj(y), \quad y \in \itpls,
 \end{equation}
-The trust region center~$\iter$ is a point chosen from~$\itpls$ according to the value of a merit
-function or the objective function. A trial point~$\iter^{\trial}$ is then obtained by solving approximately
-\begin{subequations}
+where~$\itpls \subseteq \R^n$ is a finite interpolation set  updated along the iterations.
+\gls{cobyla} models the constraints by interpolants on~$\itpls$ as well.
+Instead of repeating Powell's description of these algorithms,
+we provide a sketch of them in the sequel, emphasizing the trust-region subproblem, the
+interpolation problem, and the interpolation~set.%
+
+
+\subsubsection{The trust-region subproblem}
+In all the five algorithms, iteration~$k$ places the trust-region center~$\iter$ at
+the ``best'' point where the objective function and constraints have been evaluated
+so far. Such a point is selected according to the objective function or a merit
+function that takes the constraints into account.
+After choosing the trust-region center~$x_k$, with the trust-region model~$f_k$ constructed
+according to~\eqref{eq:itpls}, a trial point is then obtained by solving approximately
+the trust-region subproblem
+%\begin{subequations}
+%    \label{eq:trsp}
+%    \begin{align}
+\begin{equation}
     \label{eq:trsp}
-    \begin{align}
+    \begin{split}
         \min_{x \in \srchspmdl} & \quad \objmdl(x)\\
-        \text{s.t.}             & \quad \norm{x - \iter} \le \trg, \label{eq:trsp-tr}
-    \end{align}
-\end{subequations}
-where~$\trg$ is the trust-region radius,~$\norm{\cdot}$ is the~$2$-norm in~$\R^n$,
-and the feasible region~$\srchsp$ is modeled locally by a set~$\srchspmdl \subseteq \R^n$,
-which can be~$\srchsp$ itself.
+        \st             & \quad \norm{x - \iter} \le \trg, %\label{eq:trsp-tr}
+    \end{split}
+\end{equation}
+%    \end{align}
+%\end{subequations}
+where~$\trg$ is the trust-region radius, and~$\norm{\cdot}$ is the~$2$-norm in~$\R^n$.
+In this subproblem, the set~$\srchspmdl \subseteq \R^n$ is a local approximation for the feasible
+region~$\srchsp$. \gls{cobyla} defines~$\srchspmdl$ by linear interpolants of the constraint
+functions over the set~$\itpls$, whereas the other four algorithms take~$\srchspmdl = \srchsp$.
+The trust-region subproblem solvers for~\eqref{eq:trsp} will be introduced in Subsections~\ref{}--\ref{eq:}.
+
+
+\subsubsection{The interpolation problem}
+The interpolation condition~\eqref{eq:itpls}  is essentially a linear system with respect to the
+coefficients of the model.
+Given a base point~$y^{\base}\in \R^n$, which may depend on~$k$, a linear model~$f_k$ takes the form
+of~$f_k(x) = f(y^{\base}) + (x-y^{\base})^\top \nabla f_k(y^{\base})$,
+and hence~\eqref{eq:itpls} is equivalent to
+\begin{equation}
+    \label{eq:litpls}
+    f_k(y^{\base}) + (y -y^{\base})^\top \nabla f_k(y^{\base})  = f(y),  \quad y \in \itpls,
+\end{equation}
+which is a linear system with~$f(y^\base) \in \R$ and~$\nabla f(y^\base) \in \R^n$ being the
+unknowns, the degrees of freedom being~$n+1$. \gls{cobyla} builds linear models by the
+system~\eqref{eq:litpls}.
+
+Similarly, if~$f_k$ is a quadratic model, then~\eqref{eq:itpls} is equivalent to
+\begin{equation}
+    \label{eq:qitpls}
+    f_k(y^{\base}) + (y -y^{\base})^\top \nabla f_k(y^{\base})
+    + \frac{1}{2}(y-y^{\base})^\top  \nabla^2 f_k(y^{\base}) (y-y^{\base}) = f(y),  \quad y \in \itpls,
+\end{equation}
+a linear system with unknowns~$f_k(y^\base) \in \R$, $\nabla f_k(y^\base) \in \R^n$, and~$\nabla^2
+f_k(y^{\base})\in\R^{n\times n}$, the degrees of freedom being~$(n+2)(n+1)/2$
+due to the symmetry of~$\nabla^2 f(y^\base)$. \gls{uobyqa} constructs quadratic models by the
+system~\eqref{eq:qitpls}.
+
+To decide a quadratic model~$f_k$ completely by the linear system~\eqref{eq:qitpls} alone, it
+is necessary that~$\itpls$ contains~$(n+2)(n+1)/2$ points, and~$f$ should have been evaluated at all
+these points before this linear system can be formed. Even though most of these points will be
+reused at the subsequent iterations so that the number of function evaluations needed per iteration
+is tiny (see Subsection~\ref{ssec:iptset}), we must perform~$(n+2)(n+1)/2$ function evaluations
+during the very first iteration. This is impractical unless~$n$ is small, which motivates the use of
+underdetermined quadratic interpolation models. Such models are established according to the
+interpolation condition~\eqref{eq:itpls} with~$|\itpls|$ less than~$(n+2)(n+1)/2$, the
+remaining degrees of freedom being taken up by minimizing a certain functional to promote the regularity
+of the quadratic model. More specifically, this means to establish~$f_k$ by solving
+\begin{equation}
+    \label{eq:undqitp}
+    \begin{split}
+    \min_{Q \in \qspace}\; & \func_k(Q) \\
+    \st \; & Q(y) = f(y), \quad y \in \itpls,
+    \end{split}
+\end{equation}
+where~$\qspace$ is the space of polynomials on~$\R^n$ with the degree being~$2$ or lower,
+and~$\func_k$ is the aforementioned functional. \gls{newuoa}, \gls{bobyqa}, and
+\gls{lincoa} construct quadratic models in this way with
+\begin{equation}
+    \label{eq:leastchange}
+    \func_k(Q) \;=\; \|\nabla^2 Q - \nabla^2 f_{k-1}\|_\fro^2,
+\end{equation}
+which is inspired by the least-change properties of quasi-Newton
+updates~\cite{Dennis_Schnabel_1979}, although other functionals are
+possible~(see~\cite{Conn_Toint_1996,Bandeira_Scheinberg_Vicente_2012,Powell_2013,Zhang_2014} for example).
+Powell~\cite{Powell_2013} referred to his approach as the symmetric Broyden update of
+quadratic models. It can be regarded as a derivative-free version of the
+PSB (Powell's Symmetric Broyden) quasi-Newton update~\cite{Powell_1970b}, which minimizes the
+functional~$\func_k$ among all the quadratic polynomials that fulfill~$Q(x_k) = f(x_k)$, $\nabla Q(x_k)
+= \nabla f(x_k)$, and~$\nabla Q(x_{k-1}) = f(x_{k-1})$ (see~\cite[Theorem~4.2]{Dennis_Schnabel_1979}),
+with~$x_{k}$ and~$x_{k-1}$ being the current and the previous iterate respectively.
+The interpolation problem~\eqref{eq:undqitp}--\eqref{eq:leastchange} is
+a convex quadratic programming problem with respect to the coefficients of the quadratic model.
+
+Powell's algorithms do not solve the interpolation problems~\eqref{eq:litpls},
+\eqref{eq:qitpls}, and~\eqref{eq:undqitp} from scratch. Instead, \gls{cobyla} maintains the inverse
+of the coefficient matrix for the linear system~\eqref{eq:litpls} and updates it along the iterations,
+\gls{uobyqa} does the same for the linear system~\eqref{eq:qitpls}, while~\gls{newuoa},
+\gls{bobyqa}, and~\gls{lincoa} maintain and update the inverse of the KKT matrix
+for the problem~\eqref{eq:undqitp}--\eqref{eq:leastchange}~\cite{Powell_2004b}. Since each iteration of the algorithms alters the
+interpolation set by only one point~(see Subsection~\ref{ssec:iptset}), the matrices to be inverted
+are modified by low rank updates, and hence their inverses can be updated according to the
+Sherman-Morrison-Woodbury formula.
+With these inverse matrices, the corresponding interpolation problem can be solved easily.
+Indeed, the inverse matrices provide the coefficients of the Lagrange functions for the
+corresponding interpolation problems~\cite{Powell_2001,Powell_2004a}.
+
+The choice of the base point~$y^{\base}$ is also worth mentioning.
+\gls{cobyla} sets~$y^{\base}$ to the center~$x_k$ of the current trust region.
+In contrast, the other four algorithms initiate~$y^{\base}$ to the starting point provided by the
+user and keep it unchanged except for occasionally
+updating~$y^{\base}$ to~$\iter$, without which the distance~$\|y^{\base}-\iter\|$ may become unfavorably
+large for the numerical solution of the interpolation problem (see~\cite[Section~5]{Powell_2004a} for more
+elaboration).
+
+\subsubsection{The interpolation set}
+\label{ssec:iptset}
 %A crucial aspect of methods using interpolation models is the strategy they employ to update the interpolation set.
 The strategy to update~$\itpls$ is crucial.
 It should recycle points from previous iterations, at which the objective function has already been
 evaluated; meanwhile, it needs to maintain the well
 poisedness~\cite{Sauer_Xu_1995,Conn_Scheinberg_Vicente_2009b} of
-the interpolation set in order to guarantee the accuracy of the interpolants.
-After the
+the interpolation set in order to guarantee the well conditioning of the interpolation problem.
+\red{After the}
 \[
-    \itpls[k+1] = \itpls \cup \{\iter^{\trial}\} \setminus\{y_k^{\trial}\}
+    \itpls[k+1] = \itpls \cup \{\iter^{\tst}\} \setminus\{y_k^{\drop}\}
 \]
 \[
-    \itpls[k+1] = \itpls \setminus\{y_k^{\geo}\} \cup \{\iter^{\geo}\}
+    \itpls[k+1] = \itpls \setminus\{y_k^{\drop}\} \cup \{\iter^{\geo}\}
 \]
 and ensure the convergence of the optimization algorithm~\cite{Conn_Scheinberg_Vicente_2008a,Conn_Scheinberg_Vicente_2008b, Fasano_Morales_Nocedal_2009,Scheinberg_Toint_2010}.
 %interpolation set~$\itpls$ is updated by including the trial point or
+$\itpls$ always contains the trust-region center~$\iter$.
+
+{Geometry steps}
+
+We focus however our attention on polynomial models of the form
+\begin{equation}
+    \label{eq:polm}
+    \objmdl(x) \defeq \grad^{\sft} (x - \iter) + (x - \iter)^{\sft} \hess (x - \iter),
+\end{equation}
+with~$\grad \in \R^n$ and~$\hess \in \R^{n \times n}$ being symmetric and may be zero for linear models, diagonal or general depending on the considered method.
+Such models admit respectively~$n + 1$,~$2n + 1$ and~$(n + 1)(n + 2) / 2$ coefficients, determined so that they satisfy the interpolation conditions~\eqref{eq:itpls}.
+Whenever the models are defined by underdetermined interpolations, the freedom bequeathed by the interpolation conditions is usually taken up by a variational problem whose constraints are the conditions~\eqref{eq:itpls}.
+Examples of such variational problems are the minimization of the Hessian of the models in Frobenius norm~\cite{Conn_Scheinberg_Toint_1998, Wild_2008}, or the minimization of a term involving~$\grad$ and~$\hess$ in~\eqref{eq:polm}~\cite{Conn_Toint_1996}.
+Powell employed another example of such variational problem, namely the symmetric Broyden formula~\cite{Powell_1970b, Powell_2004a}, which will be studied later in this paper in Section~\ref{sec:powell}.
 
 
 \subsection{\glsfmtshort{cobyla}}
 
-At the dawn of the modern \gls{dfo}, Powell introduced in \citedate{Powell_1994} his solver \gls{cobyla}~\cite{Powell_1994}, named after \enquote{\glsxtrlong{cobyla}}.
-It attempts to solve the optimization problem~\eqref{eq:nlc} when the feasible region~$\srchsp$ is general and expressed as
+%At the dawn of the modern \gls{dfo},
+Powell released the \gls{cobyla} solver in May 1992 and published the \gls{cobyla}
+paper\cite{Powell_1994} in~\citedate{Powell_1994}. The solver is named after \enquote{\glsxtrlong{cobyla}}.
+It aims to solve the optimization problem~\eqref{eq:nlc} with the feasible region~$\srchsp$
+being
 \[
     \srchsp \defeq \set{x \in \R^n \colon \cgen(x) \ge 0,\; i=1,...,m},
 \]
-where~$\cgen \colon \R^n \to \R$ denotes the~$i$th nonlinear constraint function, with~$i \in \set{1, 2, \dots, m}$.
-At each iteration, it approximates the objective and constraint functions with linear models obtained by fully-determined interpolations on~$\itpls$, whose cardinal is fixed to~$n + 1$.
-In this context, the poisedness~\cite[\S 1]{Sauer_Xu_1995} of the interpolation set, i.e., the geometrical condition on~$\itpls$ required to ensure the uniqueness of the models, can be seen as the volume of the~$n$-simplex engendered by~$\itpls$ to be nonzero.
-Once the linear models~$\cgenmdl$ of the constraint functions~$\cgen$ for~$i \in \set{1, 2, \dots, m}$ are built, an approximation~$\srchspmdl$ of~$\srchsp$ is obtained as the intersection of the half-spaces generated by the linear approximations of the constraint functions, that is
+where~$\cgen \colon \R^n \to \R$ denotes the~$i$th constraint function ($i \in \set{1, 2, \dots, m}$).
+The same as the objective function, all the constraints are assumed to be accessible only through function values.
+
+At iteration~$k$, \gls{cobyla} models the objective and the constraint functions with {linear}
+interpolants on the interpolation set~$\itpls$, which consists of~$n+1$ points that are updated
+along the iterations.
+In this context, the interpolation set~$\itpls$ is \red{poised} if an only if
+the volume of the~$n$-simplex engendered by~$\itpls$ to be nonzero.
+
+Once the linear models~$\cgenmdl$ of the constraint functions~$\cgen$ for~$i \in \set{1, 2, \dots, m}$
+are built, the approximation~$\srchspmdl$ of~$\srchsp$ is set to
 \begin{equation}
     \label{eq:cobylarg}
-    \srchspmdl \defeq \set{x \in \R^n \colon \cgenmdl(x) \ge 0,\; i=1,...,m},
+    \srchspmdl \defeq \set{x \in \R^n \colon \cgenmdl(x) \ge 0,\; i=1,...,m}.
 \end{equation}
-and the trust-region subproblem~\eqref{eq:trsp} is then solved.
-As a linear programming problem, the trust-region subproblem is solved in the following way.
-Solving sequentially the problems~\eqref{eq:trsp} by replacing the trust-region radius~$\trg$ by a constant continuously evolving from~$0$ to~$\trg$ would generate a continuous piecewise linear path from~$\iter$ to the solution of the subproblem.
+The trust-region subproblem~\eqref{eq:trsp} is then handled in the following way.
+Solving sequentially the problems~\eqref{eq:trsp} by replacing the trust-region radius~$\trg$ with
+a constant continuously increasing from zero to~$\trg$ will generate a piecewise linear
+path from~$\iter$ to the solution of the subproblem.
 The strategy of COBYLA is to compute this path, by updating the active sets of the constraint models.
-However, the trust-region condition~\eqref{eq:trsp-tr} and the region~\eqref{eq:cobylarg} may contradict each others, in which case the trial point is chosen to solve approximately
+However, the trust-region constraint~$\|x-x_k\|\le \trg$
+and the region~\eqref{eq:cobylarg} may contradict each others, in which case the trial point is
+chosen to solve approximately
 \begin{align*}
-    \max_{x \in \R^n}   & \quad \min_{i = 1, 2, \dots, m} \cgenmdl(x)\\
-    \text{s.t.}         & \quad \norm{x - \iter} \le \trg.
+    \min_{x \in \R^n}   & \quad \max_{1\le i \le m} [\cgenmdl(x)]_{-}\\
+    \st         & \quad \norm{x - \iter} \le \trg,
 \end{align*}
-In doing so, the method attempts to reduce some violation of the constraint models while ensuring that the trial point lies in the trust region, as it is needed by most global convergence properties.
+where~$[t]_{-}= \max\{0,\,-t\}$ for any~$t\in \R$.
+In doing so, the method attempts to reduce the~$\ell_\infty$-violation of the constraint models while ensuring
+that the trial point lies in the trust region.
+\todo{Verify this paragraph.}
+
 
 
 \subsection{\glsfmtshort{uobyqa}}
@@ -444,7 +609,7 @@ It states that given a point~$\bar{y} \in \itpls$ to remove from the interpolati
     \label{eq:biglag}
     \begin{aligned}
         \max_{x \in \R^n}   & \quad \abs{\ell_{\bar{y}}(x)}\\
-        \text{s.t.}         & \quad \norm{x - \iter} \le \trg,
+        \st         & \quad \norm{x - \iter} \le \trg,
     \end{aligned}
 \end{equation}
 where~$\ell_{\bar{y}} \colon \R^n \to \R$ denotes the Lagrange function associated with~$\bar{y}$, defined by~$\ell_{\bar{y}}(y) = \delta_{\bar{y}, y}$ for each~$y \in \itpls$, where~$\delta_{\bar{y}, y}$ is the Kronecker delta.
@@ -460,8 +625,9 @@ Given the set~$\itpls$, containing typically~$\mathcal{O}(n)$ points (the defaul
 \begin{equation}
     \label{eq:varmod}
     \begin{aligned}
-        \objmdl \defeq \argmin_{Q \in \mathcal{P}_{n, 2}}    & \quad \norm{\nabla^2 Q - \nabla^2 \objmdl[k - 1]}_{\mathsf{F}}\\
-        \text{s.t.}                                 & \quad Q(y) = \obj(y), \quad y \in \itpls,
+        \objmdl \defeq \argmin_{Q \in \mathcal{P}_{n, 2}}    & \quad \norm{\nabla^2 Q - \nabla^2
+        \objmdl[k - 1]}_{\fro}\\
+        \st                                 & \quad Q(y) = \obj(y), \quad y \in \itpls,
     \end{aligned}
 \end{equation}
 where~$\mathcal{P}_{n, d}$ is the space of~$n$-variate polynomials of degree at most~$d$ and~$\nabla^2 \objmdl[-1]$ is set to be zero.
@@ -485,19 +651,6 @@ When it comes to solving the trust-region subproblems~\eqref{eq:trsp}, \gls{newu
 However, the trust-region subproblem solver of \gls{bobyqa} always respects the bounds, while the solver of \gls{lincoa} may visit point lying outside of the polyhedron of the constraints, and may even return points that are slightly infeasible.
 
 
-\subsection{Geometry steps}
-
-We focus however our attention on polynomial models of the form
-\begin{equation}
-    \label{eq:polm}
-    \objmdl(x) \defeq \grad^{\sft} (x - \iter) + (x - \iter)^{\sft} \hess (x - \iter),
-\end{equation}
-with~$\grad \in \R^n$ and~$\hess \in \R^{n \times n}$ being symmetric and may be zero for linear models, diagonal or general depending on the considered method.
-Such models admit respectively~$n + 1$,~$2n + 1$ and~$(n + 1)(n + 2) / 2$ coefficients, determined so that they satisfy the interpolation conditions~\eqref{eq:itpls}.
-Whenever the models are defined by underdetermined interpolations, the freedom bequeathed by the interpolation conditions is usually taken up by a variational problem whose constraints are the conditions~\eqref{eq:itpls}.
-Examples of such variational problems are the minimization of the Hessian of the models in Frobenius norm~\cite{Conn_Scheinberg_Toint_1998, Wild_2008}, or the minimization of a term involving~$\grad$ and~$\hess$ in~\eqref{eq:polm}~\cite{Conn_Toint_1996}.
-Powell employed another example of such variational problem, namely the symmetric Broyden formula~\cite{Powell_1970b, Powell_2004a}, which will be studied later in this paper in Section~\ref{sec:powell}.
-
 \section{An interface for the Powell's derivative-free solvers}
 \label{sec:pdfo}
 
@@ -516,7 +669,7 @@ It takes for input an optimization problem of the form
     \label{eq:pdfo}
     \begin{align}
         \min_{x \in \R^n}   & \quad \obj(x)\\
-        \text{s.t.}         & \quad \bl \le x \le \bu, \label{eq:pdfo-b}\\
+        \st        & \quad \bl \le x \le \bu, \label{eq:pdfo-b}\\
         & \quad \aub x \le \bub, \quad \aeq x = \beq, \label{eq:pdfo-l}\\
         & \quad \cub(x) \le 0, \quad \ceq(x) = 0, \label{eq:pdfo-nl}
     \end{align}
@@ -595,14 +748,16 @@ We can observe an expected behavior; \gls{uobyqa} performs better on small probl
 \begin{figure}[ht]
     \begin{subfigure}{.48\textwidth}
         \centering
-        \includegraphics[width=\textwidth]{pp10.pdf}
-        \caption{Dimension at most~$10$.}
+        %\insertprofiles{{"newuoa","bobyqa","lincoa","cobyla","uobyqa"}}{figures/perf-plain-10.csv}{4}
+        \includegraphics[width=\textwidth]{perf-plain-10.pdf}
+    \caption{Performance profile on unconstrained problems of dimension at most~$10$ with a precision~$\tau = 10^{-4}$}
+        %\caption{Dimension at most~$10$.}
         \label{fig:ppu-10}
     \end{subfigure}
     \hfill
     \begin{subfigure}{.48\textwidth}
         \centering
-        \includegraphics[width=\textwidth]{pp50.pdf}
+        \includegraphics[width=\textwidth]{perf-plain-50.pdf}
         \caption{Dimension at most~$10$.}
         \label{fig:ppu-50}
     \end{subfigure}
@@ -622,7 +777,7 @@ In doing so, one should expect a decrease of the proportion of problems solved w
 
 \begin{figure}[ht]
     \centering
-    \includegraphics[width=.48\textwidth]{pp50-noisy.pdf}
+    \includegraphics[width=.48\textwidth]{perf-noisy-50.pdf}
     \caption{Performance profile on noised variations of unconstrained problems of dimension at most~$50$ with a precision~$\tau = 10^{-1}$.}
     \label{fig:ppun-50}
 \end{figure}
