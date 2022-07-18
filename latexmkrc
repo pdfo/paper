@@ -23,3 +23,17 @@ push @generated_exts, "xdv";
 
 # Remove extra extensions on clean
 $clean_ext = "bbl run.xml";
+
+# Build dependencies for the glossaries-extra package
+# add_cus_dep("acn", "acr", 0, "makeglo2gls");
+# add_cus_dep("glo", "gls", 0, "makeglo2gls");
+# sub makeglo2gls {
+#     if ($silent) {
+#         system("makeglossaries -q $_[0]");
+#     }
+#     else {
+#         system("makeglossaries $_[0]");
+#     };
+# }
+# push @generated_exts, "acn", "acr", "alg";
+# push @generated_exts, "glg", "glo", "gls";
