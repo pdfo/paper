@@ -20,7 +20,6 @@
 \usepackage{csquotes}
 \usepackage{lmodern}
 \usepackage{booktabs}
-\usepackage{siunitx}
 
 % Fine tuning
 \usepackage[final]{microtype}
@@ -156,6 +155,13 @@
 % make @ behave as per catcode 13 (active). The TeXbook, p. 155.
 \mathcode`@="8000{\catcode`\@=\active\gdef@{\mkern1mu}}
 
+% Set up SI units
+\usepackage{siunitx}
+\sisetup{
+    group-minimum-digits=4,
+    group-separator={,},
+}
+
 % Automatic references
 \usepackage[noabbrev,capitalize]{cleveref}
 \newcommand{\creflastconjunction}{, and\nobreakspace}
@@ -204,7 +210,7 @@
 
 % Spacing between lines
 \RequirePackage[nodisplayskipstretch]{setspace}
-\onehalfspacing
+\setstretch{1.1}
 
 % List of hyphenation exceptions for US English
 % Source: https://ctan.org/tex-archive/info/digests/tugboat/hyphenex
@@ -247,7 +253,7 @@
 \begin{abstract}
     Late Professor M. J. D. Powell designed five derivative-free optimization algorithms, namely \gls{cobyla}, \gls{uobyqa}, \gls{newuoa}, \gls{bobyqa}, and \gls{lincoa}.
     The algorithms were implemented in Fortran 77 and therefore may not be easily accessible to some users.
-    This paper aims to introduce the PDFO (Powell's Derivative-Free Optimization) package, which is developed to provide both Python and MATLAB interfaces to Powell's code.
+    This paper aims to introduce the PDFO (Powell's Derivative-Free Optimization) package, which is developed to provide both Python and MATLAB interfaces to Powell's code, and has been downloaded more than \num{45000} times as of December 2022.
     With PDFO, users can call each of Powell's algorithm directly based on their own choice.
     Alternatively, if the user does not specify any algorithm, the package can also select one automatically based on the problem characteristics.
     When a problem can be solved by multiple algorithms (for example, an unconstrained problem can be solved by all the five algorithms), the selection is made based on experimental results on the CUTEst problems.
@@ -391,7 +397,7 @@ After choosing the trust-region center~$\iter$, with the trust-region model~$\ob
         \st                 & \quad \norm{x - \iter} \le \rad,
     \end{split}
 \end{equation}
-where~$\rad$ is the trust-region radius, and~$\norm{\cdot}$ is the~$2$-norm in~$\R^n$.
+where~$\rad$ is the trust-region radius, and~$\norm{\cdot}$ is the~$\ell_2$-norm in~$\R^n$.
 In this subproblem, the set~$\fsetm \subseteq \R^n$ is a local approximation for the feasible region~$\fset$.
 \Gls{cobyla} defines~$\fsetm$ by linear interpolants of the constraint functions over the set~$\xpt$, whereas the other four algorithms take~$\fsetm = \fset$.
 
@@ -457,15 +463,23 @@ In contrast, the other four algorithms initiate~$y^{\base}$ to the starting poin
 \label{ssec:iptset}
 
 The strategy to update~$\xpt$ is crucial.
-It should recycle points from previous iterations, at which the objective function has already been evaluated; meanwhile, it needs to maintain the well poisedness~\cite{Sauer_Xu_1995,Conn_Scheinberg_Vicente_2009b} of the interpolation set in order to guarantee the well conditioning of the interpolation problem.\todo{There is something missing below}
+It should recycle points from previous iterations, at which the objective function has already been evaluated; meanwhile, it needs to maintain the well poisedness~\cite{Sauer_Xu_1995,Conn_Scheinberg_Vicente_2009b} of the interpolation set in order to guarantee the well conditioning of the interpolation problem, and ensure the convergence of the optimization algorithm~\cite{Conn_Scheinberg_Vicente_2008a,Conn_Scheinberg_Vicente_2008b, Fasano_Morales_Nocedal_2009,Scheinberg_Toint_2010}.
+
+At a normal iteration, a trial point~$\iter^{\tst} \in \R^n$ is computed by solving the trust-region subproblem, and Powell's \gls{dfo} methods update the interpolation as
 \begin{equation*}
-    \xpt[k + 1] = \xpt \cup \set{\iter^{\tst}} \setminus \set{y_k^{\drop}}
+    \xpt[k + 1] = \xpt \cup \set{\iter^{\tst}} \setminus \set{y_k^{\drop}},
 \end{equation*}
-\begin{equation*}
-    \xpt[k + 1] = \xpt \setminus \set{y_k^{\drop}} \cup \set{\iter^{\geo}}
-\end{equation*}
-and ensure the convergence of the optimization algorithm~\cite{Conn_Scheinberg_Vicente_2008a,Conn_Scheinberg_Vicente_2008b, Fasano_Morales_Nocedal_2009,Scheinberg_Toint_2010}.
-$\xpt$ always contains the trust-region center~$\iter$.\todo{Geometry steps}
+where~$y_k^{\drop} \in \xpt$ is chosen to maintain~$\xpt[k + 1]$ well-poised, after evaluating~$\iter^{\tst}$.
+
+Moreover, when the methods detect that~$\objm$ does not represent~$\obj$ accurately enough, they may attempt to improve the geometry of~$\xpt$.
+To do so, they modify one point of~$\xpt$ as follows.
+The methods first select a point~$y_k^{\drop} \in \xpt$ to drop from~$\xpt$, and then set
+\begin{equation}
+    \label{eq:xpt-update-geo}
+    \xpt[k + 1] = \xpt \setminus \set{y_k^{\drop}} \cup \set{\iter^{\geo}},
+\end{equation}
+where~$\iter^{\geo} \in \R^n$ is chosen to improve the geometry of~$\xpt[k + 1]$.
+Note that in both cases, $\xpt$ always contains the trust-region center~$\iter$.
 
 \subsection{\glsfmtshort{cobyla}}
 \label{ssec:cobyla}
@@ -481,7 +495,7 @@ where~$\con : \R^n \to \R$ denotes the~$i$th constraint function, $i \in \set{1,
 The same as the objective function, all the constraints are assumed to be accessible only through function values.
 
 At iteration~$k$, \gls{cobyla} models the objective and the constraint functions with {linear} interpolants on the interpolation set~$\xpt$, which consists of~$n + 1$ points that are updated along the iterations.
-In this context, the interpolation set~$\xpt$ is \alert{poised} if an only if the volume of the~$n$-simplex engendered by~$\xpt$ to be nonzero.
+In this context, the interpolation set~$\xpt$ is poised if an only if the volume of the~$n$-simplex engendered by~$\xpt$ to be nonzero.
 
 Once the linear models~$\conm$ of the constraint functions~$\con$ for~$i \in \set{1, \dots, m}$ are built, the approximation~$\fsetm$ of~$\fset$ is set to
 \begin{equation}
@@ -497,7 +511,11 @@ However, the trust-region constraint~$\norm{x - \iter} \le \rad$ and the region~
     \st                 & \quad \norm{x - \iter} \le \rad,
 \end{align*}
 where~$[t]_{-} = \max \set{0, -t}$ for any~$t\in \R$.
-In doing so, the method attempts to reduce the~$\ell_\infty$-violation of the constraint models while ensuring that the trial point lies in the trust region.\todo{Verify this paragraph.}
+In doing so, the method attempts to reduce the~$\ell_\infty$-violation of the constraint models while ensuring that the trial point lies in the trust region.
+
+As we already mentioned, it is essential to maintain a good geometry of~$\xpt$ to ensure the accuracy of the models.
+When the geometry of~$\xpt$ turns out inadequate for producing accurate models, \gls{cobyla} sets~\cref{eq:xpt-update-geo} with~$\iter^{\geo}$ chosen on the direction perpendicular to the face of~$\xpt$ (regarded as a simplex) that is to the opposite of~$\iter^{\drop}$.
+This replacement tends to increase the volume of the simplex engendered by the interpolation set, and hence, improves the conditioning of the interpolation system~\cref{eq:itpls}.
 
 \subsection{\glsfmtshort{uobyqa}}
 \label{ssec:uobyqa}
@@ -512,8 +530,8 @@ To do so, at each iteration, it models the objective function with a quadratic o
 obtained by fully-determined interpolation on the set~$\xpt$ containing~$N = (n + 1)(n + 2) / 2$ points.
 The set~$\xpt[k + 1]$ differs from~$\xpt$ of at most one point.
 During a classical iteration, a trial point, i.e., an approximate solution of the trust-region subproblem~\cref{eq:trsp} replaces an interpolation of~$\xpt$.
-As we already mentioned, it is essential to maintain some geometrical properties of~$\xpt$ to ensure the existence and the uniqueness of the models from a computational viewpoint.
-Hence, \gls{uobyqa} may undertake geometry-improvement steps whenever the models seem not to be accurate, led a remarkable result pointed out in~\cite{Powell_2001}.
+As mentioned above, it is essential to ensure the existence and the uniqueness of the models from a computational viewpoint.
+Hence, \gls{uobyqa} may undertake geometry-improving steps whenever the models seem not to be accurate, led a result pointed out in~\cite{Powell_2001}.
 It states that given a point~$\bar{y} \in \xpt$ to remove from the interpolation set, its most suitable substitute to build~$\xpt[k + 1]$ solves the subproblem
 \begin{equation}
     \label{eq:biglag}
@@ -523,8 +541,8 @@ It states that given a point~$\bar{y} \in \xpt$ to remove from the interpolation
     \end{aligned}
 \end{equation}
 where~$\ell_{\bar{y}} : \R^n \to \R$ denotes the Lagrange polynomial associated with~$\bar{y}$, defined by~$\ell_{\bar{y}}(y) = \delta_{\bar{y}, y}$ for each~$y \in \xpt$, where~$\delta_{\bar{y}, y}$ is the Kronecker delta.
-Since \gls{uobyqa} requires only a rough solution of the geometry-improvement subproblem~\cref{eq:biglag}, Powell developed an algorithm that requires only~$\mathcal{O}(n^2)$ operations, based on an estimation of~$\abs{\ell_{\bar{y}}(\cdot)}$.
-Once such a point is calculated, the solver continues with a classical trust-region step, and the subproblem~\cref{eq:trsp} is solved with the Mor{\'{e}}-Sorensen algorithm~\cite{More_Sorensen_1983}, as it controls the accuracy of the solution.
+Since \gls{uobyqa} requires only a rough solution of the geometry-improving subproblem~\cref{eq:biglag}, Powell developed an algorithm that requires only~$\mathcal{O}(n^2)$ operations, based on an estimation of~$\abs{\ell_{\bar{y}}(\cdot)}$.
+Once such a point is calculated, the solver continues with a classical trust-region step, and the subproblem~\cref{eq:trsp} is solved with the Mor{\'{e}}-Sorensen algorithm~\cite{More_Sorensen_1983}.
 
 \subsection{\glsfmtshort{newuoa}, \glsfmtshort{bobyqa}, and \glsfmtshort{lincoa}}
 \label{ssec:nbloa}
@@ -542,7 +560,7 @@ Given the set~$\xpt$, containing typically~$\mathcal{O}(n)$ points (the default 
 where~$\mathcal{P}_{n, d}$ is the space of~$n$-variate polynomials of degree at most~$d$ and~$\nabla^2 \objm[-1]$ is set to be zero.
 If the number of interpolation points was less than or equal to~$n + 1$, the models would remain linear, so that Powell requires the number of points in~$\xpt$ to be at least~$n + 2$ and at most~$(n + 1)(n + 2) / 2$.
 As we mentioned earlier, the choice of the variational problem~\cref{eq:varmod} is fostered by the fact that it occurs in the quasi-Newton update for unconstrained optimization when the first derivative of the objective function is available~\cite[\S 3.6]{Fletcher_1987}.
-As in the fully-determined case, the geometry of the interpolation set plays a crucial role, as it influences the accuracy of the quadratic models, and the geometry-improvement steps~\cref{eq:biglag} should be also entertained.
+As in the fully-determined case, the geometry of the interpolation set plays a crucial role, as it influences the accuracy of the quadratic models, and the geometry-improving steps~\cref{eq:biglag} should be also entertained.
 
 The last three \gls{dfo} solvers of Powell are \gls{newuoa}~\cite{Powell_2006, Powell_2008}, \gls{bobyqa}~\cite{Powell_2009}, and \gls{lincoa}.
 \Gls{bobyqa} and \gls{lincoa} are named respectively after \enquote{\glsxtrlong{bobyqa}} and \enquote{\glsxtrlong{lincoa}}, but the meaning of the acronym \gls{newuoa} is not known (even though most people agree on \enquote{\glsxtrlong{newuoa}}).
@@ -551,7 +569,7 @@ As their names suggest, they aim at solving unconstrained, bound-constrained and
 All three use the underdetermined interpolation technique described above to build the quadratic models, so that \gls{newuoa} is more suitable than \gls{uobyqa} for solving problems with a relatively high dimension.
 They all set~$\fsetm$ in the trust-region subproblem~\cref{eq:trsp} to be~$\Omega$, corresponding the whole space for \gls{newuoa}, a box for \gls{bobyqa} and a polyhedron for \gls{lincoa}.
 A subtlety of \gls{bobyqa} is that the constraints are always respected, for each iterate and each point in~$\xpt$.
-Therefore, the geometry-improvement subproblem~\cref{eq:biglag} should be adapted to incorporate the bound constraints, which makes its resolution more difficult.
+Therefore, the geometry-improving subproblem~\cref{eq:biglag} should be adapted to incorporate the bound constraints, which makes its resolution more difficult.
 Moreover, as we already mentioned, at most one point of the interpolation set is altered at each iteration, which leads to an at-most rank-$2$ update of the \gls{kkt} matrix of the variational problem~\cref{eq:varmod}.
 This remark suggests that it can be much more efficient to update such \gls{kkt} matrix instead of computing it from scratch at each iteration.
 Powell derived an updating formula in~\cite{Powell_2004b} that requires only~$\mathcal{O}(N^2)$ operations instead of~$\mathcal{O}(N^3)$ if the computation was made from scratch with no loss of accuracy, where~$N$ denotes the number of interpolation points.
@@ -704,7 +722,7 @@ A description of the datasets employed is provided in \cref{tab:htdata}.
     \caption{Considered LIBSVM datasets description}
     \label{tab:htdata}
     \centering
-    \begin{tabular}{ccS[table-parse-only]S[table-parse-only]}
+    \begin{tabular}{ccS[table-format=2]S[table-format=5]}
         \toprule
         Dataset~$\mathcal{P}$   & Attribute characteristic  & {Dimension~$d$}   & {Dataset size}\\
         \midrule
@@ -748,66 +766,51 @@ The authors are currently working on a new solver for nonlinearly-constrained op
 
 \begin{table}[!ht]
     \caption{Hyperparameter tuning problem on the dataset \enquote{splice}.}
-    % \label{tab:splice}
     \centering
-    \begin{tabular}{cS[table-parse-only]SSS}
+    \begin{tabular}{cS[table-format=3]SSS}
         \toprule
-        Solver                          &
-            {No.\ eval}                 &
-            {AUC Score ($10^{-1}$)}         &
-            {Accuracy ($10^{-1}$)}          &
-            {Execution time (\si{\second})}\\
+        solver      & {No.\ eval}   & {AUC Score ($10^{-1}$)}   & {Accuracy ($10^{-1}$)}    & {Exec.\ time (\si{\second})}\\
         \midrule
-        \gls{pdfo}  & 65    & 9.568 & 9.933 & 3.697\\
-        \gls{rs}    & 100   & 6.409 & 5.300 & 4.635\\
-        \gls{rs}    & 200   & 7.880 & 5.300 & 9.244\\
-        \gls{rs}    & 300   & 7.880 & 5.300 & 13.763\\
-        \gls{tpe}   & 100   & 5.000 & 5.033 & 4.889\\
-        \gls{tpe}   & 300   & 7.736 & 5.300 & 15.726\\
+        \gls{pdfo}  & 65            & 9.568                     & 9.933                     & 3.697\\
+        \gls{rs}    & 100           & 6.409                     & 5.300                     & 4.635\\
+        \gls{rs}    & 200           & 7.880                     & 5.300                     & 9.244\\
+        \gls{rs}    & 300           & 7.880                     & 5.300                     & 13.763\\
+        \gls{tpe}   & 100           & 5.000                     & 5.033                     & 4.889\\
+        \gls{tpe}   & 300           & 7.736                     & 5.300                     & 15.726\\
         \bottomrule
     \end{tabular}
 \end{table}
 
 \begin{table}[!ht]
     \caption{Hyperparameter tuning problem on the dataset \enquote{svmguide1}.}
-    % \label{tab:svmguide1}
     \centering
-    \begin{tabular}{cS[table-parse-only]SSS}
+    \begin{tabular}{cS[table-format=3]SSS}
         \toprule
-        Solver                          &
-            {No.\ eval.}              &
-            {AUC Score ($10^{-1}$)}         &
-            {Accuracy ($10^{-1}$)}          &
-            {Execution time (\si{\second})}\\
+        Solver      & {No.\ eval.}  & {AUC Score ($10^{-1}$)}   & {Accuracy ($10^{-1}$)}    & {Exec.\ time (\si{\second})}\\
         \midrule
-        \gls{pdfo}  & 68    & 9.966 & 9.730 & 4.906\\
-        \gls{rs}    & 100   & 9.966 & 9.676 & 16.178\\
-        \gls{rs}    & 200   & 9.966 & 9.676 & 32.914\\
-        \gls{rs}    & 300   & 9.966 & 9.676 & 48.404\\
-        \gls{tpe}   & 100   & 9.966 & 9.720 & 13.057\\
-        \gls{tpe}   & 300   & 9.966 & 9.720 & 33.392\\
+        \gls{pdfo}  & 68            & 9.966                     & 9.730                     & 4.906\\
+        \gls{rs}    & 100           & 9.966                     & 9.676                     & 16.178\\
+        \gls{rs}    & 200           & 9.966                     & 9.676                     & 32.914\\
+        \gls{rs}    & 300           & 9.966                     & 9.676                     & 48.404\\
+        \gls{tpe}   & 100           & 9.966                     & 9.720                     & 13.057\\
+        \gls{tpe}   & 300           & 9.966                     & 9.720                     & 33.392\\
         \bottomrule
     \end{tabular}
 \end{table}
 
 \begin{table}[!ht]
     \caption{Hyperparameter tuning problem on the dataset \enquote{svmguide3}.}
-    % \label{tab:svmguide3}
     \centering
-    \begin{tabular}{cS[table-parse-only]SSS}
+    \begin{tabular}{cS[table-format=3]SSS}
         \toprule
-        Solver                          &
-            {No.\ eval.}              &
-            {AUC Score ($10^{-1}$)}         &
-            {Accuracy ($10^{-1}$)}          &
-            {Execution time (\si{\second})}\\
+        Solver      & {No.\ eval.}  & {AUC Score ($10^{-1}$)}   & {Accuracy ($10^{-1}$)}    & {Exec.\ time (\si{\second})}\\
         \midrule
-        \gls{pdfo}  & 68    & 8.241 & 8.016 & 2.793\\
-        \gls{rs}    & 100   & 8.025 & 7.882 & 4.233\\
-        \gls{rs}    & 200   & 8.141 & 7.775 & 8.308\\
-        \gls{rs}    & 300   & 8.141 & 7.775 & 12.414\\
-        \gls{tpe}   & 100   & 7.774 & 7.453 & 4.197\\
-        \gls{tpe}   & 300   & 8.106 & 7.989 & 12.912\\
+        \gls{pdfo}  & 68            & 8.241                     & 8.016                     & 2.793\\
+        \gls{rs}    & 100           & 8.025                     & 7.882                     & 4.233\\
+        \gls{rs}    & 200           & 8.141                     & 7.775                     & 8.308\\
+        \gls{rs}    & 300           & 8.141                     & 7.775                     & 12.414\\
+        \gls{tpe}   & 100           & 7.774                     & 7.453                     & 4.197\\
+        \gls{tpe}   & 300           & 8.106                     & 7.989                     & 12.912\\
         \bottomrule
     \end{tabular}
 \end{table}
@@ -816,20 +819,16 @@ The authors are currently working on a new solver for nonlinearly-constrained op
     \caption{Hyperparameter tuning problem on the dataset \enquote{ijcnn1}.}
     \label{tab:ijcnn1}
     \centering
-    \begin{tabular}{cS[table-parse-only]SSS}
+    \begin{tabular}{cS[table-format=3]SSS}
         \toprule
-        Solver                          &
-            {No.\ eval.}              &
-            {AUC Score ($10^{-1}$)}         &
-            {Accuracy ($10^{-1}$)}          &
-            {Execution time (\SI{}[10^3]{\second})}\\
+        Solver      & {No.\ eval.}  & {AUC Score ($10^{-1}$)}   & {Accuracy ($10^{-1}$)}    & {Exec.\ time (\SI{}[10^3]{\second})}\\
         \midrule
-        \gls{pdfo}  & 59    & 9.940 & 9.819 & 1.892\\
-        \gls{rs}    & 100   & 9.886 & 9.773 & 4.435\\
-        \gls{rs}    & 200   & 9.886 & 9.773 & 9.146\\
-        \gls{rs}    & 300   & 9.886 & 9.773 & 13.251\\
-        \gls{tpe}   & 100   & 9.891 & 9.791 & 4.426\\
-        \gls{tpe}   & 300   & 9.896 & 9.786 & 12.552\\
+        \gls{pdfo}  & 59            & 9.940                     & 9.819                     & 1.892\\
+        \gls{rs}    & 100           & 9.886                     & 9.773                     & 4.435\\
+        \gls{rs}    & 200           & 9.886                     & 9.773                     & 9.146\\
+        \gls{rs}    & 300           & 9.886                     & 9.773                     & 13.251\\
+        \gls{tpe}   & 100           & 9.891                     & 9.791                     & 4.426\\
+        \gls{tpe}   & 300           & 9.896                     & 9.786                     & 12.552\\
         \bottomrule
     \end{tabular}
 \end{table}
