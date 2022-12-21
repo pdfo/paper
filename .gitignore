@@ -1,4 +1,5 @@
 # LaTeX
+
 ## Core latex/pdflatex auxiliary files
 *.aux
 *.lof
@@ -20,9 +21,6 @@
 *.ps
 *.eps
 *.pdf
-!images/*.ps
-!images/*.eps
-!images/*.pdf
 
 ## Generated if empty string is given at "Please type another file name for output:"
 .pdf
@@ -44,10 +42,12 @@
 *.pdfsync
 
 ## Build tool directories for auxiliary files
+
 ### latexrun
 latex.out/
 
 ## Auxiliary and intermediate files from other packages
+
 ### algorithms
 *.alg
 *.loa
@@ -146,7 +146,8 @@ acs-*.bib
 
 ### knitr
 *-concordance.tex
-*.tikz
+# TODO Uncomment the next line if you use knitr and want to ignore its generated tikz files
+# *.tikz
 *-tikzDictionary
 
 ### listings
@@ -258,53 +259,25 @@ pythontex-files-*/
 ### Latexian
 TSWLatexianTemp*
 
-# Covers JetBrains IDEs: IntelliJ, RubyMine, PhpStorm, AppCode, PyCharm, CLion, Android Studio, WebStorm and Rider
-# Reference: https://intellij-support.jetbrains.com/hc/en-us/articles/206544839
-.idea/
+### standalone packages
+*.sta
 
-## Gradle and Maven with auto-import
-*.iml
-*.ipr
+### Makeindex log files
+*.lpz
 
-## CMake
-cmake-build-*/
+### xwatermark package
+*.xwm
 
-## File-based project format
-*.iws
+## Document specific
+figures/
 
-## IntelliJ
-out/
+# Visual Studio Code
 
-## mpeltonen/sbt-idea plugin
-.idea_modules/
+# General
+.vscode/*
 
-## JIRA plugin
-atlassian-ide-plugin.xml
+# Local History for Visual Studio Code
+.history/
 
-## Crashlytics plugin (for Android Studio and IntelliJ)
-com_crashlytics_export_strings.xml
-crashlytics.properties
-crashlytics-build.properties
-fabric.properties
-
-# macOS
-## General
-.DS_Store
-.AppleDouble
-.LSOverride
-
-## Files that might appear in the root of a volume
-.DocumentRevisions-V100
-.fseventsd
-.Spotlight-V100
-.TemporaryItems
-.Trashes
-.VolumeIcon.icns
-.com.apple.timemachine.donotpresent
-
-## Directories potentially created on remote AFP share
-.AppleDB
-.AppleDesktop
-Network Trash Folder
-Temporary Items
-.apdisk
+# Built Visual Studio Code Extensions
+*.vsix

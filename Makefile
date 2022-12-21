@@ -1,5 +1,25 @@
-pdf:
-	latexmk -pdf
+## Makefile
+## Copyright 2022 Tom M. Ragonneau and Zaikun Zhang
+#
+# This work may be distributed and/or modified under the
+# conditions of the LaTeX Project Public License, either version 1.3
+# of this license or (at your option) any later version.
+# The latest version of this license is in
+#   http://www.latex-project.org/lppl.txt
+# and version 1.3 or later is part of all distributions of LaTeX
+# version 2005/12/01 or later.
+#
+# This work has the LPPL maintenance status `maintained'.
+#
+# The Current Maintainer of this work is Tom M. Ragonneau.
+LC := latexmk
+LCFLAGS := -file-line-error -halt-on-error -interaction=nonstopmode
 
+all: $(basename $(wildcard *.tex))
+
+%: %.tex
+	$(LC) $(LCFLAGS) $^
+
+.PHONY: clean
 clean:
-	rm -f main.aux  main.bbl  main.bcf  main.blg  main.log  main.out  main.pdf  main.xdv
+	$(LC) -c

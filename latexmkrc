@@ -13,27 +13,13 @@
 #
 # The Current Maintainer of this work is Tom M. Ragonneau.
 
-# Generate pdf using xelatex (latexmk v4.51 or later).
-$pdf_mode = 5;
+# Generate pdf using pdflatex.
+$pdf_mode = 1;
 $postscript_mode = 0;
 $dvi_mode = 0;
 
-# Configure xelatex engine
-push @generated_exts, "xdv";
+# Run bibtex or biber as needed to regenerate the bbl files
+$bibtex_use = 2;
 
 # Remove extra extensions on clean
-$clean_ext = "bbl run.xml";
-
-# Build dependencies for the glossaries-extra package
-# add_cus_dep("acn", "acr", 0, "makeglo2gls");
-# add_cus_dep("glo", "gls", 0, "makeglo2gls");
-# sub makeglo2gls {
-#     if ($silent) {
-#         system("makeglossaries -q $_[0]");
-#     }
-#     else {
-#         system("makeglossaries $_[0]");
-#     };
-# }
-# push @generated_exts, "acn", "acr", "alg";
-# push @generated_exts, "glg", "glo", "gls";
+$clean_ext = "run.xml";

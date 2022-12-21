@@ -25,7 +25,7 @@ jobs:
       - name: Generate pdf document
         uses: xu-cheng/latex-action@v2
         with:
-          root_file: main.tex
+          root_file: pdfo2022.tex
           args: -file-line-error -halt-on-error -interaction=nonstopmode
           pre_compile: tlmgr update --self && tlmgr update --all
           latexmk_shell_escape: true
@@ -33,5 +33,5 @@ jobs:
       - name: Store artifacts
         uses: actions/upload-artifact@v3
         with:
-          path: main.pdf
+          path: pdfo2022.pdf
           if-no-files-found: error
