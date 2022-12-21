@@ -22,4 +22,4 @@ $dvi_mode = 0;
 $bibtex_use = 2;
 
 # Remove extra extensions on clean
-$clean_ext = "run.xml";
+$clean_ext = "run.xml synctex.gz";
