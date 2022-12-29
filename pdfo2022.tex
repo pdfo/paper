@@ -85,6 +85,7 @@
 \newabbreviation{tpe}{TPE}{tree of Parzen estimators}
 \newacronym{bobyqa}{BOBYQA}{Bound Optimization BY Quadratic Approximation}
 \newacronym{cobyla}{COBYLA}{Constrained Optimization BY Linear Approximations}
+\newacronym{cobyqa}{COBYQA}{Constrained Optimization BY Quadratic Approximations}
 \newacronym{lincoa}{LINCOA}{LINearly Constrained Optimization Algorithm}
 \newacronym{newuoa}{NEWUOA}{NEW Unconstrained Optimization Algorithm}
 \newacronym{uobyqa}{UOBYQA}{Unconstrained Optimization BY Quadratic Approximation}
@@ -255,9 +256,9 @@
     Late Professor M. J. D. Powell designed five derivative-free optimization methods, namely \gls{cobyla}, \gls{uobyqa}, \gls{newuoa}, \gls{bobyqa}, and \gls{lincoa}.
     The algorithms were implemented in Fortran 77 and may not be easily accessible to some users.
     This paper aims to introduce the \gls{pdfo} (\glsxtrlong{pdfo}) package, which is developed to provide both Python and MATLAB interfaces to Powell's code, and has been downloaded more than \num{45000} times as of December 2022.
-    With \gls{pdfo}, users can call each of Powell's algorithm directly based on their own choice.
+    With \gls{pdfo}, users can call each of Powell's algorithms directly based on their own choice.
     Alternatively, if the user does not specify any algorithm, the package can also select one automatically based on the problem characteristics.
-    % When a problem can be solved by multiple algorithms (for example, an unconstrained problem can be solved by all the five algorithms), the selection is made based on experimental results on the CUTEst problems.
+    % When a problem can be solved by multiple algorithms (for example, an unconstrained problem can be solved by all five algorithms), the selection is made based on experimental results on the CUTEst problems.
     We also share some observations about the behavior of Powell's algorithms on these problems.
 \end{abstract}
 
@@ -269,30 +270,30 @@ This is the case, for example, if the objective function does not have an explic
 Optimization problems of such kind arise from automatic error analysis~\cite{Higham_1993,Higham_2002}, machine learning~\cite{Ghanbari_Scheinberg_2017}, analog circuit design~\cite{Latorre_Etal_2019}, aircraft engineering~\cite{Gazaix_Etal_2019}, and chemical product design~\cite{Sun_Etal_2020}, to name but a few.
 These problems motivate the development of optimization algorithms that use only function values but not derivatives, namely \gls{dfo} algorithms.
 
-Between \citeyear{Powell_1994} and \citeyear{Powell_2015}, Powell developed five solvers to tackle unconstrained and constrained problems without using derivatives,
-namely \gls{cobyla}~\cite{Powell_1994}, \gls{uobyqa}~\cite{Powell_2002}, \gls{newuoa}~\cite{Powell_2006}, \gls{bobyqa}~\cite{Powell_2009}, and \gls{lincoa}.
+Between \citeyear{Powell_1994} and \citeyear{Powell_2015}, Powell developed five solvers to tackle unconstrained and constrained problems without using derivatives, namely \gls{cobyla}~\cite{Powell_1994}, \gls{uobyqa}~\cite{Powell_2002}, \gls{newuoa}~\cite{Powell_2006}, \gls{bobyqa}~\cite{Powell_2009}, and \gls{lincoa}.
 These solvers were implemented by Powell, with particular attention paid to their numerical stability and algebraic complexity.
 Renowned for their robustness and efficiency, these solvers are extremely appealing to practitioners and widely used in applications, for instance, aeronautical engineering~\cite{Gallard_Etal_2018}, astronomy~\cite{Biviano_Etal_2013,Mamon_Biviano_Boue_2013}, computer vision~\cite{Izadinia_Shan_Seitz_2017}, robotics~\cite{Mombaur_Truong_Laumond_2010}, and statistics~\cite{Bates_Etal_2015}.
 However, Powell coded in Fortran 77, an old-fashion language that damps the enthusiasm of many users to exploit these solvers in their projects.
-There have been a considerable demand from both researchers and practitioners for the availability of Powell's solvers in more user-friendly languages such as Python and MATLAB.
-Our aim is to wrap Powell's Fortran code into a package named \gls{pdfo}, which enables users of such languages to call Powell's solvers without any need of dealing with the Fortran code.
-For each supported language, \gls{pdfo} provides a simple function that can invoke one of Powell's solvers according to the user's request (if any) or according to the type of the problem to solve. The current release (Version 1.2) of \gls{pdfo} supports Python and MATLAB, with more languages to be covered in the future.
+There has been considerable demand from both researchers and practitioners for the availability of Powell's solvers in more user-friendly languages such as Python and MATLAB.
+Our aim is to wrap Powell's Fortran code into a package named \gls{pdfo}, which enables users of such languages to call Powell's solvers without any need to deal with the Fortran code.
+For each supported language, \gls{pdfo} provides a simple function that can invoke one of Powell's solvers according to the user's request (if any) or according to the type of the problem to solve.
+The current release (Version 1.2) of \gls{pdfo} supports Python and MATLAB, with more languages to be covered in the future.
 The signature of the Python subroutine is consistent with the \texttt{minimize} function of the SciPy optimization library; the signature of the MATLAB subroutine is consistent with the \texttt{fmincon} function of the MATLAB Optimization Toolbox.
-The package is cross-platform, available on Linux, macOS, and Windows at once.
+The package is cross-platform, and available on Linux, macOS, and Windows at once.
 
-\gls{pdfo} is not the first attempt to facilitate the usage of Powell's solvers in languages other than Fortran.
-Various efforts have been made in this direction in response to the continual demands from both researchers and practitioners: Py-BOBYQA~\cite{Cartis_Etal_2019} provides a Python implementation of \gls{bobyqa}; NLopt~\cite{Johnson_2019} includes multi-language interfaces for \gls{cobyla}, \gls{newuoa}, and \gls{bobyqa}; minqa~\cite{Bates_Etal_2014} wraps \gls{uobyqa}, \gls{newuoa}, and \gls{bobyqa} in R; SciPy~\cite{Virtanen_Etal_2020} makes \gls{cobyla} available in Python under its optimization library. Nevertheless, \gls{pdfo} has several features that distinguishes itself from others.
+\Gls{pdfo} is not the first attempt to facilitate the usage of Powell's solvers in languages other than Fortran.
+Various efforts have been made in this direction in response to the continual demands from both researchers and practitioners: Py-BOBYQA~\cite{Cartis_Etal_2019} provides a Python implementation of \gls{bobyqa}; NLopt~\cite{Johnson_2019} includes multi-language interfaces for \gls{cobyla}, \gls{newuoa}, and \gls{bobyqa}; minqa~\cite{Bates_Etal_2014} wraps \gls{uobyqa}, \gls{newuoa}, and \gls{bobyqa} in R; SciPy~\cite{Virtanen_Etal_2020} makes \gls{cobyla} available in Python under its optimization library.
+Nevertheless, \gls{pdfo} has several features that distinguishes itself from others.
 
 \begin{enumerate}
     \item \emph{Comprehensiveness.}
     To the best of our knowledge, \gls{pdfo} is the only package that provides all of \gls{cobyla}, \gls{uobyqa}, \gls{newuoa}, \gls{bobyqa}, and \gls{lincoa} with a uniform interface.
     In addition to homogenizing the usage, such an interface eases the comparison between these solvers in case multiple of them are able to tackle a given problem.
-    Doing so, we may gain insights that cannot be obtained otherwise into the behavior of the
-    solvers.
+    By doing so, we may gain insights that cannot be obtained otherwise into the behavior of the solvers.
     %, as will be illustrated in~\cref{sec:fake}.
 
     \item \emph{Solver selection.}
-    When using \gls{pdfo}, the user can specifically call one of Powell's solvers; nevertheless, if the user does not specify any solver, \gls{pdfo} will select automatically a solver according to the given problem.
+    When using \gls{pdfo}, the user can specifically call one of Powell's solvers; nevertheless, if the user does not specify any solver, \gls{pdfo} will automatically select a solver according to the given problem.
     The selection takes into consideration the performance of the solvers on the CUTEst~\cite{Gould_Orban_Toint_2015} problem set.
     Interestingly, it turns out that the solver with the best performance may not be the most intuitive one.
     For example, \gls{newuoa} is not always the best choice for solving an unconstrained problem.
@@ -304,17 +305,17 @@ Various efforts have been made in this direction in response to the continual de
     In addition, \gls{pdfo} provides \gls{cobyla} in double precision, whereas Powell used single precision when he implemented it in the 1990s.
 
     \item \emph{Fault tolerance.}
-    \gls{pdfo} takes care of failures in the evaluation of the objective or constraint functions when NaN or infinite values are returned.
-    In case of such failures, \gls{pdfo} will not exit but try to progress.
+    \Gls{pdfo} takes care of failures in the evaluation of the objective or constraint functions when NaN or infinite values are returned.
+    In case of such failures, \gls{pdfo} will not exit but will try to progress.
     Moreover, \gls{pdfo} ensures that the returned solution is not a point where the evaluation fails, while the original code of Powell may return a point whose objective function value is numerically NaN.
 
     \item \emph{Problem preprocessing.}
-    \gls{pdfo} preprocesses the inputs to simplify the problem and reformulate it to meet the requirements of Powell's solvers.
+    \Gls{pdfo} preprocesses the inputs to simplify the problem and reformulate it to meet the requirements of Powell's solvers.
     For instance, if the problem has linear constraints~$\aeq x = \beq$, \gls{pdfo} can rewrite it into a problem on the null space of~$\aeq$, eliminating such constraints and reducing the problem's dimension.
     Another example is that the starting point of a linearly constrained problem is projected onto the feasible region, because \gls{lincoa} needs a feasible starting point to work properly.
 
     \item \emph{Additional options.}
-    \gls{pdfo} includes options for the user to control the solvers in some manners that are useful in practice.
+    \Gls{pdfo} includes options for the user to control the solvers in some manners that are useful in practice.
     For example, the user can request \gls{pdfo} to scale the problem according to the bounds of the variables before solving it.
 \end{enumerate}
 
@@ -330,8 +331,7 @@ Consider the nonlinear optimization problem
 where~$\obj : \R^n \to \R$ is the objective function and~$\fset \subseteq \R^n$ refers to the feasible region of the problem.
 As summarized in~\cite{Conn_Scheinberg_Vicente_2009b}, two strategies have been developed to tackle the problem~\cref{eq:nlc} without using derivatives, which we will sketch in the sequel.
 
-The first strategy, known as direct search\footnote{In some early papers
-(e.g.,~\cite{Powell_1994,Powell_1998}), Powell used \enquote{direct search} to mean what is known as \enquote{\glsfmtlong{dfo}} today.}, explores the objective function~$\obj$ and chooses iterates by simple comparisons of function values, examples including the Nelder-Mead algorithm~\cite{Nelder_Mead_1965}, the MADS methods~\cite{Audet_Dennis_2006,Abramson_Audet_2006,Digabel_2011}, and BFO~\cite{Porcelli_Toint_2017,Porcelli_Toint_2020,Porcelli_Toint_2022}.
+The first strategy, known as direct search\footnote{In some early papers (e.g.,~\cite{Powell_1994,Powell_1998}), Powell used \enquote{direct search} to mean what is known as \enquote{\glsfmtlong{dfo}} today.}, explores the objective function~$\obj$ and chooses iterates by simple comparisons of function values, examples including the Nelder-Mead algorithm~\cite{Nelder_Mead_1965}, the MADS methods~\cite{Audet_Dennis_2006,Abramson_Audet_2006,Digabel_2011}, and BFO~\cite{Porcelli_Toint_2017,Porcelli_Toint_2020,Porcelli_Toint_2022}.
 See~\cite{Kolda_Lewis_Torczon_2003},~\cite[Chapters~7 and~8]{Conn_Scheinberg_Vicente_2009b},~\cite[Part~3]{Audet_Hare_2017}, and~\cite[\S~2.1]{Larson_Menickelly_Wild_2019} for more discussions on this paradigm, and we refer to~\cite{Gratton_Etal_2015,Gratton_Etal_2019} for recent developments on randomized methods in this category.
 
 The second strategy approximates the original problem~\cref{eq:nlc} by relatively simple models and locates the iterates according to these models.
@@ -342,35 +342,28 @@ Most model-based \gls{dfo} methods employ polynomial models that are linear or q
 Powell's methods~\cite{Powell_1994,Powell_2002,Powell_2006,Powell_2009}, MNH~\cite{Wild_2008}, DFLS~\cite{Zhang_Conn_Scheinberg_2010}, DFO-TR~\cite{Bandeira_Scheinberg_Vicente_2012}, and DFO-LS~\cite{Cartis_Etal_2019}, but there are also successful cases exploiting \glspl{rbf}, such as ORBIT~\cite{Wild_Regis_Shoemaker_2008}, CONORBIT~\cite{Regis_Wild_2017}, and BOOSTERS~\cite{Oeuvray_Bierlaire_2009}.
 Model-based \gls{dfo} is one of the motivations for studying trust-region and line-search methods with randomized models, for which we refer to~\cite{Bandeira_Scheinberg_Vicente_2014,Gratton_Etal_2018,Cartis_Scheinberg_2018} as examples.
 
-Hybrids between direct-search and model-based approaches exist, for
-example~\cite{Custodio_Vicente_2007}, \cite[Algorithm~4.7]{Kelley_2011},
-and~\cite{Conn_Digabel_2013}. Theory of global convergence and convergence rate has been established
-for both direct-search and model-based
-methods~\cite{Torczon_1997,Conn_Scheinberg_Toint_1997a,Kolda_Lewis_Torczon_2003,Conn_Scheinberg_Vicente_2009a,
+Hybrids between direct-search and model-based approaches exist, for example~\cite{Custodio_Vicente_2007}, \cite[Algorithm~4.7]{Kelley_2011}, and~\cite{Conn_Digabel_2013}.
+Theory of global convergence and convergence rate has been established for both direct-search and model-based methods~\cite{Torczon_1997,Conn_Scheinberg_Toint_1997a,Kolda_Lewis_Torczon_2003,Conn_Scheinberg_Vicente_2009a,
 Powell_2012,Vicente_2013,Dodangeh_Vicente_2016,Garmanjani_Judice_Vicente_2016,Gratton_Royer_Vicente_2020}.
-It is worth noting that the performance of
-\gls{dfo} algorithms are measured in general by the number of function evaluations needed for solving
-a given problem, because the objective and constraint functions in \gls{dfo} problems are commonly
-expensive to evaluate. Therefore, the worst-case complexity in terms of function evaluations is a major
-theoretical aspect of \gls{dfo} algorithms. Examples of such complexity analysis can be found
-in~\cite{Vicente_2013,Gratton_Etal_2015,Dodangeh_Vicente_2016,Dodangeh_Vicente_Zhang_2016}.
-For more extensive discussions on \gls{dfo} methods and theory, see the
-monographs~\cite{Conn_Scheinberg_Vicente_2009b,Audet_Hare_2017}, the survey
-papers~\cite{Rios_Sahinidis_2013, Custodio_Scheinberg_Vicente_2017, Larson_Menickelly_Wild_2019},
-and the references therein.
+It is worth noting that the performance of \gls{dfo} algorithms is measured in general by the number of function evaluations needed for solving a given problem, because the objective and constraint functions in \gls{dfo} problems are commonly
+expensive to evaluate.
+Therefore, the worst-case complexity in terms of function evaluations is a major theoretical aspect of \gls{dfo} algorithms.
+Examples of such complexity analysis can be found in~\cite{Vicente_2013,Gratton_Etal_2015,Dodangeh_Vicente_2016,Dodangeh_Vicente_Zhang_2016}.
+For more extensive discussions on \gls{dfo} methods and theory, see the monographs~\cite{Conn_Scheinberg_Vicente_2009b,Audet_Hare_2017}, the survey
+papers~\cite{Rios_Sahinidis_2013, Custodio_Scheinberg_Vicente_2017, Larson_Menickelly_Wild_2019}, and the references therein.
 
 \section{Powell's derivative-free algorithms}
 \label{sec:powell}
 
-Powell published his first \gls{dfo} algorithm based on conjugate directions in \citeyear{Powell_1964}~\cite{Powell_1964}\footnote{According to Google Scholar, this is Powell's second published paper and also the second most cited work. The earliest and meanwhile most cited one is his paper on the DFP method~\cite{Fletcher_Powell_1963}, co-authored with Fletcher and published in 1963.}.
+Powell published his first \gls{dfo} algorithm based on conjugate directions in \citeyear{Powell_1964}~\cite{Powell_1964}\footnote{According to Google Scholar, this is Powell's second published paper and also the second most cited work.
+The earliest and meanwhile most cited one is his paper on the DFP method~\cite{Fletcher_Powell_1963}, co-authored with Fletcher and published in 1963.}.
 His code for this algorithm is contained in the HSL Mathematical Software Library~\cite{HSL} as subroutine \texttt{VA24}.
 It is not included in \gls{pdfo} because the code is not in the public domain, although open-source implementations are available~(see~\cite[footnote~4]{Conn_Scheinberg_Toint_1997b}).
 
-From the 1990s to the final days of his career, Powell developed five model-based \gls{dfo} algorithms to solve~\cref{eq:nlc}, namely \gls{cobyla}~\cite{Powell_1994}~(for nonlinearly constrained problems), \gls{uobyqa}~\cite{Powell_2002}~(for unconstrained problems), \gls{newuoa}~\cite{Powell_2006}~(for unconstrained problems), \gls{bobyqa}~\cite{Powell_2009}~(for bound-constrained problems),
-and \gls{lincoa} (for linearly constrained problems).
+From the 1990s to the final days of his career, Powell developed five model-based \gls{dfo} algorithms to solve~\cref{eq:nlc}, namely \gls{cobyla}~\cite{Powell_1994}~(for nonlinearly constrained problems), \gls{uobyqa}~\cite{Powell_2002}~(for unconstrained problems), \gls{newuoa}~\cite{Powell_2006}~(for unconstrained problems), \gls{bobyqa}~\cite{Powell_2009}~(for bound-constrained problems), and \gls{lincoa} (for linearly constrained problems).
 In addition, Powell implemented these algorithms into Fortran solvers and made the code publicly available.
 The solvers constitute the cornerstones of \gls{pdfo}.
-In the sequel, we provide a brief overview on these five algorithms, starting with a sketch in \cref{ssec:sketch} and then presenting more details in the subsections after.
+In the sequel, we provide a brief overview of these five algorithms, starting with a sketch in \cref{ssec:sketch} and then presenting more details in the subsections after.
 
 \subsection{A sketch of the algorithms}
 \label{ssec:sketch}
@@ -398,14 +391,13 @@ After choosing the trust-region center~$\iter$, with the trust-region model~$\ob
     \end{split}
 \end{equation}
 where~$\rad$ is the trust-region radius, and~$\norm{\cdot}$ is the~$\ell_2$-norm in~$\R^n$.
-In this subproblem, the set~$\fsetm \subseteq \R^n$ is a local approximation for the feasible region~$\fset$.
+In this subproblem, the set~$\fsetm \subseteq \R^n$ is a local approximation of the feasible region~$\fset$.
 \Gls{cobyla} defines~$\fsetm$ by linear interpolants of the constraint functions over the set~$\xpt$, whereas the other four algorithms take~$\fsetm = \fset$.
 
 \subsubsection{The interpolation problem}
 
 The interpolation condition~\cref{eq:itpls} is essentially a linear system with respect to the coefficients of the model.
-Given a base point~$y^{\base}\in \R^n$, which may depend on~$k$, a linear model~$\objm$ takes the form of~$\objm(x) = \obj(y^{\base}) + (x - y^{\base})^{\T} \nabla \objm(y^{\base})$,
-and hence~\cref{eq:itpls} is equivalent to
+Given a base point~$y^{\base}\in \R^n$, which may depend on~$k$, a linear model~$\objm$ takes the form of~$\objm(x) = \obj(y^{\base}) + (x - y^{\base})^{\T} \nabla \objm(y^{\base})$, and hence~\cref{eq:itpls} is equivalent to
 \begin{equation}
     \label{eq:litpls}
     \objm(y^{\base}) + (y -y^{\base})^{\T} \nabla \objm(y^{\base})  = \obj(y),  \quad y \in \xpt,
@@ -435,25 +427,21 @@ More specifically, this means to establish~$\objm$ by solving
     \end{split}
 \end{equation}
 where~$\qspace$ is the space of polynomials on~$\R^n$ of degree at most~$2$, and~$\func_k$ is the aforementioned functional.
-\gls{newuoa}, \gls{bobyqa}, and \gls{lincoa} construct quadratic models in this way, with
+\Gls{newuoa}, \gls{bobyqa}, and \gls{lincoa} construct quadratic models in this way, with
 \begin{equation}
     \label{eq:leastchange}
     \func_k(Q) = \norm{\nabla^2 Q - \nabla^2 \objm[k - 1]}_{\frob}^2,
 \end{equation}
 which is inspired by the least-change properties of quasi-Newton updates~\cite{Dennis_Schnabel_1979}, although other functionals are possible~(see~\cite{Conn_Toint_1996,Bandeira_Scheinberg_Vicente_2012,Powell_2013,Zhang_2014} for example).
 Powell~\cite{Powell_2013} referred to his approach as the symmetric Broyden update of quadratic models.
-It can be regarded as a derivative-free version of the \gls{psb} quasi-Newton update~\cite{Powell_1970b}, which minimizes the functional~$\func_k$ among all the quadratic polynomials that fulfill~$Q(\iter) = \obj(\iter)$, $\nabla Q(\iter)
-= \nabla \obj(\iter)$, and~$\nabla Q(\iter[k - 1]) = \nabla \obj(\iter[k - 1])$ (see~\cite[Theorem~4.2]{Dennis_Schnabel_1979}), with~$\iter$ and~$\iter[k - 1]$ being the current and the previous iterates, respectively.
+It can be regarded as a derivative-free version of the \gls{psb} quasi-Newton update~\cite{Powell_1970b}, which minimizes the functional~$\func_k$ among all quadratic polynomials that fulfill~$Q(\iter) = \obj(\iter)$, $\nabla Q(\iter) = \nabla \obj(\iter)$, and~$\nabla Q(\iter[k - 1]) = \nabla \obj(\iter[k - 1])$ (see~\cite[Theorem~4.2]{Dennis_Schnabel_1979}), with~$\iter$ and~$\iter[k - 1]$ being the current and the previous iterates, respectively.
 The interpolation problem~\cref{eq:undqitp,eq:leastchange} is a convex quadratic programming problem with respect to the coefficients of the quadratic model.
 
 Powell's algorithms do not solve the interpolation problems~\cref{eq:litpls,eq:qitpls,eq:undqitp} from scratch.
-Instead, \gls{cobyla} maintains the inverse of the coefficient matrix for the linear system~\cref{eq:litpls} and updates it along the iterations; \gls{uobyqa} does the same for the linear system~\cref{eq:qitpls}, while \gls{newuoa},
-\gls{bobyqa}, and \gls{lincoa} maintain and update the inverse of the \gls{kkt} matrix
-for the problem defined by~\cref{eq:undqitp,eq:leastchange}~\cite{Powell_2004b}.
-Since each iteration of the algorithms alters the interpolation set by only one point~(see \cref{ssec:iptset}), the matrices to be inverted are modified by low rank updates, and hence their inverses can be updated according to the
-Sherman-Morrison-Woodbury formula.
+Instead, \gls{cobyla} maintains the inverse of the coefficient matrix for the linear system~\cref{eq:litpls} and updates it along the iterations; \gls{uobyqa} does the same for the linear system~\cref{eq:qitpls}, while \gls{newuoa}, \gls{bobyqa}, and \gls{lincoa} maintain and update the inverse of the \gls{kkt} matrix for the problem defined by~\cref{eq:undqitp,eq:leastchange}~\cite{Powell_2004b}.
+Since each iteration of the algorithms alters the interpolation set by only one point~(see \cref{ssec:iptset}), the matrices to be inverted are modified by low-rank updates, and hence their inverses can be updated according to the Sherman-Morrison-Woodbury formula.
 With these inverse matrices, the corresponding interpolation problem can be solved easily.
-Indeed, the inverse matrices provide readily the coefficients of the Lagrange functions for the corresponding interpolation problems~\cite{Powell_2001,Powell_2004a}.
+Indeed, the inverse matrices readily provide the coefficients of the Lagrange functions for the corresponding interpolation problems~\cite{Powell_2001,Powell_2004a}.
 
 The choice of the base point~$y^{\base}$ is also worth mentioning.
 \Gls{cobyla} sets~$y^{\base}$ to the center~$x_k$ of the current trust region.
@@ -463,7 +451,7 @@ In contrast, the other four algorithms initiate~$y^{\base}$ to the starting poin
 \label{ssec:iptset}
 
 The strategy to update~$\xpt$ is crucial.
-It should recycle points from previous iterations, at which the objective function has already been evaluated; meanwhile, it needs to maintain the well poisedness~\cite{Sauer_Xu_1995,Conn_Scheinberg_Vicente_2009b} of the interpolation set in order to guarantee the well conditioning of the interpolation problem, and ensure the convergence of the optimization algorithm~\cite{Conn_Scheinberg_Vicente_2008a,Conn_Scheinberg_Vicente_2008b, Fasano_Morales_Nocedal_2009,Scheinberg_Toint_2010}.
+It should recycle points from previous iterations, at which the objective function has already been evaluated; meanwhile, it needs to maintain the well-poisedness~\cite{Sauer_Xu_1995,Conn_Scheinberg_Vicente_2009b} of the interpolation set in order to guarantee the well conditioning of the interpolation problem, and ensure the convergence of the optimization algorithm~\cite{Conn_Scheinberg_Vicente_2008a,Conn_Scheinberg_Vicente_2008b, Fasano_Morales_Nocedal_2009,Scheinberg_Toint_2010}.
 
 At a normal iteration, a point~$\iter^{\tst} \in \R^n$ is computed by solving the trust-region subproblem~\cref{eq:trsp}, and Powell's \gls{dfo} methods update the interpolation set as
 \begin{equation*}
@@ -500,15 +488,14 @@ However, \gls{bobyqa} enforces~$\iter^{\geo} \in \fset$ because the points it vi
 \subsection{\glsfmtshort{cobyla}}
 \label{ssec:cobyla}
 
-Powell released the \gls{cobyla} solver in May 1992 and published the \gls{cobyla}
-paper~\cite{Powell_1994} in \citedate{Powell_1994}.
+Powell released the \gls{cobyla} solver in May 1992 and published the \gls{cobyla} paper~\cite{Powell_1994} in \citedate{Powell_1994}.
 The solver is named after \enquote{\glsxtrlong{cobyla}.}
 It aims to solve the optimization problem~\cref{eq:nlc} with the feasible region~$\fset$ being
 \begin{equation*}
     \fset \eqdef \set{x \in \R^n : \con(x) \ge 0, ~ i = 1, \dots, m},
 \end{equation*}
 where~$\con : \R^n \to \R$ denotes the~$i$th constraint function, $i \in \set{1, 2, \dots, m}$.
-The same as the objective function, all the constraints are assumed to be accessible only through function values.
+The same as the objective function, all constraints are assumed to be accessible only through function values.
 
 At iteration~$k$, \gls{cobyla} models the objective and the constraint functions with {linear} interpolants on the interpolation set~$\xpt$, which consists of~$n + 1$ points that are updated along the iterations.
 In this context, the interpolation set~$\xpt$ is poised if an only if the volume of the~$n$-simplex engendered by~$\xpt$ to be nonzero.
@@ -542,7 +529,7 @@ To do so, at each iteration, it models the objective function~$\obj$ with a quad
 
 The set~$\xpt[k + 1]$ differs from~$\xpt$ of at most one point.
 During a classical iteration, a trial point, i.e., an approximate solution of the trust-region subproblem~\cref{eq:trsp} replaces an interpolation of~$\xpt$.
-As mentioned above, it is essential to ensure the existence and the uniqueness of the models from a computational viewpoint.
+As mentioned above, it is essential to ensure the existence and uniqueness of the models from a computational viewpoint.
 Hence, \gls{uobyqa} may undertake geometry-improving steps whenever the models seem not to be accurate.
 Since \gls{uobyqa} requires only a rough solution of the geometry-improving subproblem~\cref{eq:biglag}, Powell developed an algorithm that requires only~$\mathcal{O}(n^2)$ operations, based on an estimation of~$\abs{\ell_{\drop}(\cdot)}$.
 Once such a point is calculated, the solver continues with a classical trust-region step, and the subproblem~\cref{eq:trsp} is solved with the Mor{\'{e}}-Sorensen algorithm~\cite{More_Sorensen_1983}.
@@ -558,7 +545,7 @@ Evaluating models by solving the problem defined by~\cref{eq:undqitp,eq:leastcha
 Based on such underdetermined interpolation models, Powell developed his last three \gls{dfo} solvers, namely \gls{newuoa}~\cite{Powell_2006, Powell_2008}, \gls{bobyqa}~\cite{Powell_2009}, and \gls{lincoa}.
 \Gls{bobyqa} and \gls{lincoa} are named respectively after \enquote{\glsxtrlong{bobyqa}} and \enquote{\glsxtrlong{lincoa}}, but the meaning of the acronym \gls{newuoa} is not known (even though most people agree on \enquote{\glsxtrlong{newuoa}}).
 Powell never published a paper introducing \gls{lincoa}, and~\cite{Powell_2015} discusses only the resolution of its trust-region subproblem.
-As their names suggest, they aim at solving unconstrained, bound-constrained and linearly constrained problems respectively, using quadratic models of the objective function.
+As their names suggest, they aim at solving unconstrained, bound-constrained, and linearly constrained problems respectively, using quadratic models of the objective function.
 % All three use the underdetermined interpolation technique described above to build the quadratic models, so that \gls{newuoa} is more suitable than \gls{uobyqa} for solving problems with a relatively high dimension.
 They all set~$\fsetm$ in the trust-region subproblem~\cref{eq:trsp} to be~$\fset$, corresponding the whole space for \gls{newuoa}, a box for \gls{bobyqa} and a polyhedron for \gls{lincoa}.
 A subtlety of \gls{bobyqa} is that the constraints are always respected, for each iterate and each point in~$\xpt$.
@@ -572,7 +559,7 @@ When it comes to solving the trust-region subproblems~\cref{eq:trsp}, \gls{newuo
 
 As we already mentioned, geometry-improving iterations must be entertained when the method detects that~$\objm$ does not represent~$\obj$ accurately enough.
 \Gls{newuoa} employs a technique similar to that of \gls{uobyqa} to solve~\cref{eq:biglag}.
-However, if~$\iter^{\geo}$ does not render a sufficiently big absolute value of the above-mentioned denominator, then \gls{newuoa} attempts to maximize directly the denominator within a trust region.
+However, if~$\iter^{\geo}$ does not render a sufficiently big absolute value of the above-mentioned denominator, then \gls{newuoa} attempts to maximize the denominator directly within a trust region.
 When it comes to \gls{bobyqa}, it estimates two approximate solutions to~\cref{eq:biglag} and chooses the best one.
 The geometry-improving step of \gls{lincoa} is more complex, as it involves estimating three approximate solutions to~\cref{eq:biglag}.
 It computes
@@ -588,14 +575,14 @@ Further, this point is replaced with the third alternative if the latter provide
 \label{sec:pdfo}
 
 Powell implemented all five methods in Fortran 77, in a very robust and efficient manner.
-However, less and less people are using Fortran in our present-day world, and Fortran 77 has quite old standards.
+However, fewer people are using Fortran in our present-day world, and Fortran 77 has quite old standards.
 The authors developed therefore \gls{pdfo}, named after \enquote{\glsxtrlong{pdfo}.}
-It is cross-platform package providing Python and MATLAB interfaces for using all five Powell's \gls{dfo} solvers, available for Linux, macOS, and Windows at
+It is a cross-platform package providing Python and MATLAB interfaces for using all five Powell's \gls{dfo} solvers, available for Linux, macOS, and Windows at
 \begin{center}
     \url{https://www.pdfo.net/}.
 \end{center}
 \Gls{pdfo} does not reimplement Powell's solvers, but rather links the modern languages Python and MATLAB with the Fortran source code.
-At a low-level, it uses F2PY~\cite{Peterson_2009} to interface Python with Fortran, and MEX to interface it with MATLAB.
+At a low level, it uses F2PY~\cite{Peterson_2009} to interface Python with Fortran, and MEX to interface it with MATLAB.
 
 \subsection{Main structure of the package}
 
@@ -612,9 +599,9 @@ It takes for input an optimization problem of the form
 \end{subequations}
 where~$\xl, \xu \in (\R \cup \set{\pm \infty})^n$,~$\aeq$ and~$\aub$ are real matrices,~$\beq$ and~$\bub$ are real vectors, and~$\ceq$ and~$\cub$ are multivariate functions.
 The problem~\cref{eq:pdfo} covers every possible case, since all matrices, vectors and functions can be set to zero from a mathematical viewpoint and \gls{pdfo} does not require the constraints~\cref{eq:pdfo-b},~\cref{eq:pdfo-l}, and~\cref{eq:pdfo-nl} to be provided.
-A broad example of use in MATLAB is shown in \cref{lst:minex}, where variable names have clear correspondances with the problem~\cref{eq:pdfo}.
+A broad example of use in MATLAB is shown in \cref{lst:minex}, where variable names have clear correspondences with the problem~\cref{eq:pdfo}.
 The value returned by \gls{pdfo} is the best point calculated, evaluated via a merit function.
-\gls{pdfo} for MATLAB also returns the corresponding optimal value, together with different fields describing the backend calculations and their behaviors.
+\Gls{pdfo} for MATLAB also returns the corresponding optimal value, together with different fields describing the backend calculations and their behaviors.
 
 \begin{matlablst}[%
     caption=An elementary example of \gls{pdfo} in MATLAB,
@@ -631,7 +618,7 @@ The value returned by \gls{pdfo} is the best point calculated, evaluated via a m
     end
 \end{matlablst}
 
-The package \gls{pdfo} preprocesses the arguments provided by the user, detects the type of the problem and then invokes the Powell's solver that match the best the given problem.
+The package \gls{pdfo} preprocesses the arguments provided by the user, detects the type of the problem, and then invokes the Powell's solver that match the best the given problem.
 The initial preprocessing of the arguments includes a handling of their internal types together with some programming-related procedures to allow as much freedom in the problem definition as possible, to make the use of \gls{pdfo} as easy as possible.
 More importantly, \gls{pdfo} preprocesses the constraints provided, to generate a problem as simple as possible.
 For instance, all linear constraints in~\cref{eq:pdfo-l} that are satisfied for every point in~$\R^n$ are removed and obvious infeasibility in the constraints~\cref{eq:pdfo-b} and~\cref{eq:pdfo-l} are detected.
@@ -658,8 +645,8 @@ These bugs have been patched.
 \Gls{pdfo} also handle more carefully ill-conditioned problems, for which NaN values (resulting, e.g., from a division by zero) may occur.
 These values might cause infinite cycling or segmentation faults in the original code.
 In the early stage of \gls{pdfo}, such errors occurred on the CUTEst problems~\cite{Gould_Orban_Toint_2015} DANWOODLS or GAUSS1LS for example.
-NaN values detected in the objective or constraint functions are managed using extreme barriers, but NaN values encountered in the variables internal to the Fortran code result in early exit.
-Besides, when interfacing Fortran with Python and MATLAB, rounding errors occur in the problem's variables, which led in extreme cases to failures.
+NaN values detected in the objective or constraint functions are managed using extreme barriers, but NaN values encountered in the variables internal to the Fortran code result in an early exit.
+Besides, when interfacing Fortran with Python and MATLAB, rounding errors occurred in the problem's variables, which led in extreme cases to failures.
 For example, when using \gls{pdfo}, the user may provided initial and final trust-region radii~$\rad[\text{beg}]$ and~$\rad[\text{end}]$ (respectively set to~$1$ and~$10^{-6}$ by default).
 If these values are chosen to be very close, although the condition~$\rad[\text{beg}] \le \rad[\text{end}]$ is satisfied in the MATLAB or Python code, the Fortran code may receive perturbed values with~$\rad[\text{beg}] > \rad[\text{end}]$, leading to failure exit in the original code.
 Therefore, the conditions required by Powell are ensured in the Fortran code directly.
@@ -670,13 +657,13 @@ Therefore, the conditions required by Powell are ensured in the Fortran code dir
 
 We first make a comparison of the \gls{pdfo}'s solvers on different problems from the CUTEst library~\cite{Gould_Orban_Toint_2015}.
 Performance profiles~\cite{Dolan_More_2002, More_Wild_2009} on unconstrained problem of dimensions at most~$10$ and~$50$ are provided respectively in \cref{fig:ppu-10,fig:ppu-50}.
-Broadly speaking, a performance profile plots the proportion of problem solved with respect to the number of function evaluations required to achieve convergence, in logarithmic scale.
+Broadly speaking, a performance profile plots the proportion of problem solved with respect to the number of function evaluations required to achieve convergence, in a logarithmic scale.
 The optimal value~$\obj_{\ast}$ of a given problem is considered to be the least value reached by all solvers, and an execution is considered convergent up to a tolerance~$\tau \ge 0$ whenever
 \begin{equation}
     \label{eq:cvt}
     \obj(\iter[0]) - \obj(\iter) \ge (1 - \tau) [\obj(\iter[0]) - \obj_{\ast}].
 \end{equation}
-We can observe an expected behavior; \gls{uobyqa} performs better on small problems than all the others, as it is based on quadratic models obtained by fully-determined interpolation, and the performances of \gls{cobyla} decrease with the dimension rise, as it uses only linear models to approximate locally the problem.
+We can observe an expected behavior; \gls{uobyqa} performs better on small problems than all others, as it is based on quadratic models obtained by fully-determined interpolation, and the performances of \gls{cobyla} decrease with the dimension rise, as it uses only linear models to approximate the problem locally.
 
 \begin{figure}[ht]
     \begin{subfigure}{.48\textwidth}
@@ -704,8 +691,8 @@ where~$e(x)$ is a random variable that follows a standard normal distribution~$\
 \Cref{fig:ppun-50} presents the performance profiles on the same unconstrained problems of dimension at most~$50$ from the CUTEst library as the previous experiment by randomizing the objective functions as~$F_{\sigma}$ with~$\sigma = 10^{-2}$.
 Because of the stochastic behavior of the experiment, the convergence test~\cref{eq:cvt} needs to be adapted.
 Each problem is solved~$10$ times by each solver, the objective value considered at each iteration is the average value for all runs, and the optimal value~$f_{\ast}$ of a given problem is decided as follows.
-It is the least value reached by the solvers for every run on the noised variation of the problem and by all the solvers on the noise-free original problem.
-In doing so, one should expect a decrease of the proportion of problems solved when compared with the previous experiment.
+It is the least value reached by the solvers for every run on the noised variation of the problem and by all solvers on the noise-free original problem.
+In doing so, one should expect a decrease in the proportion of problems solved when compared with the previous experiment.
 
 \begin{figure}[ht]
     \centering
@@ -719,7 +706,7 @@ It seems that the linear models of \gls{cobyla} are, in some sense, less sensiti
 
 \subsubsection{An example of hyperparameter tuning problem}
 
-We consider now the more practical problem of the hyperparameter tuning of a \gls{svm}.
+We now consider the more practical problem of the hyperparameter tuning of a \gls{svm}.
 The model we consider is a~$C$-SVM~\cite{Chang_Lin_2011} for binary classification problems with an \gls{rbf} kernel, admitting two hyperparameters: a regularization parameter~$C > 0$ and a kernel parameter~$\gamma > 0$.
 We want to compare the performance of \gls{pdfo} with a prominent Bayesian optimization method and \gls{rs}.
 To this end, we use the Python package \texttt{hyperopt}~\cite{Bergstra_Yamins_Cox_2013} for solving the optimization problems, which provides both \gls{tpe} and \gls{rs} methods.
@@ -754,16 +741,17 @@ It is then clear that such an experiment lies in the \gls{dfo} context.
 
 The numerical results for this experiment are provided in \cref{sec:htres}.
 The \gls{auc} scores and accuracies presented in the tables correspond to the ones computed on~$\mathcal{T}$ with an \gls{svm} trained on~$\mathcal{L}$, with the tuned parameters~$C$ and~$\gamma$.
-In a nutshell, it globally shows that the numerical performances of \gls{pdfo} against the two classical approaches are very similar, but the computations requires much fewer \gls{auc} evaluations, and hence, much less computation time.
+In a nutshell, it globally shows that the numerical performances of \gls{pdfo} against the two classical approaches are very similar, but the computations require much fewer \gls{auc} evaluations, and hence, much less computation time.
 This behavior is particularly visible on the dataset \enquote{ijcnn1} in \cref{tab:ijcnn1}, as the size of this dataset is much larger than the others.
 Thus, we can conclude that \gls{pdfo} performed better than the package \texttt{hyperopt} on these problems, even though the final numerical results are mostly similar.
 
 \section{Conclusions}
 
 We have presented the package \gls{pdfo} for Python and MATLAB, which aims at simplifying the use of the Powell's \gls{dfo} solvers.
-A more complete presentation of the package itself can be found on the \gls{pdfo} website, together with different examples of use.
+A more complete presentation of the package itself can be found on the \gls{pdfo} website\footnote{\url{https://www.pdfo.net/}.}, together with different examples of use.
 The scope of \gls{pdfo} in the future is not limited only to the Powell's \gls{dfo} solvers.
-The authors are currently working on a new solver for nonlinearly constrained optimization, which is aimed to be added to \gls{pdfo}, and other \gls{dfo} solvers may be included in the future to \gls{pdfo}.
+For instance, the authors are currently working on a new solver for nonlinearly constrained optimization, named \gls{cobyqa}~\cite{Ragonneau_2022}.
+It is aimed to be added to \gls{pdfo}, and other \gls{dfo} solvers may be included in the future.
 
 \printbibliography
 
@@ -779,12 +767,12 @@ The authors are currently working on a new solver for nonlinearly constrained op
         \toprule
         Solver      & {No.\ eval}   & {AUC Score ($10^{-1}$)}   & {Accuracy ($10^{-1}$)}    & {Exec.\ time (\si{\second})}\\
         \midrule
-        \gls{pdfo}  & 65            & 9.568                     & 9.933                     & 3.697\\
-        \gls{rs}    & 100           & 6.409                     & 5.300                     & 4.635\\
-        \gls{rs}    & 200           & 7.880                     & 5.300                     & 9.244\\
-        \gls{rs}    & 300           & 7.880                     & 5.300                     & 13.763\\
-        \gls{tpe}   & 100           & 5.000                     & 5.033                     & 4.889\\
-        \gls{tpe}   & 300           & 7.736                     & 5.300                     & 15.726\\
+        \Gls{pdfo}  & 65            & 9.568                     & 9.933                     & 3.697\\
+        \Gls{rs}    & 100           & 6.409                     & 5.300                     & 4.635\\
+        \Gls{rs}    & 200           & 7.880                     & 5.300                     & 9.244\\
+        \Gls{rs}    & 300           & 7.880                     & 5.300                     & 13.763\\
+        \Gls{tpe}   & 100           & 5.000                     & 5.033                     & 4.889\\
+        \Gls{tpe}   & 300           & 7.736                     & 5.300                     & 15.726\\
         \bottomrule
     \end{tabular}
 \end{table}
@@ -796,12 +784,12 @@ The authors are currently working on a new solver for nonlinearly constrained op
         \toprule
         Solver      & {No.\ eval.}  & {AUC Score ($10^{-1}$)}   & {Accuracy ($10^{-1}$)}    & {Exec.\ time (\si{\second})}\\
         \midrule
-        \gls{pdfo}  & 68            & 9.966                     & 9.730                     & 4.906\\
-        \gls{rs}    & 100           & 9.966                     & 9.676                     & 16.178\\
-        \gls{rs}    & 200           & 9.966                     & 9.676                     & 32.914\\
-        \gls{rs}    & 300           & 9.966                     & 9.676                     & 48.404\\
-        \gls{tpe}   & 100           & 9.966                     & 9.720                     & 13.057\\
-        \gls{tpe}   & 300           & 9.966                     & 9.720                     & 33.392\\
+        \Gls{pdfo}  & 68            & 9.966                     & 9.730                     & 4.906\\
+        \Gls{rs}    & 100           & 9.966                     & 9.676                     & 16.178\\
+        \Gls{rs}    & 200           & 9.966                     & 9.676                     & 32.914\\
+        \Gls{rs}    & 300           & 9.966                     & 9.676                     & 48.404\\
+        \Gls{tpe}   & 100           & 9.966                     & 9.720                     & 13.057\\
+        \Gls{tpe}   & 300           & 9.966                     & 9.720                     & 33.392\\
         \bottomrule
     \end{tabular}
 \end{table}
@@ -813,12 +801,12 @@ The authors are currently working on a new solver for nonlinearly constrained op
         \toprule
         Solver      & {No.\ eval.}  & {AUC Score ($10^{-1}$)}   & {Accuracy ($10^{-1}$)}    & {Exec.\ time (\si{\second})}\\
         \midrule
-        \gls{pdfo}  & 68            & 8.241                     & 8.016                     & 2.793\\
-        \gls{rs}    & 100           & 8.025                     & 7.882                     & 4.233\\
-        \gls{rs}    & 200           & 8.141                     & 7.775                     & 8.308\\
-        \gls{rs}    & 300           & 8.141                     & 7.775                     & 12.414\\
-        \gls{tpe}   & 100           & 7.774                     & 7.453                     & 4.197\\
-        \gls{tpe}   & 300           & 8.106                     & 7.989                     & 12.912\\
+        \Gls{pdfo}  & 68            & 8.241                     & 8.016                     & 2.793\\
+        \Gls{rs}    & 100           & 8.025                     & 7.882                     & 4.233\\
+        \Gls{rs}    & 200           & 8.141                     & 7.775                     & 8.308\\
+        \Gls{rs}    & 300           & 8.141                     & 7.775                     & 12.414\\
+        \Gls{tpe}   & 100           & 7.774                     & 7.453                     & 4.197\\
+        \Gls{tpe}   & 300           & 8.106                     & 7.989                     & 12.912\\
         \bottomrule
     \end{tabular}
 \end{table}
@@ -831,12 +819,12 @@ The authors are currently working on a new solver for nonlinearly constrained op
         \toprule
         Solver      & {No.\ eval.}  & {AUC Score ($10^{-1}$)}   & {Accuracy ($10^{-1}$)}    & {Exec.\ time (\SI{}[10^3]{\second})}\\
         \midrule
-        \gls{pdfo}  & 59            & 9.940                     & 9.819                     & 1.892\\
-        \gls{rs}    & 100           & 9.886                     & 9.773                     & 4.435\\
-        \gls{rs}    & 200           & 9.886                     & 9.773                     & 9.146\\
-        \gls{rs}    & 300           & 9.886                     & 9.773                     & 13.251\\
-        \gls{tpe}   & 100           & 9.891                     & 9.791                     & 4.426\\
-        \gls{tpe}   & 300           & 9.896                     & 9.786                     & 12.552\\
+        \Gls{pdfo}  & 59            & 9.940                     & 9.819                     & 1.892\\
+        \Gls{rs}    & 100           & 9.886                     & 9.773                     & 4.435\\
+        \Gls{rs}    & 200           & 9.886                     & 9.773                     & 9.146\\
+        \Gls{rs}    & 300           & 9.886                     & 9.773                     & 13.251\\
+        \Gls{tpe}   & 100           & 9.891                     & 9.791                     & 4.426\\
+        \Gls{tpe}   & 300           & 9.896                     & 9.786                     & 12.552\\
         \bottomrule
     \end{tabular}
 \end{table}
