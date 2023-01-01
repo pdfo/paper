@@ -26,7 +26,6 @@ jobs:
           root_file: pdfo2022.tex
           args: -file-line-error -halt-on-error -interaction=nonstopmode
           pre_compile: tlmgr update --self && tlmgr update --all
-          latexmk_shell_escape: true
 
       - name: Store artifacts
         uses: actions/upload-artifact@v3
