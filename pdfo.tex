@@ -16,6 +16,7 @@
 \usepackage{booktabs}
 \usepackage{caption}
 \usepackage[acronym]{glossaries-extra}
+\usepackage{xspace}
 \usepackage{graphicx}
 \usepackage{ifthen}
 \usepackage[final]{listings}
@@ -68,6 +69,7 @@
 \newcommand{\qspace}[1][n]{\mathcal{Q}\ifthenelse{\equal{#1}{}}{}{_{#1}}}
 \newcommand{\radalt}[1][k]{\tilde{\Delta}\ifthenelse{\equal{#1}{}}{}{_{#1}}}
 \newcommand{\rad}[1][k]{\Delta\ifthenelse{\equal{#1}{}}{}{_{#1}}}
+\newcommand{\radlb}[1][k]{\rho\ifthenelse{\equal{#1}{}}{}{_{#1}}}
 \newcommand{\set}[2][]{#1\{#2#1\}}
 \newcommand{\st}{\text{s.t.}}
 \newcommand{\trust}{{\text{t}}}
@@ -88,7 +90,6 @@
 \newacronym{bobyqa}{BOBYQA}{Bound Optimization BY Quadratic Approximation}
 \newacronym{cobyla}{COBYLA}{Constrained Optimization BY Linear Approximations}
 \newacronym{cobyqa}{COBYQA}{Constrained Optimization BY Quadratic Approximations}
-\newacronym{kkt}{KKT}{Karush-Kuhn-Tucker}
 \newacronym{lincoa}{LINCOA}{LINearly Constrained Optimization Algorithm}
 \newacronym{newuoa}{NEWUOA}{NEW Unconstrained Optimization Algorithm}
 \newacronym{pdfo}{PDFO}{Powell's Derivative-Free Optimization solvers}
@@ -129,7 +130,9 @@
 %
 \journalname{Mathematical Programming Computation}
 \title{PDFO --- A Cross-Platform Package for Powell's Derivative-Free Optimization Solvers\thanks{%
-    This work was supported by the University Grants Committee of Hong Kong under the Hong Kong Ph.D. Fellowship Scheme and the Early Career Scheme, and by The Hong Kong Polytechnic University.
+    This work was supported by the University Grants Committee
+    of Hong Kong under the Hong Kong Ph.D. Fellowship Scheme (ref.\ PF18-24698) and under
+    grants PolyU 253012/17P and PolyU 153054/20P.
 }}
 \subtitle{}
 \titlerunning{}
@@ -142,16 +145,15 @@
         ORCID: 0000-0003-2717-2876\\
         \email{tom.ragonneau@polyu.edu.hk}
     \and
-    Z. Zhang \at
+    Z. Zhang (corresponding author)\at
         Department of Applied Mathematics, The Hong Kong Polytechnic University, Hong Kong\\
         ORCID: 0000-0001-8934-8190\\
-        Tel.: +852 2766 4592\\
-        Fax: +852 2362 9045\\
         \email{zaikun.zhang@polyu.edu.hk}
 }
 \date{Received: date / Accepted: date}
 %
 \newcommand{\red}{\textcolor{red}}
+\newcommand{\kkt}{KKT\xspace}
 \begin{document}
 
 \maketitle
@@ -160,9 +162,11 @@
     Late Professor M. J. D. Powell designed five derivative-free optimization methods, namely \gls{cobyla}, \gls{uobyqa}, \gls{newuoa}, \gls{bobyqa}, and \gls{lincoa}.
     The algorithms were implemented in Fortran 77 and may not be easily accessible to some users.
     This paper introduces the~\gls{pdfo}~(\glsxtrlong{pdfo}) package, which provides user-friendly Python and MATLAB interfaces to Powell's code.
+    %, and has been downloaded more than \num{48000} times as of January 2023.
     With~\gls{pdfo}, users can call each of Powell's algorithms directly based on their own choice.
     Alternatively, if the user does not specify any algorithm, the package can also select one automatically based on the problem characteristics.
-    We also provide overviews on Powell's methods and share some observations on these methods based on experiments conducted using~\gls{pdfo}.
+    % When a problem can be solved by multiple algorithms (for example, an unconstrained problem can be solved by all five algorithms), the selection is made based on experimental results on the CUTEst problems.
+    We also provide an overview on Powell's methods and share some observations on these methods based on experiments conducted using~\gls{pdfo}.
 
     \keywords{First keyword \and Second keyword \and More}
     \subclass{MSC code1 \and MSC code2 \and more}
@@ -201,6 +205,7 @@ However, \gls{pdfo} has several features that distinguishes itself from others.
     To the best of our knowledge, \gls{pdfo} is the only package that provides all of \gls{cobyla}, \gls{uobyqa}, \gls{newuoa}, \gls{bobyqa}, and \gls{lincoa} with a uniform interface.
     In addition to homogenizing the usage, such an interface eases the comparison between these solvers in case multiple of them are able to tackle a given problem.
     By doing so, we may gain insights that cannot be obtained otherwise into the behavior of the solvers.
+    %, as will be illustrated in~\cref{sec:fake}.
 
     \item \emph{Solver selection.}
     When using \gls{pdfo}, the user can specifically call one of Powell's solvers. Nevertheless, if the user does not specify any solver, \gls{pdfo} will automatically select a solver according to the given problem.
@@ -250,7 +255,7 @@ where~$\obj : \R^n \to \R$ is the objective function and~$\fset \subseteq \R^n$ 
 As summarized in~\cite{Conn_Scheinberg_Vicente_2009b}, two strategies have been developed to tackle
 the problem~\eqref{eq:nlc} without using derivatives, which we will introduce in the following.
 
-The first strategy, known as direct search\footnote{In some early papers (e.g.,~\cite{Powell_1994,Powell_1998}), Powell used ``direct search'' to mean what is known as ``\glsfmtlong{dfo}'' today. Powell rarely used the word ``derivative-free optimization.''
+The first strategy, known as direct search\footnote{In some early papers (e.g.,~\cite{Powell_1994,Powell_1998}), Powell and many other authors used ``direct search'' to mean what is known as ``\glsfmtlong{dfo}'' today. Powell rarely used the word ``derivative-free optimization.''
 The only exceptions known to us are his last paper~\cite{Powell_2015} and his distinguished lecture
 titled ``A parsimonious way of constructing quadratic models from values of the objective function in
 derivative-free optimization'' at the National Center for Mathematics and Interdisciplinary Sciences,
@@ -260,7 +265,10 @@ See~\cite{Kolda_Lewis_Torczon_2003},~\cite[Chapters~7 and~8]{Conn_Scheinberg_Vic
 The second strategy approximates the original problem~\eqref{eq:nlc} by relatively simple models and locates the iterates according to these models.
 Algorithms with this strategy are referred to as model-based methods. They often make use of the models within a trust-region framework~\cite{Conn_Gould_Toint_2000,Conn_Scheinberg_Vicente_2009a,Yuan_2015} or a line-search framework~\cite{Berahas_Byrd_Nocedal_2019,Shi_Etal_2022}.
 Interpolation and regression are two common ways of establishing the models~\cite{Powell_2001,Conn_Scheinberg_Vicente_2008a,Conn_Scheinberg_Vicente_2008b,Wild_Regis_Shoemaker_2008,Bandeira_Scheinberg_Vicente_2012,Billups_Larson_Graf_2013,Regis_Wild_2017}.
-Algorithms using finite-difference approximations of gradients can also be regarded as model-based methods, because such approximations essentially come from linear (for forward and backward finite differences) or quadratic (for central finite difference) interpolation of the function under consideration over rather special interpolation sets.
+Algorithms using finite-difference approximations of gradients can also be regarded as model-based
+methods, because such approximations essentially come from linear (for forward and backward finite
+differences) or quadratic (for central finite difference) interpolation of the function under
+consideration over rather special interpolation sets~(see~\cite[\S~1.4.3]{Ragonneau_2022} for more comments).
 Most model-based \gls{dfo} methods employ polynomial models that are linear or quadratic, examples including
 Powell's algorithms~\cite{Powell_1994,Powell_2002,Powell_2006,Powell_2009} in \gls{pdfo},
 MNH~\cite{Wild_2008}, DFLS~\cite{Zhang_Conn_Scheinberg_2010},
@@ -288,10 +296,15 @@ of quadratic models in DFO, which is the backbone of \gls{newuoa}, \gls{bobyqa},
 His code for this algorithm is contained in the HSL Mathematical Software Library~\cite{HSL} as subroutine \texttt{VA24}.
 It is not included in \gls{pdfo} because the code is not in the public domain, although open-source implementations are available~(see~\cite[footnote~4]{Conn_Scheinberg_Toint_1997b}).
 
-From the 1990s to the final days of his career, Powell developed five model-based \gls{dfo} algorithms to solve~\eqref{eq:nlc}, namely \gls{cobyla}~\cite{Powell_1994}~(for nonlinearly constrained problems), \gls{uobyqa}~\cite{Powell_2002}~(for unconstrained problems), \gls{newuoa}~\cite{Powell_2006}~(for unconstrained problems), \gls{bobyqa}~\cite{Powell_2009}~(for bound-constrained problems), and \gls{lincoa} (for linearly constrained problems).
+From the 1990s to the final days of his career, Powell developed five model-based \gls{dfo}
+algorithms to solve~\eqref{eq:nlc}, namely \gls{cobyla}~\cite{Powell_1994}~(for nonlinearly
+constrained problems), \gls{uobyqa}~\cite{Powell_2002}~(for unconstrained problems),
+\gls{newuoa}~\cite{Powell_2006}~(for unconstrained problems), \gls{bobyqa}~\cite{Powell_2009}~(for
+bound-constrained problems), and \gls{lincoa} (for linearly constrained problems).
 Moreover, Powell implemented these algorithms into Fortran solvers and made the code publicly available.
 They are the cornerstones of \gls{pdfo}.
-We will provide a brief overview of these five algorithms, starting with a sketch in Section~\ref{ssec:sketch} and then present more details afterwards.
+In this section, we will provide an overview of these five algorithms, starting with a sketch in
+Section~\ref{ssec:sketch} and then presenting more details afterwards.
 
 \subsection{A sketch of the algorithms}
 \label{ssec:sketch}
@@ -303,7 +316,7 @@ At iteration~$k$, the algorithms construct a linear (for \gls{cobyla}) or quadra
     \objm(y) = \obj(y), \quad y \in \xpt,
 \end{equation}
 where~$\xpt \subseteq \R^n$ is a finite interpolation set updated along the iterations.
-% \Gls{cobyla} models the constraints by interpolants on~$\xpt$ as well.
+\Gls{cobyla} models the constraints by linear interpolants on~$\xpt$ as well.
 Instead of repeating Powell's description of these algorithms, we outline them in the sequel, emphasizing the trust-region subproblem, the interpolation problem, and the management of the interpolation set.
 
 \subsubsection{The trust-region subproblem}
@@ -329,11 +342,14 @@ solving~\eqref{eq:trsp}, even though the problem is only solved approximately.
 }
 
 \subsubsection{The interpolation problem}
+\label{ssec:iptprob}
 
 \paragraph{Fully determined interpolation.}
 
 The interpolation condition~\eqref{eq:itpls} is essentially a linear system.
-Given a base point~$y^{\base}\in \R^n$, which may depend on~$k$, a linear model~$\objm$ takes the form of~$\objm(x) = \obj(y^{\base}) + (x - y^{\base})^{\T} \nabla \objm(y^{\base})$, and hence~\eqref{eq:itpls} is equivalent to
+Given a base point~$y^{\base}\in \R^n$, which may depend on~$k$, a linear model~$\objm$ takes the
+form of~$\objm(x) = \obj(y^{\base}) + (x - y^{\base})^{\T} \nabla \objm(y^{\base})$, and
+hence~\eqref{eq:itpls} is equivalent to
 \begin{equation}
     \label{eq:litpls}
     \objm(y^{\base}) + (y -y^{\base})^{\T} \nabla \objm(y^{\base})  = \obj(y),  \quad y \in \xpt,
@@ -350,7 +366,8 @@ Similarly, if~$\objm$ is a quadratic model, then~\eqref{eq:itpls} is equivalent 
 a linear system with unknowns~$\objm(y^\base) \in \R$, $\nabla \objm(y^\base) \in \R^n$, and~$\nabla^2 \objm(y^{\base})\in\R^{n \times n}$, the degrees of freedom being~$(n + 1)(n + 2) / 2$ due to the symmetry of~$\nabla^2 \objm(y^\base)$.
 \Gls{uobyqa} constructs quadratic models by the system~\eqref{eq:qitpls}.
 To decide a quadratic model~$\objm$ completely by the linear system~\eqref{eq:qitpls} alone, it is necessary that~$\xpt$ contains~$(n+2)(n+1)/2$ points, and~$f$ should have been evaluated at all these points before this linear system can be formed.
-Even though most of these points will be reused at the subsequent iterations so that the number of function evaluations needed per iteration is tiny (see Section \ref{ssec:iptset}), we must perform~$(n + 1)(n + 2) / 2$ function evaluations during the very first iteration.
+Even though most of these points will be reused at the subsequent iterations so that the number of
+function evaluations needed per iteration is tiny (see Section~\ref{ssec:iptset}), we must perform~$(n + 1)(n + 2) / 2$ function evaluations during the very first iteration.
 This is impractical unless~$n$ is small, which motivates the use of underdetermined quadratic interpolation.
 
 \paragraph{Underdetermined quadratic interpolation.}
@@ -374,16 +391,17 @@ which is inspired by the least-change property of quasi-Newton updates~\cite{Den
 Powell~\cite{Powell_2013} referred to his approach as the \emph{symmetric Broyden update} of
 quadratic models (see also~\cite[\S~3.6]{Zhang_2012} and~\cite[\S~2.4.2]{Ragonneau_2022}).
 It can be regarded as a derivative-free version of the \gls{psb} quasi-Newton update~\cite{Powell_1970b}, which minimizes the functional~$\func_k$ among all quadratic polynomials that fulfill~$Q(\iter) = \obj(\iter)$, $\nabla Q(\iter) = \nabla \obj(\iter)$, and~$\nabla Q(\iter[k - 1]) = \nabla \obj(\iter[k - 1])$ (see~\cite[Theorem~4.2]{Dennis_Schnabel_1979}), with~$\iter$ and~$\iter[k - 1]$ being the current and the previous iterates, respectively.
-The interpolation problem~\eqref{eq:undqitp} and~\eqref{eq:leastchange} is a convex quadratic programming problem with respect to the coefficients of the quadratic model.
+The interpolation problem~\eqref{eq:undqitp}--\eqref{eq:leastchange} is a convex quadratic programming problem with respect to the coefficients of the quadratic model.
 
 \paragraph{Solving the interpolation problem.}
 \red{
-Powell's algorithms do not solve the interpolation problems~\eqref{eq:litpls}, \eqref{eq:qitpls}, and~\eqref{eq:undqitp} from scratch.
+Powell's algorithms do not solve the interpolation problems~\eqref{eq:litpls}, \eqref{eq:qitpls},
+and~\eqref{eq:undqitp} from scratch.
 \gls{cobyla} maintains the inverse of the coefficient matrix for~\eqref{eq:litpls}
 and updates it along the iterations.
 Since each iteration of \gls{cobyla} alters the interpolation set~$\xpt$ by only one
-point~(see Section~\ref{ssec:iptset}), the coefficient matrix is modified by a rank-$1$ update, and hence
-its inverse can be updated according to the Sherman-Morrison-Woodbury formula.
+point~(see Subsection~\ref{ssec:iptset}), the coefficient matrix is modified by a rank-$1$ update, and hence
+its inverse can be updated according to the Sherman-Morrison-Woodbury formula~\cite{Hager_1989}.
 \gls{uobyqa} does the same for~\eqref{eq:qitpls},
 except that~\cite[\S~4]{Powell_2002} describes the update in terms of the Lagrange functions of the
 interpolation problem~\eqref{eq:qitpls}, the coefficients of a Lagrange function corresponding
@@ -394,8 +412,8 @@ maintain and update the inverse of the coefficient matrix for the KKT system
 of~\eqref{eq:undqitp}--\eqref{eq:leastchange}. The update is also done by the
 Sherman-Morrison-Woodbury formula as detailed in~\cite[\S~2]{Powell_2004c}. In this case, each
 iteration modifies the coefficient matrix and its inverse by rank-$2$ updates.
-In addition, the columns of this inverse matrix also readily provide the coefficients of the Lagrange
-functions for the interpolation problem~\eqref{eq:undqitp}--\eqref{eq:leastchange}~(see~\cite[\S~3]{Powell_2004b}), making the problem easy to solve.
+In addition, the columns of this inverse matrix also readily provide the coefficients of Lagrange
+functions that make the interpolation problem~\eqref{eq:undqitp}--\eqref{eq:leastchange}~(see~\cite[\S~3]{Powell_2004b}) easy to solve.
 }
 
 \paragraph{The base point.}
@@ -415,17 +433,18 @@ It should recycle points from previous iterations, at which the objective functi
 Meanwhile, it needs to maintain the well-poisedness of the interpolation set, or equivalently, the well conditioning of the interpolation problem~\cite{Sauer_Xu_1995,Conn_Scheinberg_Vicente_2009b}
 %, and ensure the convergence of the optimization algorithm~\cite{Conn_Scheinberg_Vicente_2008a,Conn_Scheinberg_Vicente_2008b, Fasano_Morales_Nocedal_2009,Scheinberg_Toint_2010}.
 
-At a normal iteration, a point~$\iter^{\trust} \in \R^n$ is computed by solving the trust-region subproblem~\eqref{eq:trsp}, and Powell's \gls{dfo} methods update the interpolation set as
+At a normal iteration, a point~$\iter^{\trust} \in \R^n$ is computed by solving the trust-region
+subproblem~\eqref{eq:trsp}, and Powell's \gls{dfo} methods update the interpolation set as
 \begin{equation*}
     \xpt[k + 1] = \big(\xpt \cup \set{\iter^{\trust}}\big) \setminus \set{y_k^{\drop}},
 \end{equation*}
 where~$y_k^{\drop} \in \xpt$ is chosen to improve the well-poisedness of~$\xpt[k + 1]$.
 Note that~$y_k^{\drop}$ is selected after evaluating~$\iter^{\trust}$.
 Recall that Powell's methods update the inverse of either the coefficient matrix of the
-interpolation system or the corresponding \gls{kkt} system using the Sherman-Morrison-Woodbury formula.
+interpolation system or the corresponding \kkt system using the Sherman-Morrison-Woodbury formula.
 \red{
 In order to keep the interpolation problem well-conditioned, $y_k^{\drop}$ is chosen
-to enlarge the denominator in the Sherman-Morrison-Woodbury formula, which is also the ratio between
+to enlarge the denominator in this formula, which is also the ratio between
 the determinants of the old and new coefficient matrices.\footnote{
     Let~$W$ be a square matrix, and~$W_+ = W + UV^\T$, where $U$ and~$V$ are two
     matrices of the same size and $UV^\T$ has the same size as $W$.
@@ -435,7 +454,8 @@ the determinants of the old and new coefficient matrices.\footnote{
     and~$(I+V^\T W^{-1}U)$ are nonsingular. The number~$\det(I+V^\T W^{-1}U)$ is the only
     denominator involved in the numerical computation of the formula.
 }
-In fully determined interpolation, the aforementioned denominator is~$\ell_k^\drop(\iter^{\trust})$, where~$\ell_k^\drop$ is the Lagrange function associated with~$\xpt$ corresponding to~$y_k^\drop$
+In fully determined interpolation, the aforementioned denominator is~$\ell_k^\drop(\iter^{\trust})$,
+where~$\ell_k^\drop$ is the Lagrange function associated with~$\xpt$ corresponding to~$y_k^\drop$
 (see~\mbox{\cite[\S~2]{Powell_2001}}, particularly equations~(10)--(13)).
 In underdetermined quadratic interpolation, the denominator is lower
 bounded by~$[\ell_k^{\drop}(\iter^{\trust})]^2$ (see~\mbox{\cite[\S~2]{Powell_2004c}}, particularly
@@ -453,7 +473,7 @@ to improve the well-poisedness of the interpolation set.
 In this case, the methods first select a point~$y_k^{\drop} \in \xpt$ to drop from~$\xpt$, and then set
 \begin{equation}
     \label{eq:xpt-update-geo}
-    \xpt[k + 1] = \left(\xpt \setminus \set{y_k^{\drop}}\right) \cup \set{\iter^{\geo}},
+    \xpt[k + 1] = \big(\xpt \setminus \set{y_k^{\drop}}\big) \cup \set{\iter^{\geo}},
 \end{equation}
 where~$\iter^{\geo} \in \R^n$ is chosen to improve the well-poisedness of~$\xpt[k + 1]$.
 %The choice of~$\iter^{\geo}$ made by \gls{cobyla} is specified in \cref{ssec:cobyla}.
@@ -487,7 +507,7 @@ always satisfy the bound constraints.
 \subsection{\glsfmtshort{cobyla}}
 \label{ssec:cobyla}
 
-Powell released the \gls{cobyla} solver in May 1992 and published the \gls{cobyla} paper~\cite{Powell_1994} in 1994.
+Published in 1994, \gls{cobyla} was the first model-based \gls{dfo} solver of Powell.
 The solver is named after ``\glsxtrlong{cobyla}.''
 It aims to solve the optimization problem~\eqref{eq:nlc} with the feasible region~$\fset$ being
 \begin{equation*}
@@ -496,55 +516,87 @@ It aims to solve the optimization problem~\eqref{eq:nlc} with the feasible regio
 where~$\con : \R^n \to \R$ denotes the~$i$th constraint function, $i \in \set{1, 2, \dots, m}$.
 The same as the objective function, all constraints are assumed to be accessible only through function values.
 
-At iteration~$k$, \gls{cobyla} models the objective and the constraint functions with {linear} interpolants on the interpolation set~$\xpt$, which consists of~$n + 1$ points that are updated along the iterations.
-In this context, the interpolation set~$\xpt$ is poised if an only if the volume of the~$n$-simplex engendered by~$\xpt$ to be nonzero.
-
-Once the linear models~$\conm$ of the constraint functions~$\con$ for~$i \in \set{1, \dots, m}$ are built, the approximation~$\fsetm$ of~$\fset$ is set to
+As mentioned before, at iteration~$k$, \gls{cobyla} models the objective and the constraint functions with {linear}
+interpolants on the interpolation set~$\xpt$ of~$n + 1$ points.
+Once the linear models~$\conm$ of the constraint functions~$\con$ are built for~$i \in \set{1, \dots, m}$, the approximation~$\fsetm$ of~$\fset$ is set to
 \begin{equation}
     \label{eq:cobylarg}
     \fsetm \eqdef \set{x \in \R^n : \conm(x) \ge 0, ~ i=1, \dots, m}.
 \end{equation}
-The trust-region subproblem~\eqref{eq:trsp} is then handled in the following way.
-Solving sequentially the problems~\eqref{eq:trsp} by replacing the trust-region radius~$\rad$ with a constant continuously increasing from zero to~$\rad$ will generate a piecewise linear path from~$\iter$ to the solution of the subproblem.
-The strategy of COBYLA is to compute this path, by updating the active sets of the constraint models.
-However, the trust-region constraint~$\norm{x - \iter} \le \rad$ and the region~\eqref{eq:cobylarg} may contradict each others, in which case the trial point is chosen to solve approximately
-\begin{align*}
+Note that the trust-region subproblem~\eqref{eq:trsp} may not be feasible,
+as the trust region and the region~\eqref{eq:cobylarg} may not intersect.
+\gls{cobyla} handles the subproblem in two stages. In the first stage, the problem
+\begin{equation}
+    \label{eq:cobyla_sp1}
+    \begin{split}
     \min_{x \in \R^n}   & \quad \max_{1 \le i \le m} [\conm(x)]_{-}\\
-    \st                 & \quad \norm{x - \iter} \le \rad,
-\end{align*}
-where~$[t]_{-} = \max \set{0, -t}$ for any~$t\in \R$.
-In doing so, the method attempts to reduce the~$\ell_\infty$-violation of the constraint models while ensuring that the trial point lies in the trust region.
+    \st                 & \quad \norm{x - \iter} \le \rad
+    \end{split}
+\end{equation}
+is solved, where~$[t]_{-} = \max \set{0, -t}$ for any~$t\in \R$.
+In doing so, the method attempts to reduce the~$\ell_{\infty}$-violation of the linearized constraints within the trust region.
+If the solution to~\eqref{eq:cobyla_sp1} lies strictly in the trust region,
+then the second stage uses the resultant freedom in $x$ to minimize the linearized objective
+function~$\objm(x)$ within the trust region subject to no increase in any greatest violation of the
+linearized constraints.
 
-As we already mentioned, it is essential to maintain a good geometry of~$\xpt$ to ensure the accuracy of the models.
-When the geometry of~$\xpt$ turns out inadequate for producing accurate models, \gls{cobyla} sets~\eqref{eq:xpt-update-geo} with~$\iter^{\geo}$ chosen on the direction perpendicular to the face of~$\xpt$ (regarded as a simplex) that is to the opposite of~$\iter^{\drop}$.
-This replacement tends to increase the volume of the simplex engendered by the interpolation set, and hence, improves the conditioning of the interpolation system~\eqref{eq:itpls}.
+%by imagining that~$\rad[k]$ is replaced with a constant continuously increasing
+%from zero to~$\rad[k]$, which would generate a piecewise linear path from~$\iter[k]$ to the solution of this problem.
+%The trust-region subproblem solver of \gls{cobyla} follows this path to locate the solution.
+%%by updating the active sets of the linear constraints~\eqref{eq:cobylarg}.
+%However, the trust-region constraint~$\norm{x - \iter} \le \rad$ and the region~\eqref{eq:cobylarg} may contradict each others, in which case the trial point is chosen to solve approximately
+
+
+%As we already mentioned, it is essential to maintain a good geometry of~$\xpt$ to ensure the accuracy of the models.
+%When the geometry of~$\xpt$ turns out inadequate for producing accurate models, \gls{cobyla}
+%sets~\eqref{eq:xpt-update-geo} with~$\iter^{\geo}$ chosen on the direction perpendicular to the face of~$\xpt$ (regarded as a simplex) that is to the opposite of~$\iter^{\drop}$.
+%This replacement tends to increase the volume of the simplex engendered by the interpolation set,
+%and hence, improves the conditioning of the interpolation system~\eqref{eq:itpls}.
 
 \subsection{\glsfmtshort{uobyqa}}
 \label{ssec:uobyqa}
 
-Later on, in 2002, Powell developed \gls{uobyqa}~\cite{Powell_2002}, named after ``\glsxtrlong{uobyqa}.''
+In 2002, Powell published \gls{uobyqa}~\cite{Powell_2002}, named after ``\glsxtrlong{uobyqa}.''
 It aims at solving the nonlinear optimization problem~\eqref{eq:nlc} in the unconstrained case, i.e., when~$\fset = \R^n$.
-To do so, at each iteration, it models the objective function~$\obj$ with a quadratic model~$\objm$ obtained by fully-determined interpolation on the set~$\xpt$ containing~$(n + 1)(n + 2) / 2$ points.
 
-The set~$\xpt[k + 1]$ differs from~$\xpt$ of at most one point.
-During a classical iteration, a trial point, i.e., an approximate solution of the trust-region subproblem~\eqref{eq:trsp} replaces an interpolation of~$\xpt$.
-As mentioned above, it is essential to ensure the existence and uniqueness of the models from a computational viewpoint.
-Hence, \gls{uobyqa} may undertake geometry-improving steps whenever the models seem not to be accurate.
-Since \gls{uobyqa} requires only a rough solution of the geometry-improving subproblem~\eqref{eq:biglag}, Powell developed an algorithm that requires only~$\mathcal{O}(n^2)$ operations, based on an estimation of~$\abs{\ell_{\drop}(\cdot)}$.
-Once such a point is calculated, the solver continues with a classical trust-region step, and the subproblem~\eqref{eq:trsp} is solved with the Mor{\'{e}}-Sorensen algorithm~\cite{More_Sorensen_1983}.
+
+At iteration $k$, \gls{uobyqa} constructs the model~$\objm$ for the objective function~$\obj$
+by the fully determined quadratic interpolation on the interpolation set~$\xpt$ containing~$(n + 1)(n + 2) / 2$ points.
+The trust-region subproblem~\eqref{eq:trsp} is solved with the Mor{\'{e}}-Sorensen algorithm~\cite{More_Sorensen_1983}.
+For the geometry-improving subproblem~\eqref{eq:biglag}, Powell developed an inexact algorithm that requires only~$\mathcal{O}(n^2)$
+operations. See~\cite[\S~2]{Powell_2002} for more details.
+
+The update of the trust-region radius~$\rad$ in \gls{uobyqa} is worth noting.
+It is updated in a way that is typical for trust-region methods, except that a  lower
+bound~$\radlb$ is imposed on~$\rad$.
+The value of~$\radlb[k]$ can be regarded as an indicator for the \emph{resolution} of the algorithm at the current iteration.
+Without imposing~$\rad[k] \ge \radlb[k]$, the trust-region radius~$\rad[k]$ may be reduced to a
+value that is too small for the current precision of the algorithm, making the interpolation points
+concentrate too much.
+The value of~$\radlb[k]$ is never increased and is decreased when the \gls{uobyqa} decides that the work for the current value of~$\radlb[k]$ is finished.
+It decides so if~$\rad[k]$ has reached its lower bound~$\radlb[k]$,
+the current trust-region trial step does not perform well,
+and the current interpolation set seems adequate for the current resolution.
+See~\cite[\S~3]{Powell_2002} for more information on the updates of~$\rad$ and~$\radlb[k]$.
+
 
 \subsection{\glsfmtshort{newuoa}, \glsfmtshort{bobyqa}, and \glsfmtshort{lincoa}}
 \label{ssec:nbloa}
 
-The major flaw of \gls{uobyqa} is the amount of required interpolation points, which can become prohibitively huge when~$n$ increases.
-Evaluating models by solving the problem defined by~\eqref{eq:undqitp} and~\eqref{eq:leastchange} copes with this issue by reducing the number of interpolation points, necessitating typically~$\mathcal{O}(n)$ points (the default value~$2n + 1$ being recommended).
-% If the number of interpolation points was less than or equal to~$n + 1$, the models would remain linear, so that Powell requires the number of points in~$\xpt$ to be at least~$n + 2$ and at most~$(n + 1)(n + 2) / 2$.
-% As in the fully-determined case, the geometry of the interpolation set plays a crucial role, as it influences the accuracy of the quadratic models, and the geometry-improving steps~\cref{eq:biglag} should be also entertained.
+%The major flaw of \gls{uobyqa} is the amount of required interpolation points, which can become prohibitively huge when~$n$ increases.
+%Evaluating models by solving the problem defined by~\eqref{eq:undqitp} and~\eqref{eq:leastchange} copes with this issue by reducing the number of interpolation points, necessitating typically~$\mathcal{O}(n)$ points (the default value~$2n + 1$ being recommended).
+%% If the number of interpolation points was less than or equal to~$n + 1$, the models would remain linear, so that Powell requires the number of points in~$\xpt$ to be at least~$n + 2$ and at most~$(n + 1)(n + 2) / 2$.
+%% As in the fully determined case, the geometry of the interpolation set plays a crucial role, as it influences the accuracy of the quadratic models, and the geometry-improving steps~\cref{eq:biglag} should be also entertained.
 
-Based on such underdetermined interpolation models, Powell developed his last three \gls{dfo} solvers, namely \gls{newuoa}~\cite{Powell_2006,Powell_2008}, \gls{bobyqa}~\cite{Powell_2009}, and \gls{lincoa}.
+Later on, based on the underdetermined quadratic interpolation introduced in Subsection~\ref{ssec:iptprob},
+Powell developed his last three \gls{dfo} solvers, namely \gls{newuoa}~\cite{Powell_2006,Powell_2008}, \gls{bobyqa}~\cite{Powell_2009}, and \gls{lincoa}.
 \Gls{bobyqa} and \gls{lincoa} are named respectively after ``\glsxtrlong{bobyqa}'' and
-``\glsxtrlong{lincoa}'', but Powell~\cite{Powell_2006,Powell_2008} did not specify the meaning of~\gls{newuoa}, which is likely an acronym for ``\glsxtrlong{newuoa}.''
-As their names suggest, they aim at solving unconstrained, bound-constrained, and linearly constrained problems respectively, using quadratic models of the objective function.
+``\glsxtrlong{lincoa}'', but Powell~\cite{Powell_2006,Powell_2008} did not specify the meaning
+of~\gls{newuoa}, which is likely an acronym for ``\glsxtrlong{newuoa}.''
+It is worth mentioning that Powell \emph{never} published a paper to introduce \gls{lincoa}, and~\cite{Powell_2015} discusses only the resolution of its trust-region subproblem.
+
+As their names suggest, \gls{newuoa}, \gls{bobyqa}, and \gls{lincoa} aim at solving unconstrained,
+bound-constrained, and linearly constrained problems respectively.
 % All three use the underdetermined interpolation technique described above to build the quadratic models, so that \gls{newuoa} is more suitable than \gls{uobyqa} for solving problems with a relatively high dimension.
 They all set~$\fsetm$ in the trust-region subproblem~\eqref{eq:trsp} to be~$\fset$, corresponding the whole space for \gls{newuoa}, a box for \gls{bobyqa} and a polyhedron for \gls{lincoa}.
 \red{A subtlety of \gls{bobyqa} is that the constraints are always respected, for each iterate and
@@ -557,7 +609,7 @@ each point in~$\xpt$.}
 % Powell derived an updating formula in~\cite{Powell_2004b} that requires only~$\mathcal{O}(N^2)$ operations instead of~$\mathcal{O}(N^3)$ if the computation was made from scratch with no loss of accuracy, where~$N$ denotes the number of interpolation points.
 When it comes to solving the trust-region subproblems~\eqref{eq:trsp}, \gls{newuoa} employs the
 Steihaug-Toint truncated conjugate gradient algorithm~\cite{Steihaug_1983,Toint_1981}, and
-\gls{bobyqa} and \gls{lincoa} use active-set variations of it. \red{citation}
+\gls{bobyqa} and \gls{lincoa} use active-set variants of it. \red{citation}
 
 As we already mentioned, geometry-improving iterations must be entertained when the method detects that~$\objm$ does not represent~$\obj$ accurately enough.
 \Gls{newuoa} employs a technique similar to that of \gls{uobyqa} to solve~\eqref{eq:biglag}.
@@ -572,8 +624,6 @@ It computes
 \end{enumerate}
 The procedure first selects the point among the first two alternatives that provide the larger value of~$\abs{\ell_{\drop}(\cdot)}$.
 Further, this point is replaced with the third alternative if the latter provides a value of~$\abs{\ell_{\drop}(\cdot)}$ that is not too small compared with the above one, while being nearly feasible.
-
-It is worth mentioning that Powell \emph{never} published a paper introducing \gls{lincoa}, and~\cite{Powell_2015} discusses only the resolution of its trust-region subproblem.
 
 \section{An interface for the Powell's derivative-free solvers}
 \label{sec:pdfo}
@@ -632,7 +682,8 @@ As long as these constraints are consistent, they define a subspace of~$\R^n$ of
 A crucial point of \gls{bobyqa} and \gls{lincoa} is that they require the initial guess to be feasible, so that \gls{pdfo} attempts to project the provided initial guess onto the feasible set (\gls{lincoa} would otherwise increase the coefficients of the right-hand side of the linear constraints to make the initial guess feasible).
 Another main feature of \gls{pdfo} is its solver selection mechanism.
 When a constrained problem is received, the selected solver is the one corresponding to the most general constraint provided.
-For example, when \gls{pdfo} receives a problem that admits both bound constraints~\eqref{eq:pdfo-b} and linear constraints~\eqref{eq:pdfo-l}, \gls{lincoa} will be chosen.
+For example, when \gls{pdfo} receives a problem that admits both bound constraints~\eqref{eq:pdfo-b}
+and linear constraints~\eqref{eq:pdfo-l}, \gls{lincoa} will be chosen.
 It is possible on some examples that \gls{lincoa} gives better results than \gls{bobyqa} on bound-constrained problems.
 This is likely because \gls{bobyqa} is a feasible method, while \gls{lincoa} may visit infeasible points (but on an engineering problem, these points may be unassessable).
 At last, when \gls{pdfo} receives an unconstrained problem, it will attempt to solve it with \gls{uobyqa} when its size is reasonable ($2 \le n \le 8$, say), and with \gls{newuoa} otherwise.
@@ -658,6 +709,9 @@ Therefore, the conditions required by Powell are ensured in the Fortran code dir
 \section{Numerical results}
 \label{sec:numerical}
 
+\subsection{Comparison with methods based on finite differences}
+\label{ssec:fd}
+
 \subsection{Comparison on the CUTEst library}
 
 We first make a comparison of the \gls{pdfo}'s solvers on different problems from the CUTEst library~\cite{Gould_Orban_Toint_2015}.
@@ -668,7 +722,7 @@ The optimal value~$\obj_{\ast}$ of a given problem is considered to be the least
     \label{eq:cvt}
     \obj(\iter[0]) - \obj(\iter) \ge (1 - \tau) [\obj(\iter[0]) - \obj_{\ast}].
 \end{equation}
-We can observe an expected behavior; \gls{uobyqa} performs better on small problems than all others, as it is based on quadratic models obtained by fully-determined interpolation, and the performances of \gls{cobyla} decrease with the dimension rise, as it uses only linear models to approximate the problem locally.
+We can observe an expected behavior; \gls{uobyqa} performs better on small problems than all others, as it is based on quadratic models obtained by fully determined interpolation, and the performances of \gls{cobyla} decrease with the dimension rise, as it uses only linear models to approximate the problem locally.
 
 \begin{figure}[ht]
     \begin{subfigure}{.48\textwidth}
@@ -684,7 +738,7 @@ We can observe an expected behavior; \gls{uobyqa} performs better on small probl
         \caption{Dimension at most~$50$.}
         \label{fig:ppu-50}
     \end{subfigure}
-    \caption{Performance profile on unconstrained problems with a precision~$\tau = 10^{-4}$.}
+    \caption{Performance profile on unconstrained problems with~$\tau = 10^{-4}$.}
 \end{figure}
 
 Consider however the following experiment.
