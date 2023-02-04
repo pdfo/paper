@@ -129,11 +129,7 @@
 \input{ushyphex}    % hyphenation exceptions for US English
 %
 \journalname{Mathematical Programming Computation}
-\title{PDFO --- A Cross-Platform Package for Powell's Derivative-Free Optimization Solvers\thanks{%
-    This work was supported by the University Grants Committee
-    of Hong Kong under the Hong Kong Ph.D. Fellowship Scheme (ref.\ PF18-24698) and under
-    grants PolyU 253012/17P and PolyU 153054/20P.
-}}
+\title{PDFO --- A Cross-Platform Package for Powell's Derivative-Free Optimization Solvers}
 \subtitle{}
 \titlerunning{}
 \dedication{To the memory of late Prof.\ M. J. D. Powell FRS}
@@ -169,8 +165,8 @@
     We also provide an overview on Powell's methods and share some observations on these methods based on experiments conducted using~\gls{pdfo}.
 
     \keywords{First keyword \and Second keyword \and More}
-    \subclass{MSC code1 \and MSC code2 \and more}
-    \CRclass{CR code1 \and CR code2 \and more}
+    \subclass{65K05 \and 90C30 \and 90C56 \and 90-04}
+    %\CRclass{CR code1 \and CR code2 \and more}
 \end{abstract}
 
 \section{Introduction}
@@ -255,7 +251,8 @@ where~$\obj : \R^n \to \R$ is the objective function and~$\fset \subseteq \R^n$ 
 As summarized in~\cite{Conn_Scheinberg_Vicente_2009b}, two strategies have been developed to tackle
 the problem~\eqref{eq:nlc} without using derivatives, which we will introduce in the following.
 
-The first strategy, known as direct search\footnote{In some early papers (e.g.,~\cite{Powell_1994,Powell_1998}), Powell and many other authors used ``direct search'' to mean what is known as ``\glsfmtlong{dfo}'' today. Powell rarely used the word ``derivative-free optimization.''
+The first strategy, known as direct search\footnote{In some early papers (e.g.,~\cite{Powell_1994,Powell_1998}),
+Powell and many other authors used ``direct search'' to mean what is known as ``\glsfmtlong{dfo}'' today. Powell rarely used the word ``derivative-free optimization.''
 The only exceptions known to us are his last paper~\cite{Powell_2015} and his distinguished lecture
 titled ``A parsimonious way of constructing quadratic models from values of the objective function in
 derivative-free optimization'' at the National Center for Mathematics and Interdisciplinary Sciences,
@@ -771,7 +768,7 @@ We now consider the more practical problem of the hyperparameter tuning of a \gl
 The model we consider is a~$C$-SVM~\cite{Chang_Lin_2011} for binary classification problems with an \gls{rbf} kernel, admitting two hyperparameters: a regularization parameter~$C > 0$ and a kernel parameter~$\gamma > 0$.
 We want to compare the performance of \gls{pdfo} with a prominent Bayesian optimization method and \gls{rs}.
 To this end, we use the Python package \texttt{hyperopt}~\cite{Bergstra_Yamins_Cox_2013} for solving the optimization problems, which provides both \gls{tpe} and \gls{rs} methods.
-Our experiments are based on binary classifications problems from the LIBSVM datasets\footnote{See \url{https://www.csie.ntu.edu.tw/~cjlin/libsvmtools/datasets/}.}.
+Our experiments are based on binary classifications problems from the LIBSVM datasets\footnote{\url{https://www.csie.ntu.edu.tw/~cjlin/libsvmtools/datasets/}.}.
 A description of the datasets employed is provided in Table~\ref{tab:htdata}.
 
 \begin{table}[ht]
@@ -814,6 +811,24 @@ More information about the package itself can be found on the \gls{pdfo} website
 The scope of \gls{pdfo} in the future is not limited only to the Powell's \gls{dfo} solvers.
 For instance, the authors are currently working on a new solver for nonlinearly constrained optimization, named \gls{cobyqa}~\cite{Ragonneau_2022}.
 It is aimed to be added to \gls{pdfo}, and other \gls{dfo} solvers may be included in the future.
+
+\section{Statements and declarations}
+
+\subsection{Funding}
+
+This work was funded by the University Grants Committee of Hong Kong under the
+projects PF18-24698 (Hong Kong Ph.D.~Fellowship Scheme), PolyU 253012/17P, and PolyU 153054/20P.
+It was also supported by The Hong Kong Polytechnic University under project P0009767.
+
+\subsection{Competing interests}
+
+The authors have no relevant financial or non-financial interests to disclose.
+
+\subsection{Data availability}
+
+The source code of the \gls{pdfo} package is available at \mbox{\url{https://www.pdfo.net/}}.
+The source code of the numerical experiments presented in this manuscript is available at
+\mbox{\url{https://www.github.com/pdfo/paper/blob/main/experiments/}}.
 
 \bibliographystyle{spmpsci}
 \bibliography{pdfo}
