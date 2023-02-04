@@ -1,3041 +1,814 @@
-%%% ===================================================================
-%%% BibTeX-file{
-%%%     author      = "Tom M. Ragonneau and Zaikun Zhang",
-%%%     version     = "1.0.0",
-%%% year = "February 3, 2023",
-%%%     filename    = "pdfo2022.bib",
-%%%     address     = "Department of Applied Mathematics
-%%%                    The Hong Kong Polytechnic University
-%%%                    Hung Hom, Kowloon, Hong Kong",
-%%%     telephone   = "+852 6995 7651 and +852 2766 4592",
-%%%     FAX         = "+852 2362 9045",
-%%%     checksum    = "",
-%%%     email       = "tom.ragonneau at polyu.edu.hk (Internet) and
-%%%                    zaikun.zhang at polyu.edu.hk (Internet)",
-%%%     codetable   = "ISO/ASCII",
-%%%     keywords    = "BibLaTeX",
-%%%     supported   = "yes",
-%%%     docstring   = "BibLaTeX bibliography for PDFO."
-%%% }
-%%% ===================================================================
-%%% This file is adapted from the BibTex bibliography for papers, books
-%%% e-prints, articles, etc. of Nicholas J. Higham, available at
-%%%
-%%%    https://github.com/higham/njhigham-bib
-%%%    (or http://www.maths.manchester.ac.uk/~higham/papers).
-
-%% ====================================================================
-% Journal abbreviations
-% Note: adapted from https://mathscinet.ams.org/msnhtml/serials.pdf.
-
-@string{j-aa = "A\&A"}
-@string{j-acmtist = "ACM TIST"}
-@string{j-aml = "Appl. Math. Lett."}
-@string{j-an = "Acta Numer."}
-@string{j-aor = "Ann. Oper. Res."}
-@string{j-ar = "Auton. Robot."}
-@string{j-arc = "Autom. Remote Control"}
-@string{j-arma = "Arch. Rational Mech. Anal."}
-@string{j-awr = "Adv. Water Resour."}
-
-@string{j-bams = "Bull. Amer. Math. Soc."}
-@string{j-bmfrs = "Biogr. Mems Fell. R. Soc."}
-
-@string{j-cam = "Comp. Appl. Math."}
-@string{j-cit = "Cybern. Inf. Technol."}
-@string{j-cj = "Comput. J."}
-@string{j-coa = "Comput. Optim. Appl."}
-@string{j-coce = "Curr. Opin. Chem. Eng."}
-@string{j-cs = "Comput. Stat."}
-
-@string{j-dm = "Documenta Math."}
-
-@string{j-ejc = "EURO J. Comput."}
-
-@string{j-fcs = "Front. Comput. Sci."}
-
-@string{j-ijcse = "Int. J. Comput. Sci. Eng."}
-@string{j-ijms = "Int. J. Model. Simul."}
-@string{j-ima-jna = "IMA J. Numer. Anal."}
-
-@string{j-jacm = "J. ACM"}
-@string{j-jcc = "J. Comput. Chem."}
-@string{j-jcm = "J. Chemom."}
-@string{j-jcma = "J. Comput. Math."}
-@string{j-jgo = "J. Global Optim."}
-@string{j-jima = "J. Inst. Maths Applics."}
-@string{j-jmlr = "J. Mach. Learn. Res."}
-@string{j-jmma = "J. Math. Model. Algor."}
-@string{j-jota = "J. Optim. Theory Appl."}
-@string{j-jss = "J. Stat. Softw."}
-@string{j-jwrpm = "J. Water Resour. Plan. Manag."}
-
-@string{j-kib = "Kibernetika"}
-
-@string{j-mc = "Math. Comp."}
-@string{j-ml = "Mach. Learn."}
-@string{j-mn = "Math. Notes"}
-@string{j-mnras = "Mon. Not. R. Astron. Soc."}
-@string{j-mor = "Math. Oper. Res."}
-@string{j-mp = "Math. Program."}
-@string{j-mpc = "Math. Program. Comput."}
-@string{j-mt = "Math. Today"}
-
-@string{j-nat = "Nature"}
-@string{j-natm = "Nat. Methods"}
-@string{j-nm = "Numer. Math."}
-
-@string{j-oe = "Optim. Eng."}
-@string{j-ol = "Optim. Lett."}
-@string{j-oms = "Optim. Methods Softw."}
-@string{j-opt = "Optimization"}
-@string{j-or = "Oper. Res."}
-
-@string{j-pr = "Pattern Recognit."}
-@string{j-prc = "Phys. Rev. C"}
-
-@string{j-rad = "Radiology"}
-
-@string{j-sci = "Science"}
-@string{j-sicon = "SIAM J. Control Optim."}
-@string{j-simax = "SIAM J. Matrix Anal. Appl."}
-@string{j-siopt = "SIAM J. Optim."}
-@string{j-sirev = "SIAM Rev."}
-@string{j-sisc = "SIAM J. Sci. Comput."}
-@string{j-sissc = "SIAM J. Sci. Stat. Comp."}
-@string{j-smo = "Struct. Multidiscip. Optim."}
-
-@string{j-toms = "ACM Trans. Math. Software"}
-
-@string{j-ussr = "USSR Comput. Math. Math. Phys."}
-
-@string{j-wrr = "Water Resour. Res."}
-
-%% ====================================================================
-% Series abbreviations
-
-@string{s-cap = "Classics Appl. Math."}
-@string{s-cmacm = "Cambridge Monogr. Appl. Comput. Math."}
-@string{s-cse = "Comput. Sci. Eng."}
-
-@string{s-imavma = "IMA Vol. Math. Appl."}
-
-@string{s-lnm = "Lect. Notes Math."}
-@string{s-lnsc = "Lect. Notes Comput. Sci."}
-
-@string{s-mass = "Math. Appl. (Soviet Ser.)"}
-@string{s-moso = "MOS-SIAM Ser. Optim."}
-@string{s-mps = "Math. Program. Studies"}
-@string{s-mpso = "MPS-SIAM Ser. Optim."}
-
-@string{s-nas32 = "Notes on Appl. Sci. No. 32"}
-
-@string{s-otam = "Other Titles Appl. Math."}
-
-@string{s-set = "Software Environ. Tools"}
-@string{s-soia = "SOIA"}
-@string{s-sorfe = "Springer Ser. Oper. Res. Financ. Eng."}
-
-%% ====================================================================
-% Departments/Institutions and their addresses
-
-@string{inst-ama = "Department of Applied Mathematics, The Hong Kong Polytechnic University"}
-@string{inst-ama:adr = "Hong Kong"}
-
-@string{inst-anl = "Argonne National Laboratory"}
-@string{inst-anl:adr = "Lemont, IL, US"}
-
-@string{inst-cas = "Chinese Academy of Sciences"}
-@string{inst-cas:adr = "Beijing, CN"}
-
-@string{inst-cmsema = "Center for Mathematical Studies in Economics and Management Science, Northwestern University"}
-@string{inst-cmsema:adr = "Evanston, IL, US"}
-
-@string{inst-coral = "COR@L"}
-@string{inst-coral:adr = "Bethlehem, PA, US"}
-
-@string{inst-damtp = "Department of Applied Mathematics and Theoretical Physics, University of Cambridge"}
-@string{inst-damtp:adr = "Cambridge, UK"}
-
-@string{inst-dfvlr = "Deutsche Forschungs- und Versuchsanstalt fur Luft- und Raumfahrt"}
-@string{inst-dfvlr:adr = "Oberpfaffenhofen, DE"}
-
-@string{inst-dmuc = "Department of Mathematics, University of Chicago"}
-@string{inst-dmuc:adr = "Chicago, IL, US"}
-
-@string{inst-epfl = "EPFL"}
-@string{inst-epfl:adr = "Lausanne, CH"}
-
-@string{inst-hbs = "Harvard Business School"}
-@string{inst-hbs:adr = "Boston, MA, US"}
-
-@string{inst-hu = "Harvard University"}
-@string{inst-hu:adr = "Cambridge, MA, US"}
-
-@string{inst-icl = "Imperial College London"}
-@string{inst-icl:adr = "London, UK"}
-
-@string{inst-iiasa = "IIASA"}
-@string{inst-iiasa:adr = "Laxenburg, AT"}
-
-@string{inst-lanl = "Los Alamos National Laboratory, University of California"}
-@string{inst-lanl:adr = "Oakland, CA, US"}
-
-@string{inst-mnsug = "Department of Mathematics and Natural Sciences, University of Groningen"}
-@string{inst-mnsug:adr = "Groningen, NL"}
-
-@string{inst-ru = "Rice University"}
-@string{inst-ru:adr = "Houston, TX, US"}
-
-@string{inst-su = "Stanford University"}
-@string{inst-su:adr = "Stanford, CA, US"}
-
-@string{inst-ucb = "University of Colorado Boulder"}
-@string{inst-ucb:adr = "Boulder, CO, US"}
-
-@string{inst-ud = "University of Dundee"}
-@string{inst-ud:adr = "Dundee, UK"}
-
-@string{inst-ulb = "Universit{\'{e}} Libre de Bruxelles"}
-@string{inst-ulb:adr = "Bruxelles, BE"}
-
-@string{inst-um = "University of Michigan"}
-@string{inst-um:adr = "Ann Arbor, MI, US"}
-
-@string{inst-unsa = "Universit{\'{e}} Nice Sophia Antipolis"}
-@string{inst-unsa:adr = "Nice, FR"}
-
-@string{inst-uw = "University of Wisconsin"}
-@string{inst-uw:adr = "Madison, WI, US"}
-
-%% ====================================================================
-% Publishers and their addresses
-
-@string{pub-acm = "ACM Press"}
-@string{pub-aiaa = "AIAA"}
-@string{pub-aiaa:adr-a = "Albany, NY, US"}
-@string{pub-aiaa:adr-d = "Dallas, TX, US"}
-@string{pub-aiaa:adr-k = "Kissimmee, FL, US"}
-@string{pub-aiaa:adr-sl = "St. Louis, MO, US"}
-@string{pub-aip = "AIP"}
-@string{pub-aip:adr = "Albena, BG"}
-@string{pub-ap = "Academic Press"}
-@string{pub-awl = "Addison-Wesley Longman"}
-@string{pub-awl:adr = "Harlow, UK"}
-@string{pub-cup = "Cambridge University Press"}
-@string{pub-cup:adr = "Cambridge, UK"}
-@string{pub-gb = "Gordon and Breach"}
-@string{pub-hmso = "HMSO"}
-@string{pub-hmso:adr = "London, UK"}
-@string{pub-ieee = "IEEE"}
-@string{pub-ieee:adr = "San Juan, PR, US"}
-@string{pub-nh = "North Holland"}
-@string{pub-nh:adr = "Amsterdam, NL"}
-@string{pub-oup = "Oxford University Press"}
-@string{pub-oup:adr = "Oxford, UK"}
-@string{pub-pmlr = "PMLR"}
-@string{pub-pmlr:adr = "Atlanta, GA, US"}
-@string{pub-siam = "SIAM"}
-@string{pub-siam:adr = "Philadelphia, PA, US"}
-@string{pub-sp = "Science Press"}
-@string{pub-sp:adr = "Beijing, CN"}
-@string{pub-springer = "Springer"}
-@string{pub-springer:adr-b = "Boston, MA, US"}
-@string{pub-springer:adr-bh = "Berlin, Heidelberg, DE"}
-@string{pub-springer:adr-c = "Cham, CH"}
-@string{pub-springer:adr-d = "Dordrecht, NL"}
-@string{pub-ucp = "University of California Press"}
-@string{pub-ucp:adr = "Berkeley, CA, US"}
-@string{pub-ump = "University of Michigan Press"}
-@string{pub-ump:adr = "Ann Arbor, MI, US"}
-@string{pub-wiley = "Wiley"}
-@string{pub-wiley:adr-c = "Chichester, UK"}
-@string{pub-wiley:adr-ny = "New York, NY, US"}
-
-%% ====================================================================
-% BibLaTeX entries
+%% pdfo.bib
+%% Copyright 2023 Tom M. Ragonneau and Zaikun Zhang
 
 @article{Abramson_Audet_2006,
-    author       = {Abramson, M. A. and Audet, C.},
     title        = {Convergence of mesh adaptive direct search to second-order stationary points},
- journal = j-siopt,
-    volume       = {17},
-    _number      = {2},
-    pages        = {606--619},
- year = {2006},
-}
-
-@article{Abramson_Etal_2009,
-    author       = {Abramson, M. A. and Audet, C. and Dennis, Jr., J. E. and Le Digabel, S.},
-    title        = {{OrthoMADS}: a deterministic {MADS} instance with orthogonal directions},
- journal = j-siopt,
-    volume       = {20},
-    _number      = {2},
-    pages        = {948--966},
- year = {2009},
-}
-
-@article{Ai_Zhang_2009,
-    author       = {Ai, W. and Zhang, S.},
-    title        = {Strong duality for the {CDT} subproblem: a necessary and sufficient condition},
- journal = j-siopt,
-    volume       = {19},
-    _number      = {4},
-    pages        = {1735--1756},
- year = {2009},
-}
-
-@article{Alberto_Etal_2004,
-    author       = {Alberto, P. and Nogueira, F. and Rocha, H. and Vicente, L. N.},
-    title        = {Pattern search methods for user-provided points: application to molecular geometry problems},
- journal = j-siopt,
-    volume       = {14},
-    _number      = {4},
-    pages        = {1216--1236},
- year = {2004},
-}
-
-@book{Anderson_Etal_1999,
-    author    = {Anderson, E. and Bai, Z. and Bischof, C. and Blackford, S. and Demmel, J. and Dongarra, J. and Croz, J. Du and Greenbaum, A. and Hammarling, S. and McKenney, A. and Sorensen, D.},
-    title     = {{LAPACK} Users' Guide},
-    edition   = {Third},
-    publisher = pub-siam,
- address = pub-siam:adr,
- year = {1999},
+    author       = {Abramson, M. A. and Audet, C.},
+    year         = 2006,
+    journal      = {SIAM J. Optim.},
+    volume       = 17,
+    pages        = {606--619}
 }
 
 @article{Audet_Dennis_2006,
-    author       = {Audet, C. and Dennis, Jr., J. E.},
     title        = {Mesh adaptive direct search algorithms for constrained optimization},
- journal = j-siopt,
-    volume       = {17},
-    _number      = {1},
-    pages        = {188--217},
- year = {2006},
-}
-
-@article{Audet_Dennis_Digabel_2008,
-    author       = {Audet, C. and Dennis, Jr., J. E. and Le Digabel, S.},
-    title        = {Parallel space decomposition of the mesh adaptive direct search algorithm},
- journal = j-siopt,
-    volume       = {19},
-    _number      = {3},
-    pages        = {1150--1170},
- year = {2008},
-}
-
-@article{Audet_Digabel_Tribes_2019,
-    author       = {Audet, C. and Le Digabel, S. and Tribes, C.},
-    title        = {The mesh adaptive direct search algorithm for granular and discrete variables},
- journal = j-siopt,
-    volume       = {29},
-    _number      = {2},
-    pages        = {1164--1189},
- year = {2019},
+    author       = {Audet, C. and Dennis, Jr., J. E.},
+    year         = 2006,
+    journal      = {SIAM J. Optim.},
+    volume       = 17,
+    pages        = {188--217}
 }
 
 @book{Audet_Hare_2017,
-    author    = {Audet, C. and Hare, W.},
-    title     = {Derivative-Free and Blackbox Optimization},
-    series    = s-sorfe,
-    publisher = pub-springer,
- address = pub-springer:adr-c,
- year = {2017},
-}
-
-@article{Audet_Orban_2006,
-    author       = {Audet, C. and Orban, D.},
-    title        = {Finding optimal algorithmic parameters using derivative-free optimization},
- journal = j-siopt,
-    volume       = {17},
-    _number      = {3},
-    pages        = {642--664},
- year = {2006},
-}
-
-@book{Bagirov_Karmitsa_Makela_2014,
-    author    = {Bagirov, A. and Karmitsa, N. and M\"{a}kel\"{a}, M. M.},
-    title     = {Introduction to Nonsmooth Optimization: Theory, Practice and Software},
-    publisher = pub-springer,
- address = pub-springer:adr-c,
- year = {2014},
+    title        = {Derivative-Free and Blackbox Optimization},
+    author       = {Audet, C. and Hare, W.},
+    year         = 2017,
+    publisher    = {Springer},
+    address      = {Cham, CH},
+    series       = {Springer Ser. Oper. Res. Financ. Eng.}
 }
 
 @article{Bandeira_Scheinberg_Vicente_2012,
-    author       = {Bandeira, A. S. and Scheinberg, K. and Vicente, L. N.},
     title        = {Computation of sparse low degree interpolating polynomials and their application to derivative-free optimization},
- journal = j-mp,
-    volume       = {134},
-    _number      = {1},
-    pages        = {223--257},
- year = {2012},
-}
-
-@article{Bandeira_Scheinberg_Vicente_2014,
     author       = {Bandeira, A. S. and Scheinberg, K. and Vicente, L. N.},
-    title        = {Convergence of trust-region methods based on probabilistic models},
- journal = j-siopt,
-    volume       = {24},
-    _number      = {3},
-    pages        = {1238--1264},
- year = {2014},
-}
-
-@article{Bates_Etal_2015,
-    author       = {Bates, D. M. and M\"{a}chler, M. and Bolker, B. and Walker, S.},
-    title        = {Fitting linear mixed-effects models using lme4},
- journal = j-jss,
-    volume       = {67},
-    _number      = {1},
-    pages        = {1--48},
- year = {2015},
+    year         = 2012,
+    journal      = {Math. Program.},
+    volume       = 134,
+    pages        = {223--257}
 }
 
 @misc{Bates_Etal_2014,
-    author   = {Bates, D. M. and Mullen, K. M. and Nash, J. C. and Varadhan, R.},
-    title    = {minqa: derivative-free optimization algorithms by quadratic approximation, version 1.2.4},
-    url      = {http://cran.r-project.org/package=minqa},
- year = {2014},
+    title        = {minqa: derivative-free optimization algorithms by quadratic approximation, version 1.2.4},
+    author       = {Bates, D. M. and Mullen, K. M. and Nash, J. C. and Varadhan, R.},
+    year         = 2014,
+    url          = {http://cran.r-project.org/package=minqa}
 }
 
-@inproceedings{Beale_1967,
-    author    = {Beale, E. M. L.},
-    title     = {Numerical methods},
-    booktitle = {Nonlinear Programming},
-    editor    = {Abadie, J.},
-    publisher = pub-nh,
- address = pub-nh:adr,
-    pages     = {135--205},
- year = {1977},
-}
-
-@article{Behnel_Etal_2011,
-    author       = {Behnel, S. and Bradshaw, R. and Citro, C. and Dalcin, L. and Seljebotn, D. S. and Smith, K.},
-    title        = {Cython: the best of both worlds},
- journal = s-cse,
-    volume       = {13},
-    _number      = {2},
-    pages        = {31--39},
- year = {2011},
+@article{Bates_Etal_2015,
+    title        = {Fitting linear mixed-effects models using lme4},
+    author       = {Bates, D. M. and M\"{a}chler, M. and Bolker, B. and Walker, S.},
+    year         = 2015,
+    journal      = {J. Stat. Softw.},
+    volume       = 67,
+    pages        = {1--48}
 }
 
 @article{Berahas_Byrd_Nocedal_2019,
-    author       = {Berahas, A. S. and Byrd, R. H. and Nocedal, J.},
     title        = {Derivative-free optimization of noisy functions via quasi-{Newton} methods},
- journal = j-siopt,
-    volume       = {29},
-    _number      = {2},
-    pages        = {965--993},
- year = {2019},
-}
-
-@article{Berghen_Bersini_2004,
-    author       = {{Vanden Berghen}, F. and Bersini, Hughes},
-    title        = {{CONDOR}, a new parallel, constrained extension of Powell\textquoteright{}{}s {UOBYQA} algorithm: experimental results and comparison with the {DFO} algorithm},
- journal = j-cam,
-    volume       = {181},
-    _number      = {1},
-    pages        = {157--175},
- year = {2004},
+    author       = {Berahas, A. S. and Byrd, R. H. and Nocedal, J.},
+    year         = 2019,
+    journal      = {SIAM J. Optim.},
+    volume       = 29,
+    pages        = {965--993}
 }
 
 @inproceedings{Bergstra_Yamins_Cox_2013,
-    author    = {Bergstra, J. and Yamins, D. and Cox, D. D.},
-    title     = {Making a science of model search: hyperparameter optimization in hundreds of dimensions for vision architectures},
-    booktitle = {Proceedings of the 30th International Conference on Machine Learning},
-    editor    = {Dasgupta, S. and McAllester, D.},
-    publisher = pub-pmlr,
- address = pub-pmlr:adr,
-    pages     = {115--123},
- year = {2013},
-}
-
-@article{Bezanson_Etal_2017,
-    author       = {Bezanson, J. and Edelman, A. and Karpinski, S. and Shah, V. B},
-    title        = {Julia: a fresh approach to numerical computing},
- journal = j-sirev,
-    volume       = {59},
-    _number      = {1},
-    pages        = {65--98},
- year = {2017},
-}
-
-@article{Bienstock_2016,
-    author       = {Bienstock, D.},
-    title        = {A note on polynomial solvability of the CDT problem},
- journal = j-siopt,
-    volume       = {26},
-    _number      = {1},
-    pages        = {488--498},
- year = {2016},
-}
-
-@inproceedings{Biggs_1975,
-    author    = {Biggs, M. C.},
-    title     = {Constrained minimization using recursive quadratic programming: Some alternative subproblem formulation},
-    booktitle = {Towards Global Optimisation},
-    editor    = {Dixon, L. C.W. and Szeg\"{o}, G. P.},
-    publisher = pub-nh,
- address = pub-nh:adr,
-    pages     = {341--349},
- year = {1975},
+    title        = {Making a science of model search: hyperparameter optimization in hundreds of dimensions for vision architectures},
+    author       = {Bergstra, J. and Yamins, D. and Cox, D. D.},
+    year         = 2013,
+    booktitle    = {Proceedings of the 30th International Conference on Machine Learning},
+    publisher    = {PMLR},
+    address      = {Atlanta, GA, USA},
+    pages        = {115--123},
+    editor       = {Dasgupta, S. and McAllester, D.}
 }
 
 @article{Billups_Larson_Graf_2013,
-    author       = {Billups, S. C. and Larson, J. and Graf, P.},
     title        = {Derivative-free optimization of expensive functions with computational error using weighted regression},
- journal = j-siopt,
-    volume       = {23},
-    _number      = {1},
-    pages        = {27--53},
- year = {2013},
+    author       = {Billups, S. C. and Larson, J. and Graf, P.},
+    year         = 2013,
+    journal      = {SIAM J. Optim.},
+    volume       = 23,
+    pages        = {27--53}
 }
 
 @article{Biviano_Etal_2013,
-    author       = {Biviano, A. and Rosati, P. and Balestra, I. and Mercurio, A. and Girardi, M. and Nonino, M. and Grillo, C. and Scodeggio, M. and Lemze, D. and Kelson, D. and Umetsu, K. and Postman, M. and Zitrin, A. and Czoske, O. and Ettori, S. and Fritz, A. and Lombardi, M. and Maier, C. and Medezinski, E. and Mei, S. and Presotto, V. and Strazzullo, V. and Tozzi, P. and Ziegler, B. and Annunziatella, M. and Bartelmann, M. and Benitez, N. and Bradley, L. and Brescia, M. and Broadhurst, T. and Coe, D. and Demarco, R. and Donahue, M. and Ford, H. and Gobat, R. and Graves, G. and Koekemoer, A. and Kuchner, U. and Melchior, P. and Meneghetti, M. and Merten, J. and Moustakas, L. and Munari, E. and Reg\H{o}s, E. and Sartoris, B. and Seitz, S. and Zheng, W.},
     title        = {{CLASH-VLT}: the mass, velocity-anisotropy, and pseudo-phase-space density profiles of the~$z = 0.44$ galaxy cluster {MACS} {J1206.2-0847}},
- journal = j-aa,
-    volume       = {558},
-    pages        = {A1:1--A1:22},
- year = {2013},
-}
-
-@article{Blackford_Etal_2002,
-    author       = {Blackford, L. and Demmel, J. and Dongarra, J. and Duff, I. and Hammarling, S. and Henry, G. and Heroux, M. and Kaufman, L. and Lumsdaine, A. and Petitet, A. and Pozo, R. and Remington, K. and Whaley, R. C.},
-    title        = {An updated set of basic linear algebra subprograms ({BLAS})},
- journal = j-toms,
-    volume       = {28},
-    _number      = {2},
-    pages        = {135--151},
- year = {2002},
-}
-
-@article{Boggs_Tolle_1995,
-    author       = {Boggs, P. T. and Tolle, J. W.},
-    title        = {Sequential Quadratic Programming},
- journal = j-an,
-    volume       = {4},
-    pages        = {1--51},
- year = {1995},
-}
-
-@article{Bomze_Overton_2015,
-    author       = {Bomze, I. M. and Overton, M. L.},
-    title        = {Narrowing the difficulty gap for the {Celis--Dennis--Tapia} problem},
- journal = j-mp,
-    volume       = {151},
-    pages        = {459--476},
- year = {2015},
-}
-
-@inproceedings{Booker_Etal_1998a,
-    author    = {Booker, A. J. and Dennis, Jr., J. E. and Frank, P. D. and Moore, D. W. and Serafini, D. B.},
-    title     = {Managing surrogate objectives to optimize a helicopter rotor design -- further experiments},
-    booktitle = {The 7th AIAA/USAF/NASA/ISSMO Symposium on Multidisciplinary Analysis and Optimization},
-    publisher = pub-aiaa,
- address = pub-aiaa:adr-sl,
- year = {1998},
-}
-
-@inproceedings{Booker_Etal_1998b,
-    author    = {Booker, A. J. and Dennis, Jr., J. E. and Frank, P. D. and Serafini, D. B. and Torczon, V.},
-    title     = {Optimization using surrogate objectives on a helicopter test example},
-    booktitle = {Computational Methods for Optimal Design and Control},
-    editor    = {Borggaard, J. T. and Burns, J. and Cliff, E. and Schreck, E.},
-    publisher = {Birkh\"{a}user},
- address = pub-springer:adr-b,
-    pages     = {49--58},
- year = {1998},
-}
-
-@article{Booker_Etal_1999,
-    author       = {Booker, A. J. and Dennis, Jr., J. E. and Frank, P. D. and Serafini, D. B. and Torczon, V. and Trosset, M. W.},
-    title        = {A rigorous framework for optimization of expensive functions by surrogates},
- journal = j-smo,
-    volume       = {17},
-    _number      = {1},
-    pages        = {1--13},
- year = {1999},
-}
-
-@inproceedings{Bortz_Kelley_1998,
-    author    = {Bortz, D. M. and Kelley, C. T.},
-    title     = {The simplex gradient and noisy optimization problems},
-    booktitle = {Computational Methods in Optimal Design and Control, Progress in Systems and Control Theory},
-    editor    = {Borggaard, J. T. and Burns, J. and Cliff, E. and Schreck, S.},
-    publisher = {Birkh\"{a}user},
- address = pub-springer:adr-b,
-    pages     = {77--90},
- year = {1998},
-}
-
-@inproceedings{Boser_Guyon_Vapnik_1992,
-    author    = {Boser, B. E. and Guyon, I. M. and Vapnik, V. N.},
-    title     = {A training algorithm for optimal margin classifiers},
-    booktitle = {Proceedings of the 5th Annual Workshop on Computational Learning Theory},
-    editor    = {Haussler, D.},
-    publisher = pub-acm,
- address = pub-wiley:adr-ny,
-    pages     = {144--152},
- year = {1992},
-}
-
-@article{Box_1966,
-    author       = {Box, M. J.},
-    title        = {A comparison of several current optimization methods, and the use of transformations in constrained problems},
- journal = j-cj,
-    volume       = {9},
-    _number      = {1},
-    pages        = {67--77},
- year = {1966},
-}
-
-@article{Bradley_1997,
-    author       = {Bradley, A. P.},
-    title        = {The use of the area under the {ROC} curve in the evaluation of machine learning algorithms},
- journal = j-pr,
-    volume       = {30},
-    _number      = {7},
-    pages        = {1145--1159},
- year = {1997},
-}
-
-@article{Bregman_1967,
-    author       = {Bregman, L. M.},
-    title        = {The relaxation method of finding the common point of convex sets and its application to the solution of problems in convex programming},
- journal = j-ussr,
-    volume       = {7},
-    _number      = {3},
-    pages        = {200--217},
- year = {1967},
-}
-
-@article{Bro_Jong_1997,
-    author       = {Bro, R. and {De Jong}, S.},
-    title        = {A fast non-negativity-constrained least squares algorithm},
- journal = j-jcm,
-    volume       = {11},
-    _number      = {5},
-    pages        = {393--401},
- year = {1997},
-}
-
-@article{Buckley_1978,
-    author       = {Bucley, A. G.},
-    title        = {A combined conjugate gradient quasi-{Newton} minimization algorithm},
- journal = j-mp,
-    volume       = {15},
-    pages        = {200--210},
- year = {1978},
-}
-
-@article{Buckley_Lenir_1978,
-    author       = {Bucley, A. G. and Lenir, A.},
-    title        = {{QN}-like variable storage conjugate gradients},
- journal = j-mp,
-    volume       = {27},
-    pages        = {155--175},
- year = {1983},
+    author       = {Biviano, A. and Rosati, P. and Balestra, I. and Mercurio, A. and Girardi, M. and Nonino, M. and Grillo, C. and Scodeggio, M. and Lemze, D. and Kelson, D. and Umetsu, K. and Postman, M. and Zitrin, A. and Czoske, O. and Ettori, S. and Fritz, A. and Lombardi, M. and Maier, C. and Medezinski, E. and Mei, S. and Presotto, V. and Strazzullo, V. and Tozzi, P. and Ziegler, B. and Annunziatella, M. and Bartelmann, M. and Benitez, N. and Bradley, L. and Brescia, M. and Broadhurst, T. and Coe, D. and Demarco, R. and Donahue, M. and Ford, H. and Gobat, R. and Graves, G. and Koekemoer, A. and Kuchner, U. and Melchior, P. and Meneghetti, M. and Merten, J. and Moustakas, L. and Munari, E. and Reg\H{o}s, E. and Sartoris, B. and Seitz, S. and Zheng, W.},
+    year         = 2013,
+    journal      = {A\&A},
+    volume       = 558,
+    pages        = {A1:1--A1:22}
 }
 
 @article{Buhmann_Fletcher_Iserles_Toint_2018,
-    author       = {Buhmann, M. D. and Fletcher, R. and Iserles, A. and Toint, Ph. L.},
- journal = j-bmfrs,
-    pages        = {341--366},
     title        = {{Michael J. D. Powell}. 29 {July} 1936--19 {April} 2015},
-    volume       = {64},
- year = {2018},
-}
-
-@article{Burke_1992,
-    author       = {Burke, J. V.},
-    title        = {A robust trust region method for constrained nonlinear programming problems},
- journal = j-siopt,
-    volume       = {2},
-    _number      = {2},
-    pages        = {324--347},
- year = {1992},
-}
-
-@inproceedings{Byrd_1987,
-    author    = {Byrd, R. H.},
-    title     = {Robust trust region methods for constrained optimization},
-    booktitle = {The Third SIAM Conference on Optimization},
- year = {1987},
-}
-
-@article{Byrd_Gilbert_Nocedal_2000,
-    author       = {Byrd, R. H. and Gilbert, J. C. and Nocedal, J.},
-    title        = {A trust region method based on interior point techniques for nonlinear programming},
- journal = j-mp,
-    volume       = {89},
-    _number      = {1},
-    pages        = {149--185},
- year = {2000},
-}
-
-@article{Byrd_Etal_2004,
-    author       = {Byrd, R. H. and Gould, N. I. M. and Nocedal, J. and Waltz, R. A.},
-    title        = {An algorithm for nonlinear optimization using linear programming and equality constrained subproblems},
- journal = j-mp,
-    volume       = {100},
-    pages        = {27--48},
- year = {2004},
-}
-
-@article{Byrd_Hribar_Nocedal_1999,
-    author       = {Byrd, R. H. and Hribar, M. E. and Nocedal, J.},
-    title        = {An interior point algorithm for large-scale nonlinear programming},
- journal = j-siopt,
-    volume       = {9},
-    _number      = {4},
-    pages        = {877--900},
- year = {1999},
-}
-
-@article{Byrd_Nocedal_1991,
-    author       = {Byrd, R. H. and Nocedal, J.},
-    title        = {An analysis of reduced {Hessian} methods for constrained optimization},
- journal = j-mp,
-    volume       = {49},
-    pages        = {285--323},
- year = {1991},
-}
-
-@article{Byrd_Schnabel_Shultz_1987,
-    author       = {Byrd, R. H. and Schnabel, R. B. and Shultz, G. A.},
-    title        = {A trust region algorithm for nonlinearly constrained optimization},
- journal = {SIAM J. Numer. Anal.},
-    volume       = {24},
-    _number      = {5},
-    pages        = {1152--1170},
- year = {1987},
-}
-
-@inproceedings{Cartis_Ferguson_Roberts_2020,
-    author    = {Cartis, C. and Ferguson, T. and Roberts, L.},
-    title     = {Optimization for nonlinear least-squares problems},
-    booktitle = {The 37th International Conference on Machine Learning},
- year = {2020},
+    author       = {Buhmann, M. D. and Fletcher, R. and Iserles, A. and Toint, {\relax Ph.L}},
+    year         = 2018,
+    journal      = {Biogr. Mems Fell. R. Soc.},
+    volume       = 64,
+    pages        = {341--366}
 }
 
 @article{Cartis_Etal_2019,
-    author       = {Cartis, C. and Fiala, J. and Marteau, B. and Roberts, L.},
     title        = {Improving the flexibility and robustness of model-based derivative-free optimization solvers},
- journal = j-toms,
-    volume       = {45},
-    _number      = {3},
-    pages        = {32:1--32:41},
- year = {2019},
+    author       = {Cartis, C. and Fiala, J. and Marteau, B. and Roberts, L.},
+    year         = 2019,
+    journal      = {ACM Trans. Math. Software},
+    volume       = 45,
+    pages        = {32:1--32:41}
 }
 
 @article{Cartis_Roberts_Sheridan-Methven_2022,
-    author       = {Cartis, C. and Roberts, L. and Sheridan-Methven, O.},
     title        = {Escaping local minima with local derivative-free methods: a numerical investigation},
- journal = j-opt,
-    volume       = {71},
-    _number      = {8},
-    pages        = {2343--2373},
- year = {2022},
-}
-
-@article{Cartis_Scheinberg_2018,
-    author       = {Cartis, C. and Scheinberg, K.},
-    title        = {Global convergence rate analysis of unconstrained optimization methods based on probabilistic models},
- journal = j-mp,
-    volume       = {169},
-    _number      = {2},
-    pages        = {337--375},
- year = {2018},
-}
-
-@inproceedings{Celis_Dennis_Tapia_1985,
-    author    = {Celis, M. R. and Dennis, J. E. and Tapia, R. A.},
-    title     = {A trust region strategy for nonlinear equality constrained optimization},
-    booktitle = {Numerical Optimization},
-    editor    = {Boggs, P. T. and Byrd, R. H. and Schnabel, R. B.},
-    publisher = pub-siam,
- address = pub-siam:adr,
-    pages     = {71--82},
- year = {1985},
-}
-
-@inproceedings{Chamberlain_Etal_1982,
-    author    = {Chamberlain, R. M. and Powell, M. J. D. and Lemarechal, C. and Pedersen, H. C.},
-    title     = {The watchdog technique for forcing convergence in algorithms for constrained optimization},
-    booktitle = {Algorithms for Constrained Minimization of Smooth Nonlinear Functions},
-    editor    = {Buckley, A. G. and Goffin, J. L.},
-    series    = s-mps,
-    volume    = {16},
-    publisher = pub-springer,
- address = pub-springer:adr-bh,
-    pages     = {1--17},
- year = {1982},
+    author       = {Cartis, C. and Roberts, L. and Sheridan-Methven, O.},
+    year         = 2022,
+    journal      = {Optimization},
+    volume       = 71,
+    pages        = {2343--2373}
 }
 
 @article{Chang_Lin_2011,
-    author       = {Chang, C. C. and Lin, C. J.},
     title        = {{LIBSVM}: a library for support vector machines},
- journal = j-acmtist,
-    volume       = {2},
-    _number      = {3},
-    pages        = {27:1--27:27},
- year = {2011},
-}
-
-@article{Chen_Etal_2018,
-    author       = {Chen, X. and Kelley, C. T. and Xu, F. and Zhang, Z.},
-    title        = {A smoothing direct search method for {Monte Carlo}-based bound constrained composite nonsmooth optimization},
- journal = j-sisc,
-    volume       = {40},
-    _number      = {4},
-    pages        = {A2174--A2199},
- year = {2018},
-}
-
-@article{Chen_Menickelly_Scheinberg_2018,
-    author       = {Chen, R. and Menickelly, M. and Scheinberg, K.},
-    title        = {Stochastic optimization using a trust-region method and random models},
- journal = j-mp,
-    volume       = {169},
-    _number      = {2},
-    pages        = {447--487},
- year = {2018},
-}
-
-@article{Chen_Niu_Yuan_2013,
-    author       = {Chen, X. and Niu, L. and Yuan, Y.},
-    title        = {Optimality conditions and a smoothing trust region method for nonLipschitz optimization},
- journal = j-siopt,
-    volume       = {23},
-    _number      = {3},
-    pages        = {1528--1552},
- year = {2013},
-}
-
-@article{Chen_Yuan_1999,
-    author       = {Chen, X. and Yuan, Y.},
-    title        = {On local solutions of the Celis-Dennis-Tapia subproblem},
- journal = j-siopt,
-    volume       = {10},
-    _number      = {2},
-    pages        = {359--383},
- year = {1999},
-}
-
-@article{Chen_Yuan_2009,
-    author       = {Chen, X. and Yuan, Y.},
-    title        = {Strong duality for the CDT subproblem: a necessary and sufficient condition},
- journal = j-jcma,
-    volume       = {19},
-    _number      = {2},
-    pages        = {113--124},
- year = {2009},
-}
-
-@article{Ciarlet_Raviart_1972,
-    author       = {Ciarlet, P. G. and Raviart, P. A.},
-    title        = {General {Lagrange} and {Hermite} interpolation in~$R^n$ with applications to finite element methods},
- journal = j-arma,
-    volume       = {46},
-    _number      = {3},
-    pages        = {177--199},
- year = {1972},
-}
-
-@book{Clark_1983,
-    author    = {Clarke, F. H.},
-    title     = {Optimization and Nonsmooth Analysis},
-    publisher = pub-wiley,
- address = pub-wiley:adr-ny,
- year = {1983},
-}
-
-@article{Colman_Conn_1982a,
-    author       = {Colman, T. F. and Conn, A. R.},
-    title        = {Nonlinear programming via an exact penalty function: asymptotic analysis},
- journal = j-mp,
-    volume       = {24},
-    _number      = {1},
-    pages        = {123--136},
- year = {1982},
-}
-
-@article{Colman_Conn_1982b,
-    author       = {Colman, T. F. and Conn, A. R.},
-    title        = {Nonlinear programming via an exact penalty function: global analysis},
- journal = j-mp,
-    volume       = {24},
-    _number      = {1},
-    pages        = {137--161},
- year = {1982},
-}
-
-@article{Conejo_Karas_Pedroso_2015,
-    author       = {Conejo, P. D. and Karas, E. W. and Pedroso, L. G.},
-    title        = {A trust-region derivative-free algorithm for constrained optimization},
- journal = j-oms,
-    volume       = {30},
-    _number      = {6},
-    pages        = {1126--1145},
- year = {2015},
+    author       = {Chang, C. C. and Lin, C. J.},
+    year         = 2011,
+    journal      = {ACM TIST},
+    volume       = 2,
+    pages        = {27:1--27:27}
 }
 
 @article{Conn_Digabel_2013,
-    author       = {Conn, A. R. and Le Digabel, S.},
     title        = {Use of quadratic models with mesh-adaptive direct search for constrained black box optimization},
- journal = j-oms,
-    volume       = {28},
-    _number      = {1},
-    pages        = {139--158},
- year = {2013},
+    author       = {Conn, A. R. and Le Digabel, S.},
+    year         = 2013,
+    journal      = {Optim. Methods Softw.},
+    volume       = 28,
+    pages        = {139--158}
 }
 
 @book{Conn_Gould_Toint_2000,
-    author    = {Conn, A. R. and Gould, N. I. M. and Toint, Ph. L.},
-    title     = {Trust-Region Methods},
-    series    = s-mpso,
-    publisher = pub-siam,
- address = pub-siam:adr,
- year = {2000},
+    title        = {Trust-Region Methods},
+    author       = {Conn, A. R. and Gould, N. I. M. and Toint, {\relax Ph.L}},
+    year         = 2000,
+    publisher    = {SIAM},
+    address      = {Philadelphia, PA, USA},
+    series       = {MPS-SIAM Ser. Optim.}
 }
 
 @inproceedings{Conn_Scheinberg_Toint_1997a,
-    author    = {Conn, A. R. and Scheinberg, K. and Toint, Ph. L.},
-    title     = {On the convergence of derivative-free methods for unconstrained optimization},
-    booktitle = {Approximation Theory and Optimization: Tributes to M. J. D. Powell},
-    editor    = {Buhmann, M. D. and Iserles, A.},
-    publisher = pub-cup,
- address = pub-cup:adr,
-    pages     = {83--108},
- year = {1997},
+    title        = {On the convergence of derivative-free methods for unconstrained optimization},
+    author       = {Conn, A. R. and Scheinberg, K. and Toint, {\relax Ph.L}},
+    year         = 1997,
+    booktitle    = {Approximation Theory and Optimization: Tributes to M. J. D. Powell},
+    publisher    = {Cambridge University Press},
+    address      = {Cambridge, UK},
+    pages        = {83--108},
+    editor       = {Buhmann, M. D. and Iserles, A.}
 }
 
 @article{Conn_Scheinberg_Toint_1997b,
-    author       = {Conn, A. R. and Scheinberg, K. and Toint, Ph. L.},
     title        = {Recent progress in unconstrained nonlinear optimization without derivatives},
- journal = j-mp,
-    volume       = {79},
-    _number      = {1--3},
-    pages        = {397--414},
- year = {1997},
-}
-
-@inproceedings{Conn_Scheinberg_Toint_1998,
-    author    = {Conn, A. R. and Scheinberg, K. and Toint, Ph. L.},
-    title     = {A derivative free optimization algorithm in practice},
-    booktitle = {Proceedings of the 7th AIAA/USAF/NASA/ISSMO Symposium on Multidisciplinary Analysis and Optimization},
-    publisher = pub-aiaa,
- address = pub-aiaa:adr-sl,
-    pages     = {129--139},
- year = {1998},
+    author       = {Conn, A. R. and Scheinberg, K. and Toint, {\relax Ph.L}},
+    year         = 1997,
+    journal      = {Math. Program.},
+    volume       = 79,
+    pages        = {397--414}
 }
 
 @article{Conn_Scheinberg_Vicente_2008a,
-    author       = {Conn, A. R. and Scheinberg, K. and Vicente, L. N.},
     title        = {Geometry of interpolation sets in derivative free optimization},
- journal = j-mp,
-    volume       = {111},
-    _number      = {1},
-    pages        = {141--172},
- year = {2008},
+    author       = {Conn, A. R. and Scheinberg, K. and Vicente, L. N.},
+    year         = 2008,
+    journal      = {Math. Program.},
+    volume       = 111,
+    pages        = {141--172}
 }
 
 @article{Conn_Scheinberg_Vicente_2008b,
-    author       = {Conn, A. R. and Scheinberg, K. and Vicente, L. N.},
     title        = {Geometry of sample sets in derivative-free optimization: polynomial regression and underdetermined interpolation},
- journal = j-ima-jna,
-    volume       = {28},
-    _number      = {4},
-    pages        = {721--748},
- year = {2008},
+    author       = {Conn, A. R. and Scheinberg, K. and Vicente, L. N.},
+    year         = 2008,
+    journal      = {IMA J. Numer. Anal.},
+    volume       = 28,
+    pages        = {721--748}
 }
 
 @article{Conn_Scheinberg_Vicente_2009a,
-    author       = {Conn, A. R. and Scheinberg, K. and Vicente, L. N.},
     title        = {Global convergence of general derivative-free trust-region algorithms to first- and second-order critical points},
- journal = j-siopt,
-    volume       = {20},
-    _number      = {1},
-    pages        = {387--415},
- year = {2009},
+    author       = {Conn, A. R. and Scheinberg, K. and Vicente, L. N.},
+    year         = 2009,
+    journal      = {SIAM J. Optim.},
+    volume       = 20,
+    pages        = {387--415}
 }
 
 @book{Conn_Scheinberg_Vicente_2009b,
-    author    = {Conn, A. R. and Scheinberg, K. and Vicente, L. N.},
-    title     = {Introduction to Derivative-Free Optimization},
-    series    = s-mpso,
-    publisher = pub-siam,
- address = pub-siam:adr,
- year = {2009},
+    title        = {Introduction to Derivative-Free Optimization},
+    author       = {Conn, A. R. and Scheinberg, K. and Vicente, L. N.},
+    year         = 2009,
+    publisher    = {SIAM},
+    address      = {Philadelphia, PA, USA},
+    series       = {MPS-SIAM Ser. Optim.}
 }
 
 @inproceedings{Conn_Toint_1996,
-    author    = {Conn, A. R. and Toint, Ph. L.},
-    title     = {An algorithm using quadratic interpolation for unconstrained derivative free optimization},
-    booktitle = {Nonlinear Optimization and Applications},
-    editor    = {{Di Pillo}, G. and Giannessi, F.},
-    publisher = pub-springer,
- address = pub-springer:adr-b,
-    pages     = {27--47},
- year = {1996},
-}
-
-@article{Cortes_Vapnik_1995,
-    author       = {Cortes, C. and Vapnik, V.},
-    title        = {Support-vector networks},
- journal = j-ml,
-    volume       = {20},
-    _number      = {3},
-    pages        = {273--297},
- year = {1995},
-}
-
-@article{Courant_1943,
-    author       = {Courant, R.},
-    title        = {Variational methods for the solution of problems of equilibrium and vibrations},
- journal = j-bams,
-    volume       = {49},
-    pages        = {1--23},
- year = {1943},
-}
-
-@inproceedings{Cramer_Gablonsky_2004,
-    author    = {Cramer, E. J. and Gablonsky, J. M.},
-    title     = {Effective parallel optimization of complex computer simulations},
-    booktitle = {Proceedings of the 10th AIAA/ISSMO Multidisciplinary Analysis and Optimization Conference},
-    publisher = pub-aiaa,
- address = pub-aiaa:adr-a,
- year = {2004},
-}
-
-@book{Cui_Pang_2021,
-    author    = {Cui, Y. and Pang, J. S.},
-    title     = {Modern Nonconvex Nondifferentiable Optimization},
-    series    = s-moso,
-    publisher = pub-siam,
- address = pub-siam:adr,
- year = {2021},
-}
-
-@article{Curtis_Overton_2012,
-    author       = {Curtis, F. E. and Overton, M. L.},
-    title        = {On sequential quadratic programming algorithm for nonconvex, nonsmooth constrained optimization},
- journal = j-siopt,
-    volume       = {22},
-    _number      = {2},
-    pages        = {474--500},
- year = {2012},
-}
-
-@article{Custodio_Bras_2019,
-    author       = {Cust\'{o}dio, A. L. and Bras, C. P.},
-    title        = {On the use of polynomial models in multiobjective directional direct search},
- journal = j-coa,
-    volume       = {77},
-    _number      = {3},
-    pages        = {897--918},
- year = {2019},
-}
-
-@article{Custodio_Rocha_Vicente_2009,
-    author       = {Cust\'{o}dio, A. L. and Rocha, H. and Vicente, L. N.},
-    title        = {Incorporating minimum Frobenius norm models in direct search},
- journal = j-coa,
-    volume       = {46},
-    _number      = {2},
-    pages        = {265--278},
- year = {2009},
+    title        = {An algorithm using quadratic interpolation for unconstrained derivative free optimization},
+    author       = {Conn, A. R. and Toint, {\relax Ph.L}},
+    year         = 1996,
+    booktitle    = {Nonlinear Optimization and Applications},
+    publisher    = {Springer},
+    address      = {Boston, MA, USA},
+    pages        = {27--47},
+    editor       = {{Di Pillo}, G. and Giannessi, F.}
 }
 
 @inproceedings{Custodio_Scheinberg_Vicente_2017,
-    author    = {Cust\'{o}dio, A. L. and Scheinberg, K. and Vicente, L. N.},
-    title     = {Methodologies and software for derivative-free optimization},
-    booktitle = {Advances and Trends in Optimization with Engineering Applications},
-    editor    = {Terlaky, T. and Anjos, M. F. and Ahmed, S.},
-    publisher = pub-siam,
- address = pub-siam:adr,
-    pages     = {495--506},
- year = {2017},
+    title        = {Methodologies and software for derivative-free optimization},
+    author       = {Cust\'{o}dio, A. L. and Scheinberg, K. and Vicente, L. N.},
+    year         = 2017,
+    booktitle    = {Advances and Trends in Optimization with Engineering Applications},
+    publisher    = {SIAM},
+    address      = {Philadelphia, PA, USA},
+    pages        = {495--506},
+    editor       = {Terlaky, T. and Anjos, M. F. and Ahmed, S.}
 }
 
 @article{Custodio_Vicente_2007,
-    author       = {Cust\'{o}dio, A. L. and Vicente, L. N.},
     title        = {Using sampling and simplex derivatives in pattern search methods},
- journal = j-siopt,
-    volume       = {18},
-    _number      = {2},
-    pages        = {537--555},
- year = {2007},
-}
-
-@article{Daniel_1973,
-    author       = {Daniel, J. W.},
-    title        = {Newton's method for nonlinear inequalities},
- journal = j-nm,
-    volume       = {21},
-    _number      = {5},
-    pages        = {381--387},
- year = {1974},
-}
-
-@article{Dennis_More_1974,
-    author       = {Dennis, Jr., J. E. and Mor\'{e}, J. J.},
-    title        = {A characterization of superlinear convergence and its application to quasi-{Newton} methods},
- journal = j-mc,
-    volume       = {28},
-    _number      = {126},
-    pages        = {549--560},
- year = {1974},
-}
-
-@article{Dennis_More_1977,
-    author       = {Dennis, Jr., J. E. and Mor\'{e}, J. J.},
-    title        = {Quasi-{Newton} methods, motivation and theory},
- journal = j-sirev,
-    volume       = {19},
-    _number      = {1},
-    pages        = {46--89},
- year = {1977},
+    author       = {Cust\'{o}dio, A. L. and Vicente, L. N.},
+    year         = 2007,
+    journal      = {SIAM J. Optim.},
+    volume       = 18,
+    pages        = {537--555}
 }
 
 @article{Dennis_Schnabel_1979,
-    author       = {Dennis, Jr., J. E. and Schnabel, R. B.},
     title        = {Least change secant updates for quasi-{Newton} methods},
- journal = j-sirev,
-    volume       = {4},
-    _number      = {21},
-    pages        = {443--459},
- year = {1979},
-}
-
-@article{Dickinson_Gijben_2014,
-    author       = {Dickinson, P. J. C. and Gijben, L.},
-    title        = {On the computational complexity of membership problems for the completely positive cone and its dual},
- journal = j-coa,
-    volume       = {57},
-    _number      = {2},
-    pages        = {403--415},
- year = {2014},
+    author       = {Dennis, Jr., J. E. and Schnabel, R. B.},
+    year         = 1979,
+    journal      = {SIAM Rev.},
+    volume       = 4,
+    pages        = {443--459}
 }
 
 @article{Digabel_2011,
-    author       = {Le Digabel, S.},
     title        = {Algorithm 909: {NOMAD}: nonlinear optimization with the {MADS} algorithm},
- journal = j-toms,
-    volume       = {37},
-    _number      = {4},
-    pages        = {44:1--44:15},
- year = {2011},
+    author       = {Le Digabel, S.},
+    year         = 2011,
+    journal      = {ACM Trans. Math. Software},
+    volume       = 37,
+    pages        = {44:1--44:15}
 }
 
 @article{Dodangeh_Vicente_2016,
-    author       = {Dodangeh, M. and Vicente, L. N.},
     title        = {Worst case complexity of direct search under convexity},
- journal = j-mp,
-    volume       = {155},
-    _number      = {1},
-    pages        = {307--332},
- year = {2016},
+    author       = {Dodangeh, M. and Vicente, L. N.},
+    year         = 2016,
+    journal      = {Math. Program.},
+    volume       = 155,
+    pages        = {307--332}
 }
 
 @article{Dodangeh_Vicente_Zhang_2016,
-    author       = {Dodangeh, M. and Vicente, L. N. and Zhang, Z.},
     title        = {On the optimal order of worst case complexity of direct search},
- journal = j-ol,
-    volume       = {10},
-    _number      = {4},
-    pages        = {699--708},
- year = {2016},
-}
-
-@article{Dolan_Lewis_Torczon_2003,
-    author       = {Dolan, E. D. and Lewis, R. M. and Torczon, V.},
-    title        = {On the local convergence of pattern search},
- journal = j-siopt,
-    volume       = {14},
-    _number      = {2},
-    pages        = {567--583},
- year = {2003},
+    author       = {Dodangeh, M. and Vicente, L. N. and Zhang, Z.},
+    year         = 2016,
+    journal      = {Optim. Lett.},
+    volume       = 10,
+    pages        = {699--708}
 }
 
 @article{Dolan_More_2002,
-    author       = {Dolan, E. D. and Mor\'{e}, J. J.},
     title        = {Benchmarking optimization software with performance profiles},
- journal = j-mp,
-    volume       = {91},
-    _number      = {2},
-    pages        = {201--213},
- year = {2002},
-}
-
-@article{Dussault_1995,
-    author       = {Dussault, J. P.},
-    title        = {Numerical stability and efficiency of penalty algorithms},
- journal = {SIAM J. Numer. Anal.},
-    volume       = {32},
-    _number      = {1},
-    pages        = {296--317},
- year = {1995},
-}
-
-@article{Duvigneau_Visonneau_2004,
-    author       = {Duvigneau, R. and Visonneau, M.},
-    title        = {Hydrodynamic design using a derivative-free method},
- journal = j-smo,
-    volume       = {28},
-    _number      = {2},
-    pages        = {195--205},
- year = {2004},
-}
-
-@article{Eldred_Etal_2022,
-    author       = {Eldred, J. S. and Larson, J. and Padidar, M. and Stern, E. and Wild, S. M.},
-    title        = {Derivative-free optimization of a rapid-cycling synchrotron},
- journal = j-oe,
-    volume       = {124},
-    pages        = {1--27},
- year = {2022},
-}
-
-@article{Santo_Denysiuk_Fernandes_2014,
-    author       = {{Espirito Santo}, I. C. P. and Denysiuk, R. and Fernandes, E. M. G. P.},
-    title        = {Derivative-free augmented lagrangian for global optimization: cost minimization in a simplified activated sludge system model},
- journal = j-jmma,
-    volume       = {14},
-    _number      = {1},
-    pages        = {35--53},
- year = {2014},
-}
-
-@article{Farkas_1902,
-    author       = {Farkas, J.},
-    title        = {Theorie der Einfachen Ungleichungen},
- journal = {J. f\"{u}r Reine Angew. Math.},
-    volume       = {124},
-    pages        = {1--27},
- year = {1902},
-}
-
-@article{Fasano_Morales_Nocedal_2009,
-    author       = {Fasano, G. and Morales, J. L. and Nocedal, J.},
-    title        = {On the geometry phase in model-based algorithms for derivative-free optimization},
- journal = j-oms,
-    volume       = {24},
-    _number      = {1},
-    pages        = {145--154},
- year = {2009},
-}
-
-@article{Fletcher_1965,
-    author       = {Fletcher, R.},
-    title        = {Function minimization without evaluating derivatives --- a review},
- journal = j-cj,
-    volume       = {8},
-    _number      = {1},
-    pages        = {33--41},
- year = {1965},
-}
-
-@inproceedings{Fletcher_1982a,
-    author    = {Fletcher, R.},
-    title     = {A model algorithm for composite non-differentiable optimization problems},
-    booktitle = {Nondifferential and Variational Techniques in Optimization},
-    editor    = {Sorensen, D. C. and Wets, R. J. B.},
-    series    = s-mps,
-    volume    = {17},
-    publisher = pub-springer,
- address = pub-springer:adr-bh,
-    pages     = {67--76},
- year = {1982},
-}
-
-@inproceedings{Fletcher_1982b,
-    author    = {Fletcher, R.},
-    title     = {Second order corrections for non-differentiable optimization},
-    booktitle = {Numerical Analysis},
-    editor    = {Watson, G. A.},
-    series    = s-lnm,
-    volume    = {912},
-    publisher = pub-springer,
- address = pub-springer:adr-bh,
-    pages     = {85--114},
- year = {1982},
-}
-
-@book{Fletcher_1987,
-    author    = {Fletcher, R.},
-    title     = {Practical Methods of Optimization},
-    edition   = {Second},
-    publisher = pub-wiley,
- address = pub-wiley:adr-c,
- year = {1987},
-}
-
-@article{Fletcher_Leyffer_2002,
-    author       = {Fletcher, R. and Leyffer, S.},
-    title        = {Nonlinear programming without a penalty function},
- journal = j-mp,
-    volume       = {91},
-    pages        = {239--269},
- year = {2002},
-}
-
-@article{Fletcher_Leyffer_Toint_2002,
-    author       = {Fletcher, R. and Leyffer, S. and Toint, Ph. L.},
-    title        = {On the global convergence of a filter-{SQP} algorithm},
- journal = j-siopt,
-    volume       = {13},
-    _number      = {1},
-    pages        = {44--59},
- year = {2002},
-}
-
-@article{Fletcher_Maza_1989,
-    author       = {Fletcher, R. and {Sainz de la Maza}, E.},
-    title        = {Nonlinear programming and nonsmooth optimization by successive linear programming},
- journal = j-mp,
-    volume       = {43},
-    pages        = {235--256},
- year = {1989},
+    author       = {Dolan, E. D. and Mor\'{e}, J. J.},
+    year         = 2002,
+    journal      = {Math. Program.},
+    volume       = 91,
+    pages        = {201--213}
 }
 
 @article{Fletcher_Powell_1963,
-    author       = {Fletcher, R. and Powell, M. J. D.},
     title        = {A Rapid Convergent Decent Method for Minimization},
- journal = j-cj,
-    volume       = {6},
-    _number      = {2},
-    pages        = {163--168},
- year = {1963},
-}
-
-@article{Fowler_Etal_2008,
-    author       = {Fowler, K. R. and Reese, J. P. and Kees, C. E. and Dennis, Jr., J. E. and Kelley, C. T. and Miller, C. T. and Audet, C. and Booker, A. J. and Couture, G. and Darwin, R. W. and Farthing, M. W. and Finkel, D. E. and Gablonsky, J. M. and Gray, G. and Kolda, T. G.},
-    title        = {Comparison of derivative-free optimization methods for groundwater supply and hydraulic capture community problems},
- journal = j-awr,
-    volume       = {31},
-    _number      = {5},
-    pages        = {743--757},
- year = {2008},
-}
-
-@article{Fukushima_1986,
-    author       = {Fukushima, M.},
-    title        = {A successive quadratic programming algorithm with global and superlinear convergence properties},
- journal = j-mp,
-    volume       = {35},
-    _number      = {3},
-    pages        = {253--264},
- year = {1986},
-}
-
-@inproceedings{Gabay_1982,
-    author    = {Gabay, D.},
-    title     = {Reduced quasi-Newton methods with feasibility improvement for nonlinear constrained optimization},
-    booktitle = {Algorithms for Constrained Minimization of Smooth Nonlinear Functions},
-    editor    = {Buckley, A. G. and Goffin, J. L.},
-    series    = s-mps,
-    volume    = {16},
-    publisher = pub-springer,
- address = pub-springer:adr-bh,
-    pages     = {18--44},
- year = {1982},
+    author       = {Fletcher, R. and Powell, M. J. D.},
+    year         = 1963,
+    journal      = {Comput. J.},
+    volume       = 6,
+    pages        = {163--168}
 }
 
 @inproceedings{Gallard_Etal_2018,
-    author    = {Gallard, F. and Vanaret, C. and Gu\'{e}not, D. and Gachelin, V. and Lafage, R. and Pauwels, B. and Barjhoux, P. J. and Gazaix, A.},
-    title     = {{GEMS}: a {Python} library for automation of multidisciplinary design optimization process generation},
-    booktitle = {2018 AIAA/ASCE/AHS/ASC Structures, Structural Dynamics, and Materials Conference},
-    publisher = pub-aiaa,
- address = pub-aiaa:adr-k,
- year = {2018},
-}
-
-@article{Garcia-Palomares_Mangasarian_1976,
-    author       = {Garc\`{\i}a-Palomares, U. M. and Mangasarian, O. L.},
-    title        = {Superlinearly convergent quasi-newton algorithms for nonlinearly constrained optimization problems},
- journal = j-mp,
-    volume       = {11},
-    _number      = {1},
-    pages        = {1--13},
- year = {1976},
+    title        = {{GEMS}: a {Python} library for automation of multidisciplinary design optimization process generation},
+    author       = {Gallard, F. and Vanaret, C. and Gu\'{e}not, D. and Gachelin, V. and Lafage, R. and Pauwels, B. and Barjhoux, P. J. and Gazaix, A.},
+    year         = 2018,
+    booktitle    = {2018 AIAA/ASCE/AHS/ASC Structures, Structural Dynamics, and Materials Conference},
+    publisher    = {AIAA},
+    address      = {Kissimmee, FL, USA}
 }
 
 @article{Garmanjani_Judice_Vicente_2016,
-    author       = {Garmanjani, R. and J\`{u}dice, D. and Vicente, L. N.},
     title        = {Trust-region methods without using derivatives: worst case complexity and the nonsmooth case},
- journal = j-siopt,
-    volume       = {26},
-    _number      = {4},
-    pages        = {1987--2011},
- year = {2016},
+    author       = {Garmanjani, R. and J\`{u}dice, D. and Vicente, L. N.},
+    year         = 2016,
+    journal      = {SIAM J. Optim.},
+    volume       = 26,
+    pages        = {1987--2011}
 }
 
 @inproceedings{Gazaix_Etal_2019,
-    author    = {Gazaix, A. and Gallard, F. and Ambert, V. and Gu\'{e}not, D. and Hamadi, M. and Grihon, S. and Sarouille, P. and Druot, T. and Brezillon, J. and Gachelin, V. and Plakoo, J. and Desfachelles, N. and Bartoli, N. and Lefebvre, T. and G\"{u}rol, S. and Pauwels, B. and Vanaret, C. and Lafage, R.},
-    title     = {Industrial application of an advanced bi-level {MDO} formulation to aircraft engine pylon optimization},
-    booktitle = {AIAA Aviation Forum},
-    publisher = pub-aiaa,
- address = pub-aiaa:adr-d,
- year = {2019},
+    title        = {Industrial application of an advanced bi-level {MDO} formulation to aircraft engine pylon optimization},
+    author       = {Gazaix, A. and Gallard, F. and Ambert, V. and Gu\'{e}not, D. and Hamadi, M. and Grihon, S. and Sarouille, P. and Druot, T. and Brezillon, J. and Gachelin, V. and Plakoo, J. and Desfachelles, N. and Bartoli, N. and Lefebvre, T. and G\"{u}rol, S. and Pauwels, B. and Vanaret, C. and Lafage, R.},
+    year         = 2019,
+    booktitle    = {AIAA Aviation Forum},
+    publisher    = {AIAA},
+    address      = {Dallas, TX, USA}
 }
 
 @techreport{Ghanbari_Scheinberg_2017,
-    author      = {Ghanbari, H. and Scheinberg, K.},
-    title       = {Black-box optimization in machine learning with trust region based derivative free algorithm},
-    number      = {17T-005},
-    institution = inst-coral,
- address = inst-coral:adr,
- year = {2017},
-}
-
-@article{Gilbert_Nocedal_1993,
-    author       = {Gilbert, J. C. and Nocedal, J.},
-    title        = {Automatic differentiation and the step computation in the limited memory {BFGS} method},
- journal = j-aml,
-    volume       = {6},
-    _number      = {3},
-    pages        = {47--50},
- year = {1993},
-}
-
-@article{Gill_Murray_1979,
-    author       = {Gill, P. E. and Murray, W.},
-    title        = {The computation of {Lagrange}-multiplier estimates for constrained minimization},
- journal = j-mp,
-    volume       = {17},
-    _number      = {1},
-    pages        = {32--60},
- year = {1979},
-}
-
-@article{Gill_Murray_Saunders_2002,
-    author       = {Gill, P. E. and Murray, W. and Saunders, M. A.},
-    title        = {{SNOPT}: an {SQP} algorithm for large-scale constrained optimization},
- journal = j-siopt,
-    volume       = {12},
-    _number      = {4},
-    pages        = {979--1006},
- year = {2002},
-}
-
-@article{Gill_Murray_Saunders_2005,
-    author       = {Gill, P. E. and Murray, W. and Saunders, M. A.},
-    title        = {{SNOPT}: an {SQP} algorithm for large-scale constrained optimization},
- journal = j-sirev,
-    volume       = {47},
-    _number      = {1},
-    pages        = {99--131},
- year = {2005},
-}
-
-@inproceedings{Gill_Wong_2011,
-    author    = {Gill, P. E. and Wong, E.},
-    title     = {Sequential Quadratic Programming Methods},
-    booktitle = {Mixed Integer Nonlinear Programming},
-    editor    = {Lee, J. and Leyffer, S.},
-    series    = s-imavma,
-    volume    = {154},
-    publisher = pub-springer,
- address = pub-wiley:adr-ny,
-    pages     = {147--224},
- year = {2011},
-}
-
-@article{Goldfarb_Idnani_1983,
-    author       = {Goldfarb, D. and Idnani, A.},
-    title        = {A numerically stable dual method for solving strictly convex quadratic programs},
- journal = j-mp,
-    volume       = {27},
-    _number      = {1},
-    pages        = {1--33},
- year = {1983},
-}
-
-@inproceedings{Golovin_Etal_2017,
-    author    = {Golovin, D. and Solnik, B. and Moitra, S. and Kochanski, G. and Karro, J. and Sculley, D.},
-    title     = {{Google Vizier}: a service for black-box optimization},
-    booktitle = {Proceedings of the 23th ACM SIGKDD International Conference on Knowledge Discovery and Data Mining},
-    editor    = {Matwin, S. and Yu, S. and Farooq, F.},
-    publisher = pub-acm,
- address = pub-wiley:adr-ny,
-    pages     = {1487--1495},
- year = {2017},
-}
-
-@article{Gould_Orban_Toint_2003,
-    author       = {Gould, N. I. M. and Orban, D. and Toint, Ph. L.},
-    title        = {{GALAHAD}, a library of thread-safe Fortran 90 packages for large-scale nonlinear optimization},
- journal = j-toms,
-    volume       = {29},
-    _number      = {4},
-    pages        = {353--372},
- year = {2003},
+    title        = {Black-box optimization in machine learning with trust region based derivative free algorithm},
+    author       = {Ghanbari, H. and Scheinberg, K.},
+    year         = 2017,
+    address      = {Bethlehem, PA, USA},
+    number       = {17T-005},
+    institution  = {COR@L}
 }
 
 @article{Gould_Orban_Toint_2015,
-    author       = {Gould, N. I. M. and Orban, D. and Toint, Ph. L.},
     title        = {{CUTEst}: a constrained and unconstrained testing environment with safe threads for mathematical optimization},
- journal = j-coa,
-    volume       = {60},
-    _number      = {3},
-    pages        = {545--557},
- year = {2015},
-}
-
-@article{Gould_Scott_2016,
-    author       = {Gould, N. I. M. and Scott, J.},
-    title        = {A note on performance profiles for benchmarking software},
- journal = j-toms,
-    volume       = {43},
-    _number      = {2},
-    pages        = {A:1--A:5},
- year = {2016},
-}
-
-@inproceedings{Gould_Toint_2000,
-    author    = {Gould, N. I. M. and Toint, Ph. L.},
-    title     = {SQP Methods for large-scale nonlinear programming},
-    booktitle = {System Modelling and Optimization},
-    editor    = {Powell, M. J. D. and Scholtes, S.},
-    volume    = {46},
- year = {2000},
-}
-
-@article{Grapiglia_Yuan_Yuan_2016,
-    author       = {Grapiglia, G. N. and Yuan, J. and Yuan, Y.},
-    title        = {On the worst-case complexity of nonlinear stepsize control algorithms for convex unconstrained optimization},
- journal = j-oms,
-    volume       = {31},
-    _number      = {3},
-    pages        = {591--604},
- year = {2016},
-}
-
-@article{Gratton_Toint_Troltzsch_2011,
-    author       = {Gratton, S. and Toint, Ph. L. and Tr\"{o}ltzsch, A.},
-    title        = {An active-set trust-region method for derivative-free nonlinear bound-constrained optimization},
- journal = j-oms,
-    volume       = {26},
-    _number      = {4--5},
-    pages        = {873--894},
- year = {2011},
-}
-
-@article{Gratton_Royer_Vicente_2020,
-    author       = {Gratton, S. and Royer, C. W. and Vicente, L. N.},
-    title        = {A decoupled first/second-order steps technique for nonconvex nonlinear unconstrained optimization with improved complexity bounds},
- journal = j-mp,
-    volume       = {179},
-    _number      = {1--2},
-    pages        = {195--222},
- year = {2020},
+    author       = {Gould, N. I. M. and Orban, D. and Toint, {\relax Ph.L}},
+    year         = 2015,
+    journal      = {Comput. Optim. Appl.},
+    volume       = 60,
+    pages        = {545--557}
 }
 
 @article{Gratton_Etal_2015,
-    author       = {Gratton, S. and Royer, C. W. and Vicente, L. N. and Zhang, Z.},
     title        = {Direct search based on probabilistic descent},
- journal = j-siopt,
-    volume       = {25},
-    _number      = {3},
-    pages        = {1515--1541},
- year = {2015},
-}
-
-@article{Gratton_Etal_2018,
     author       = {Gratton, S. and Royer, C. W. and Vicente, L. N. and Zhang, Z.},
-    title        = {Complexity and global rates of trust-region methods based on probabilistic models},
- journal = j-ima-jna,
-    volume       = {38},
-    _number      = {3},
-    pages        = {1579--1597},
- year = {2018},
+    year         = 2015,
+    journal      = {SIAM J. Optim.},
+    volume       = 25,
+    pages        = {1515--1541}
 }
 
 @article{Gratton_Etal_2019,
-    author       = {Gratton, S. and Royer, C. W. and Vicente, L. N. and Zhang, Z.},
     title        = {Direct search based on probabilistic feasible descent for bound and linearly constrained problems},
- journal = j-coa,
-    volume       = {72},
-    _number      = {3},
-    pages        = {525--559},
- year = {2019},
+    author       = {Gratton, S. and Royer, C. W. and Vicente, L. N. and Zhang, Z.},
+    year         = 2019,
+    journal      = {Comput. Optim. Appl.},
+    volume       = 72,
+    pages        = {525--559}
 }
 
-@article{Griewank_2003,
-    author       = {Griewank, A.},
-    title        = {A mathematical view of automatic differentiation},
- journal = j-an,
-    volume       = {12},
-    pages        = {321--398},
- year = {2003},
-}
-
-@book{Griewank_Walther_2008,
-    author    = {Griewank, A. and Walther, A.},
-    title     = {Evaluating Derivatives: Principles and Techniques of Algorithmic Differentiation},
-    series    = s-otam,
-    edition   = {Second},
-    publisher = pub-siam,
- address = pub-siam:adr,
- year = {2008},
-}
-
-@article{Han_1976,
-    author       = {Han, S. P.},
-    title        = {Superlinearly convergent variable metric algorithms for general nonlinear programming problems},
- journal = j-mp,
-    volume       = {11},
-    _number      = {1},
-    pages        = {263--282},
- year = {1976},
-}
-
-@article{Han_1977,
-    author       = {Han, S. P.},
-    title        = {A globally convergent method for nonlinear programming},
- journal = j-jota,
-    volume       = {22},
-    _number      = {3},
-    pages        = {297--309},
- year = {1977},
-}
-
-@article{Han_Mangasarian_1979,
-    author       = {Han, S. P. and Mangasarian, O. L.},
-    title        = {Exact penalty functions in nonlinear programming},
- journal = j-mp,
-    volume       = {17},
-    pages        = {251--269},
- year = {1979},
-}
-
-@article{Hanley_Mcneil_1982,
-    author       = {Hanley, J. A. and McNeil, B. J.},
-    title        = {The meaning and use of the area under a receiver operating characteristic ({ROC}) curve},
- journal = j-rad,
-    volume       = {143},
-    _number      = {1},
-    pages        = {29--36},
- year = {1982},
-}
-
-@article{Harris_Etal_2020,
-    author       = {Harris, C. R. and Millman, K. J. and {van der Walt}, S. J. and Gommers, R. and Virtanen, P. and Cournapeau, D. and Wieser, E. and Taylor, J. and Berg, S. and Smith, N. J. and Kern, R. and Picus, M. and Hoyer, S. and {van Kerkwijk}, M. H. and Brett, M. and Haldane, A. and {del R\'{\i}o}, J. F. and Wiebe, M. and Peterson, P. and {G\'{e}rard-Marchant}, P. and Sheppard, K. and Reddy, T. and Weckesser, W. and Abbasi, H. and Gohlke, C. and Oliphant, T. E.},
-    title        = {Array programming with {NumPy}},
- journal = j-nat,
-    volume       = {585},
-    _number      = {7825},
-    pages        = {357--362},
- year = {2020},
-}
-
-@inproceedings{Henriksen_2015,
-    author    = {Henriksen, I.},
-    title     = {Circumventing the linker: using {SciPy}\textquoteright{}{}s {BLAS} and {LAPACK} within {Cython}},
-    booktitle = {Proceedings of the 14th Python in Science Conference},
-    editor    = {Huff, K. and Bergstra, J.},
-    pages     = {49--52},
- year = {2015},
-}
-
-@article{Hestenes_1969,
-    author       = {Hestenes, M. R.},
-    title        = {Multiplier and gradient methods},
- journal = j-jota,
-    volume       = {4},
-    _number      = {5},
-    pages        = {303--320},
- year = {1969},
+@article{Gratton_Royer_Vicente_2020,
+    title        = {A decoupled first/second-order steps technique for nonconvex nonlinear unconstrained optimization with improved complexity bounds},
+    author       = {Gratton, S. and Royer, C. W. and Vicente, L. N.},
+    year         = 2020,
+    journal      = {Math. Program.},
+    volume       = 179,
+    pages        = {195--222}
 }
 
 @article{Higham_1993,
-    author       = {Higham, N. J.},
     title        = {Optimization by direct search in matrix computations},
- journal = j-simax,
-    volume       = {14},
-    _number      = {2},
-    pages        = {317--333},
- year = {1993},
+    author       = {Higham, N. J.},
+    year         = 1993,
+    journal      = {SIAM J. Matrix Anal. Appl.},
+    volume       = 14,
+    pages        = {317--333}
 }
 
 @book{Higham_2002,
-    author    = {Higham, N. J.},
-    title     = {Accuracy and Stability of Numerical Algorithms},
-    edition   = {Second},
-    publisher = pub-siam,
- address = pub-siam:adr,
- year = {2002},
-}
-
-@article{Higham_Higham_1989,
-    author       = {Higham, N. J. and Higham, D. J.},
-    title        = {Large growth factors in Gaussian elimination with pivoting},
- journal = j-simax,
-    volume       = {10},
-    _number      = {2},
-    pages        = {155--164},
- year = {1989},
-}
-
-@book{Holland_1975,
-    author    = {Holland, J. H.},
-    title     = {Adaptation in Natural and Artificial Systems},
-    publisher = pub-ump,
- address = pub-ump:adr,
- year = {1975},
+    title        = {Accuracy and Stability of Numerical Algorithms},
+    author       = {Higham, N. J.},
+    year         = 2002,
+    publisher    = {SIAM},
+    address      = {Philadelphia, PA, USA},
+    edition      = {Second}
 }
 
 @article{Hough_Roberts_2022,
-    author       = {Hough, M. and Roberts, L.},
     title        = {Model-based derivative-free methods for convex-constrained optimization},
- journal = j-siopt,
-    volume       = {32},
-    _number      = {4},
-    pages        = {2552--2579},
- year = {2022},
+    author       = {Hough, M. and Roberts, L.},
+    year         = 2022,
+    journal      = {SIAM J. Optim.},
+    volume       = 32,
+    pages        = {2552--2579}
 }
 
 @misc{HSL,
-    author   = {HSL},
-    title    = {A collection of {Fortran} codes for large scale scientific computation},
-    url      = {http://www.hsl.rl.ac.uk/},
+    title        = {A collection of {Fortran} codes for large scale scientific computation},
+    author       = {HSL},
+    url          = {http://www.hsl.rl.ac.uk/}
 }
 
 @inproceedings{Izadinia_Shan_Seitz_2017,
-    author    = {Izadinia, H. and Shan, Q. and Seitz, S. M.},
-    title     = {{IM2CAD}},
-    booktitle = {Proceedings of the IEEE Conference on Computer Vision and Pattern Recognition},
-    publisher = pub-ieee,
- address = pub-ieee:adr,
-    pages     = {5134--5143},
- year = {2017},
+    title        = {{IM2CAD}},
+    author       = {Izadinia, H. and Shan, Q. and Seitz, S. M.},
+    year         = 2017,
+    booktitle    = {Proceedings of the IEEE Conference on Computer Vision and Pattern Recognition},
+    publisher    = {IEEE},
+    address      = {San Juan, PR, USA},
+    pages        = {5134--5143}
 }
 
 @misc{Johnson_2019,
-    author   = {Johnson, S. G.},
-    title    = {The {NLopt} nonlinear-optimization package},
-    url      = {http://github.com/stevengj/nlopt},
-}
-
-@article{Jones_Perttunen_Stuckman_1993,
-    author       = {Jones, D. R. and Perttunen, C. D. and Stuckman, B. E.},
-    title        = {Lipschitzian optimization without the Lipschitz constant},
- journal = j-jota,
-    volume       = {79},
-    _number      = {1},
-    pages        = {157--181},
- year = {1993},
-}
-
-@article{Karmanov_1974,
-    author       = {Karmanov, V. G.},
-    title        = {Convergence estimates for iterative minimization methods},
- journal = j-ussr,
-    volume       = {14},
-    _number      = {1},
-    pages        = {1--13},
- year = {1974},
+    title        = {The {NLopt} nonlinear-optimization package},
+    author       = {Johnson, S. G.},
+    url          = {http://github.com/stevengj/nlopt}
 }
 
 @book{Kelley_2011,
-    author    = {Kelley, C. T.},
-    title     = {Implicit Filtering},
-    series    = s-set,
-    publisher = pub-siam,
- address = pub-siam:adr,
- year = {2011},
-}
-
-@article{Kirkpatrick_Gelatt_Vecchi_1983,
-    author       = {Kirkpatrick, S. and Gelatt, C. D. and Vecchi, M. P.},
-    title        = {Optimization by simulated annealing},
- journal = j-sci,
-    volume       = {220},
-    _number      = {4598},
-    pages        = {671--680},
- year = {1983},
-}
-
-@article{Klerk_Pasechnik_2002,
-    author       = {{De Klerk}, E. and Pasechnik, D. V.},
-    title        = {Approximation of the stability number of a graph via copositive programming},
- journal = j-siopt,
-    volume       = {12},
-    _number      = {4},
-    pages        = {875--892},
- year = {2002},
+    title        = {Implicit Filtering},
+    author       = {Kelley, C. T.},
+    year         = 2011,
+    publisher    = {SIAM},
+    address      = {Philadelphia, PA, USA},
+    series       = {Software Environ. Tools}
 }
 
 @article{Kolda_Lewis_Torczon_2003,
-    author       = {Kolda, T. G. and Lewis, R. M. and Torczon, V.},
     title        = {Optimization by direct search: New perspectives on some classical and modern methods},
- journal = j-sirev,
-    volume       = {45},
-    _number      = {3},
-    pages        = {385--482},
- year = {2003},
-}
-
-@article{Kortelainen_Etal_2010,
-    author       = {Kortelainen, M. and Lesinski, T. and Mor\'{e}, J. and Nazarewicz, W. and Sarich, J. and Schunck, N. and Stoitsov, M. V. and Wild, S. M.},
-    title        = {Nuclear energy density optimization},
- journal = j-prc,
-    volume       = {82},
-    _number      = {2},
-    pages        = {024313:1--024313:18},
- year = {2010},
-}
-
-@article{Kortelainen_Etal_2012,
-    author       = {Kortelainen, M. and McDonnell, J. and Nazarewicz, W. and Reinhard, P. G. and Sarich, J. and Schunck, N. and Stoitsov, M. V. and Wild, S. M.},
-    title        = {Nuclear energy density optimization: large deformations},
- journal = j-prc,
-    volume       = {85},
-    _number      = {2},
-    pages        = {024304:1--024304:15},
- year = {2012},
-}
-
-@article{Kortelainen_Etal_2014,
-    author       = {Kortelainen, M. and McDonnell, J. and Nazarewicz, W. and Olsen, E. and Reinhard, P. G. and Sarich, J. and Schunck, N. and Wild, S. M. and Davesne, D. and Erler, J. and Pastore, A.},
-    title        = {Nuclear energy density optimization: shell structure},
- journal = j-prc,
-    volume       = {89},
-    _number      = {5},
-    pages        = {054314:1--054314:16},
- year = {2014},
-}
-
-@inproceedings{Kuhn_Tucker_1951,
-    author    = {Kuhn, H. W. and Tucker, A. W.},
-    title     = {Nonlinear programming},
-    booktitle = {Proceedings of the 2nd Berkeley Symposium on Mathematics, Statistics and Probability},
-    editor    = {Neyman, J.},
-    volume    = {2},
-    publisher = pub-ucp,
- address = pub-ucp:adr,
-    pages     = {481--492},
- year = {1951},
-}
-
-@article{Lagarias_Etal_1998,
-    author       = {Lagarias, J. C. and Reeds, J. A. and Wright, M. H. and Wright, P. E.},
-    title        = {Convergence Properties of the Nelder-Mead Simplex Method in Low Dimensions},
- journal = j-siopt,
-    volume       = {9},
-    _number      = {1},
-    pages        = {112--147},
- year = {1998},
-}
-
-@article{Lalee_Nocedal_Plantenga_1998,
-    author       = {Lalee, M. and Nocedal, J. and Plantenga, T.},
-    title        = {On the implementation of an algorithm for large-scale equality constrained optimization},
- journal = j-siopt,
-    volume       = {8},
-    _number      = {3},
-    pages        = {682--706},
- year = {1998},
+    author       = {Kolda, T. G. and Lewis, R. M. and Torczon, V.},
+    year         = 2003,
+    journal      = {SIAM Rev.},
+    volume       = 45,
+    pages        = {385--482}
 }
 
 @article{Larson_Menickelly_Wild_2019,
-    author       = {Larson, J. and Menickelly, M. and Wild, S. M.},
     title        = {Derivative-free optimization methods},
- journal = j-an,
-    volume       = {28},
-    _number      = {1},
-    pages        = {287--404},
- year = {2019},
+    author       = {Larson, J. and Menickelly, M. and Wild, S. M.},
+    year         = 2019,
+    journal      = {Acta Numer.},
+    volume       = 28,
+    pages        = {287--404}
 }
 
 @article{Latorre_Etal_2019,
-    author       = {Latorre, V. and Habal, H. and Graeb, H. and Lucidi, S.},
     title        = {Derivative free methodologies for circuit worst case analysis},
- journal = j-ol,
-    volume       = {13},
-    _number      = {7},
-    pages        = {1557--1571},
- year = {2019},
-}
-
-@book{Lawson_Hanson_1987,
-    author    = {Lawson, C. L. and Hanson, R. J.},
-    title     = {Solving Least Squares Problems},
-    series    = s-cap,
-    publisher = pub-siam,
- address = pub-siam:adr,
- year = {1974},
-}
-
-@article{Leonetti_Kormushev_Sagratella_2012,
-    author       = {Leonetti, M. and Kormushev, P. and Sagratella, S.},
-    title        = {Combining local and global direct derivative-free optimization for reinforcement learning},
- journal = j-cit,
-    volume       = {12},
-    _number      = {3},
-    pages        = {53--65},
- year = {2012},
-}
-
-@article{Levina_Etal_2009,
-    author       = {Levina, T. and Levin, Y. and McGill, J. and Nediak, M.},
-    title        = {Dynamic pricing with online learning and strategic consumers: an application of the aggregation algorithm},
- journal = j-or,
-    volume       = {57},
-    _number      = {2},
-    pages        = {327--341},
- year = {2009},
-}
-
-@article{Liu_Nocedal_1989,
-    author       = {Liu, D. C. and Nocedal, J.},
-    title        = {On the limited memory {BFGS} method for large scale optimization},
- journal = j-mp,
-    volume       = {45},
-    pages        = {503--528},
- year = {1989},
+    author       = {Latorre, V. and Habal, H. and Graeb, H. and Lucidi, S.},
+    year         = 2019,
+    journal      = {Optim. Lett.},
+    volume       = 13,
+    pages        = {1557--1571}
 }
 
 @article{Mamon_Biviano_Boue_2013,
-    author       = {Mamon, G. A. and Biviano, A. and Bou\'{e}, G.},
     title        = {{MAMPOSSt}: modelling anisotropy and mass profiles of observed spherical systems {I.} {Gaussian} {3D} velocities},
- journal = j-mnras,
-    volume       = {429},
-    _number      = {4},
-    pages        = {3079--3098},
- year = {2013},
-}
-
-@article{Marazzi_Nocedal_2002,
-    author       = {Marazzi, M. and Nocedal, J.},
-    title        = {Wedge trust region methods for derivative free optimization},
- journal = j-mp,
-    volume       = {91},
-    _number      = {2},
-    pages        = {289--305},
- year = {2002},
-}
-
-@article{Marsden_Etal_2004,
-    author       = {Marsden, A. L. and Wang, M. and Dennis, Jr., J. E. and Moin, P.},
-    title        = {Optimal aeroacoustic shape design using the surrogate management framework},
- journal = j-oe,
-    volume       = {5},
-    _number      = {2},
-    pages        = {235--262},
- year = {2004},
-}
-
-@article{Matyas_1965,
-    author       = {Matyas, J.},
-    title        = {Random optimization},
- journal = j-arc,
-    volume       = {26},
-    _number      = {2},
-    pages        = {246--253},
- year = {1965},
-}
-
-@inproceedings{Mayne_1980,
-    author    = {Mayne, D. Q.},
-    title     = {On the use of exact penalty functions to determine step length in optimization algorithms},
-    booktitle = {Numerical Analysis},
-    editor    = {Watson, G. A.},
-    series    = s-lnm,
-    volume    = {773},
-    publisher = pub-springer,
- address = pub-springer:adr-bh,
-    pages     = {98--109},
- year = {1980},
-}
-
-@article{Mayne_Maratos_1979,
-    author       = {Mayne, D. Q. and Maratos, N.},
-    title        = {A first order, exact penalty function algorithm for equality constrained optimization problems},
- journal = j-mp,
-    volume       = {16},
-    _number      = {1},
-    pages        = {303--324},
- year = {1979},
-}
-
-@inproceedings{Mayne_Polak_1982,
-    author    = {Mayne, D. Q. and Polak, E.},
-    title     = {A surperlinearly convergent algorithm for constrained optimization problems},
-    booktitle = {Algorithms for Constrained Minimization of Smooth Nonlinear Functions},
-    editor    = {Buckley, A. G. and Goffin, J. L.},
-    series    = s-mps,
-    volume    = {16},
-    publisher = pub-springer,
- address = pub-springer:adr-bh,
-    pages     = {45--61},
- year = {1982},
-}
-
-@article{Meza_Martinez_1994,
-    author       = {Meza, J. C. and Martinez, M. L.},
-    title        = {On the use of direct search methods for the molecular conformation problem},
- journal = j-jcc,
-    volume       = {15},
-    _number      = {6},
-    pages        = {627--632},
- year = {1994},
-}
-
-@inproceedings{Mockus_1975,
-    author    = {Mo\v{c}kus, R.},
-    title     = {On bayesian methods for seeking the extremum},
-    booktitle = {Optimization Techniques IFIP Technical Conference Novosibirsk},
-    editor    = {Marchuk, G. I.},
-    series    = s-lnsc,
-    volume    = {27},
-    publisher = pub-springer,
- address = pub-springer:adr-bh,
-    pages     = {400--404},
- year = {1975},
+    author       = {Mamon, G. A. and Biviano, A. and Bou\'{e}, G.},
+    year         = 2013,
+    journal      = {Mon. Not. R. Astron. Soc.},
+    volume       = 429,
+    pages        = {3079--3098}
 }
 
 @article{Mombaur_Truong_Laumond_2010,
-    author       = {Mombaur, K. and Truong, A. and Laumond, J. P.},
     title        = {From human to humanoid locomotion---an inverse optimal control approach},
- journal = j-ar,
-    volume       = {28},
-    _number      = {3},
-    pages        = {369--383},
- year = {2010},
+    author       = {Mombaur, K. and Truong, A. and Laumond, J. P.},
+    year         = 2010,
+    journal      = {Auton. Robot.},
+    volume       = 28,
+    pages        = {369--383}
 }
 
 @article{More_Sorensen_1983,
-    author       = {Mor\'{e}, J. J. and Sorensen, D. C.},
     title        = {Computing a trust region step},
- journal = j-sissc,
-    volume       = {4},
-    _number      = {3},
-    pages        = {553--572},
- year = {1983},
+    author       = {Mor\'{e}, J. J. and Sorensen, D. C.},
+    year         = 1983,
+    journal      = {SIAM J. Sci. Stat. Comp.},
+    volume       = 4,
+    pages        = {553--572}
 }
 
 @article{More_Wild_2009,
-    author       = {Mor\'{e}, J. J. and Wild, S. M.},
     title        = {Benchmarking derivative-free optimization algorithms},
- journal = j-siopt,
-    volume       = {20},
-    _number      = {1},
-    pages        = {172--191},
- year = {2009},
-}
-
-@article{More_Wild_2011,
     author       = {Mor\'{e}, J. J. and Wild, S. M.},
-    title        = {Estimating computational noise},
- journal = j-siopt,
-    volume       = {33},
-    _number      = {3},
-    pages        = {1292--1314},
- year = {2011},
-}
-
-@article{Mugunthan_Shoemaker_Regis_2005,
-    author       = {Mugunthan, P. and Shoemaker, C. A. and Regis, R. G.},
-    title        = {Comparison of function approximation, heuristic, and derivative-based methods for automatic calibration of computationally expensive groundwater bioremediation models},
- journal = j-wrr,
-    volume       = {41},
-    _number      = {11},
-    pages        = {W11427:1--W11427:17},
- year = {2005},
-}
-
-@article{Murty_Kabadi_1987,
-    author       = {Murty, K. G. and Kabadi, S. N.},
-    title        = {Some {NP}-complete problems in quadratic and nonlinear programming},
- journal = j-mp,
-    volume       = {39},
-    _number      = {2},
-    pages        = {117--129},
- year = {1987},
+    year         = 2009,
+    journal      = {SIAM J. Optim.},
+    volume       = 20,
+    pages        = {172--191}
 }
 
 @article{Nelder_Mead_1965,
-    author       = {Nelder, J. A. and Mead, R.},
     title        = {A simplex method for function minimization},
- journal = j-cj,
-    volume       = {7},
-    _number      = {4},
-    pages        = {308--313},
- year = {1965},
-}
-
-@article{Niu_Yuan_2010,
-    author       = {Niu, L. F. and Yuan, Y.},
-    title        = {A new trust region algorithm for nonlinear constrained optimization},
- journal = j-jcma,
-    volume       = {28},
-    pages        = {72--86},
- year = {2010},
-}
-
-@book{Nocedal_Wright_2006,
-    author    = {Nocedal, J. and Wright, S. J.},
-    title     = {Numerical Optimization},
-    series    = s-sorfe,
-    edition   = {Second},
-    publisher = pub-springer,
- address = pub-wiley:adr-ny,
- year = {2006},
-}
-
-@article{Oeuvray_Bierlaire_2007,
-    author       = {Oeuvray, R. and Bierlaire, M.},
-    title        = {A new derivative-free algorithm for the medical image registration problem},
- journal = j-ijms,
-    volume       = {27},
-    _number      = {2},
-    pages        = {115--124},
- year = {2007},
+    author       = {Nelder, J. A. and Mead, R.},
+    year         = 1965,
+    journal      = {Comput. J.},
+    volume       = 7,
+    pages        = {308--313}
 }
 
 @article{Oeuvray_Bierlaire_2009,
-    author       = {Oeuvray, R. and Bierlaire, M.},
     title        = {{BOOSTERS}: a derivative-free algorithm based on radial basis functions},
- journal = j-ijms,
-    volume       = {29},
-    _number      = {1},
-    pages        = {29--36},
- year = {2009},
-}
-
-@article{Paquette_Scheinberg_2020,
-    author       = {Paquette, C. and Scheinberg, K.},
-    title        = {A stochastic line search method with expected complexity analysis},
- journal = j-siopt,
-    volume       = {30},
-    _number      = {1},
-    pages        = {349--376},
- year = {2020},
-}
-
-@article{Pedregosa_Etal_2011,
-    author       = {Pedregosa, F. and Varoquaux, G. and Gramfort, A. and Michel, V. and Thirion, B. and Grisel, O. and Blondel, M. and Prettenhofer, P. and Weiss, R. and Dubourg, V. and Vanderplas, J. and Passos, A. and Cournapeau, D. and Brucher, M. and Perrot, M. and Duchesnay, E.},
-    title        = {Scikit-learn: machine learning in {Python}},
- journal = j-jmlr,
-    volume       = {12},
-    _number      = {85},
-    pages        = {2825--2830},
- year = {2011},
+    author       = {Oeuvray, R. and Bierlaire, M.},
+    year         = 2009,
+    journal      = {Int. J. Model. Simul.},
+    volume       = 29,
+    pages        = {29--36}
 }
 
 @article{Peterson_2009,
-    author       = {Peterson, P.},
     title        = {{F2PY}: a tool for connecting Fortran and Python programs},
- journal = j-ijcse,
-    volume       = {4},
-    _number      = {4},
-    pages        = {296--305},
- year = {2009},
-}
-
-@article{Pillo_Grippo_1989,
-    author       = {{Di Pillo}, G. and Grippo, L.},
-    title        = {Exact penalty functions in constrained optimization},
- journal = j-sicon,
-    volume       = {27},
-    _number      = {6},
-    pages        = {1333--1360},
- year = {1989},
+    author       = {Peterson, P.},
+    year         = 2009,
+    journal      = {Int. J. Comput. Sci. Eng.},
+    volume       = 4,
+    pages        = {296--305}
 }
 
 @article{Porcelli_Toint_2017,
-    author       = {Porcelli, M. and Toint, Ph. L.},
     title        = {{BFO}, a trainable derivative-free brute force optimizer for nonlinear bound-constrained optimization and equilibrium computations with continuous and discrete variables},
- journal = j-toms,
-    volume       = {44},
-    _number      = {1},
-    pages        = {6:1--6:25},
- year = {2017},
+    author       = {Porcelli, M. and Toint, {\relax Ph.L}},
+    year         = 2017,
+    journal      = {ACM Trans. Math. Software},
+    volume       = 44,
+    pages        = {6:1--6:25}
 }
 
 @misc{Porcelli_Toint_2020,
-    author      = {Porcelli, M. and Toint, Ph. L.},
-    title       = {Global and local information in structured derivative free optimization with {BFO}},
-    howpublished  = {arxiv:2001.04801},
- year = {2020},
+    title        = {Global and local information in structured derivative free optimization with {BFO}},
+    author       = {Porcelli, M. and Toint, {\relax Ph.L}},
+    year         = 2020,
+    howpublished = {arxiv:2001.04801}
 }
 
 @article{Porcelli_Toint_2022,
-    author       = {Porcelli, M. and Toint, Ph. L.},
     title        = {Exploiting problem structure in derivative free optimization},
- journal = j-toms,
-    volume       = {48},
-    _number      = {1},
- year = {2022},
+    author       = {Porcelli, M. and Toint, {\relax Ph.L}},
+    year         = 2022,
+    journal      = {ACM Trans. Math. Software},
+    volume       = 48
 }
 
 @article{Powell_1964,
-    author       = {Powell, M. J. D.},
     title        = {An efficient method for finding the minimum of a function of several variables without calculating derivatives},
- journal = j-cj,
-    volume       = {7},
-    _number      = {2},
-    pages        = {155--162},
- year = {1964},
-}
-
-@inproceedings{Powell_1969,
-    author    = {Powell, M. J. D.},
-    title     = {A method for nonlinear constraints in minimization problems},
-    booktitle = j-opt,
-    editor    = {Fletcher, R.},
-    publisher = pub-ap,
- address = pub-hmso:adr,
-    pages     = {283--398},
- year = {1969},
-}
-
-@inproceedings{Powell_1970a,
-    author    = {Powell, M. J. D.},
-    title     = {A hybrid method for nonlinear equations},
-    booktitle = {Numerical Methods for Nonlinear Algebraic Equations},
-    editor    = {Rabinowitz, P.},
-    publisher = pub-gb,
- address = pub-hmso:adr,
-    pages     = {87--114},
- year = {1970},
+    author       = {Powell, M. J. D.},
+    year         = 1964,
+    journal      = {Comput. J.},
+    volume       = 7,
+    pages        = {155--162}
 }
 
 @inproceedings{Powell_1970b,
-    author    = {Powell, M. J. D.},
-    title     = {A new algorithm for unconstrained optimization},
-    booktitle = {Nonlinear Programming},
-    editor    = {Rosen, J. B. and Mangasarian, O. L. and Ritter, K.},
-    publisher = pub-ap,
- address = pub-hmso:adr,
-    pages     = {31--65},
- year = {1970},
-}
-
-@article{Powell_1975a,
+    title        = {A new algorithm for unconstrained optimization},
     author       = {Powell, M. J. D.},
-    title        = {A view of unconstrained minimization algorithms that do not require derivatives},
- journal = j-toms,
-    volume       = {1},
-    _number      = {2},
-    pages        = {97--107},
- year = {1975},
-}
-
-@inproceedings{Powell_1975b,
-    author    = {Powell, M. J. D.},
-    title     = {Convergence properties of a class of minimization algorithms},
-    booktitle = {Nonlinear Programming 2},
-    editor    = {Mangasarian, O. L. and Meyer, R. R. and Robinson, S. M.},
-    publisher = pub-ap,
- address = pub-hmso:adr,
-    pages     = {1--27},
- year = {1975},
-}
-
-@inproceedings{Powell_1978a,
-    author    = {Powell, M. J. D.},
-    title     = {A fast algorithm for nonlinearly constrained optimization calculations},
-    booktitle = {Numerical Analysis},
-    editor    = {Watson, G. A.},
-    publisher = pub-springer,
- address = pub-springer:adr-bh,
-    pages     = {144--157},
- year = {1978},
-}
-
-@article{Powell_1978b,
-    author       = {Powell, M. J. D.},
-    title        = {Algorithms for nonlinear constraints that use Lagrangian functions},
- journal = j-mp,
-    volume       = {14},
-    _number      = {1},
-    pages        = {224--248},
- year = {1978},
-}
-
-@inproceedings{Powell_1978c,
-    author    = {Powell, M. J. D.},
-    title     = {The convergence of variable metric methods for nonlinearly constrained optimization calculations},
-    booktitle = {Nonlinear Programming 3},
-    editor    = {Mangasarian, O. L. and Meyer, R. R. and Robinson, S. M.},
-    publisher = pub-ap,
- address = pub-hmso:adr,
-    pages     = {27--64},
- year = {1978},
-}
-
-@inproceedings{Powell_1987,
-    author    = {Powell, M. J. D.},
-    title     = {Methods for nonlinear constraints in optimization calculations},
-    booktitle = {The State of the Art in Numerical Analysis},
-    editor    = {Iserles, A. and Powell, M. J. D.},
-    publisher = pub-oup,
- address = pub-oup:adr,
-    pages     = {325--358},
- year = {1987},
+    year         = 1970,
+    booktitle    = {Nonlinear Programming},
+    publisher    = {Academic Press},
+    address      = {London, UK},
+    pages        = {31--65},
+    editor       = {Rosen, J. B. and Mangasarian, O. L. and Ritter, K.}
 }
 
 @inproceedings{Powell_1994,
-    author    = {Powell, M. J. D.},
-    title     = {A direct search optimization method that models the objective and constraint functions by linear interpolation},
-    booktitle = {Advances in Optimization and Numerical Analysis},
-    editor    = {Gomez, S. and Hennart, J. P.},
-    publisher = pub-springer,
- address = pub-springer:adr-d,
-    pages     = {51--67},
- year = {1994},
+    title        = {A direct search optimization method that models the objective and constraint functions by linear interpolation},
+    author       = {Powell, M. J. D.},
+    year         = 1994,
+    booktitle    = {Advances in Optimization and Numerical Analysis},
+    publisher    = {Springer},
+    address      = {Dordrecht, NL},
+    pages        = {51--67},
+    editor       = {Gomez, S. and Hennart, J. P.}
 }
 
 @article{Powell_1998,
-    author       = {Powell, M. J. D.},
     title        = {Direct search algorithms for optimization calculations},
- journal = j-an,
-    volume       = {7},
-    pages        = {287--336},
- year = {1998},
+    author       = {Powell, M. J. D.},
+    year         = 1998,
+    journal      = {Acta Numer.},
+    volume       = 7,
+    pages        = {287--336}
 }
 
 @article{Powell_2001,
-    author       = {Powell, M. J. D.},
     title        = {On the {Lagrange} functions of quadratic models that are defined by interpolation},
- journal = j-oms,
-    volume       = {16},
-    _number      = {1--4},
-    pages        = {289--309},
- year = {2001},
+    author       = {Powell, M. J. D.},
+    year         = 2001,
+    journal      = {Optim. Methods Softw.},
+    volume       = 16,
+    pages        = {289--309}
 }
 
 @article{Powell_2002,
-    author       = {Powell, M. J. D.},
     title        = {{UOBYQA}: unconstrained optimization by quadratic approximation},
- journal = j-mp,
-    volume       = {92},
-    _number      = {3},
-    pages        = {555--582},
- year = {2002},
-}
-
-@misc{Powell_2004a,
     author       = {Powell, M. J. D.},
-    title        = {Five lectures on radial basis functions},
-    howpublished = {Delivered at the Technical University of Denmark},
- year = {2014},
+    year         = 2002,
+    journal      = {Math. Program.},
+    volume       = 92,
+    pages        = {555--582}
 }
 
 @article{Powell_2004b,
-    author       = {Powell, M. J. D.},
     title        = {Least Frobenius norm updating of quadratic models that satisfy interpolation conditions},
- journal = j-mp,
-    volume       = {100},
-    _number      = {1},
-    pages        = {183--215},
- year = {2004},
+    author       = {Powell, M. J. D.},
+    year         = 2004,
+    journal      = {Math. Program.},
+    volume       = 100,
+    pages        = {183--215}
 }
 
 @inproceedings{Powell_2004c,
-    author    = {Powell, M. J. D.},
-    title     = {On updating the inverse of a {KKT} matrix},
-    booktitle = {Numerical Linear Algebra and Optimization},
-    editor    = {Yuan, Y.},
-    publisher = pub-sp,
- address = pub-sp:adr,
-    pages     = {56--78},
- year = {2004},
+    title        = {On updating the inverse of a {KKT} matrix},
+    author       = {Powell, M. J. D.},
+    year         = 2004,
+    booktitle    = {Numerical Linear Algebra and Optimization},
+    publisher    = {Science Press},
+    address      = {Beijing, CN},
+    pages        = {56--78},
+    editor       = {Yuan, Y.}
 }
 
 @inproceedings{Powell_2006,
-    author    = {Powell, M. J. D.},
-    title     = {The {NEWUOA} software for unconstrained optimization without derivatives},
-    booktitle = {Large-Scale Nonlinear Optimization},
-    editor    = {{Di Pillo}, G. and Roma, M.},
-    publisher = pub-springer,
- address = pub-wiley:adr-ny,
-    pages     = {255--297},
- year = {2006},
-}
-
-@article{Powell_2007,
+    title        = {The {NEWUOA} software for unconstrained optimization without derivatives},
     author       = {Powell, M. J. D.},
-    title        = {A view of algorithms for optimization without derivatives},
- journal = j-mt,
-    volume       = {43},
-    _number      = {5},
-    pages        = {170--174},
- year = {2007},
+    year         = 2006,
+    booktitle    = {Large-Scale Nonlinear Optimization},
+    publisher    = {Springer},
+    address      = {New York, NY, USA},
+    pages        = {255--297},
+    editor       = {{Di Pillo}, G. and Roma, M.}
 }
 
 @article{Powell_2008,
-    author       = {Powell, M. J. D.},
     title        = {Developments of {NEWUOA} for minimization without derivatives},
- journal = j-ima-jna,
-    volume       = {28},
-    _number      = {4},
-    pages        = {649--664},
- year = {2008},
+    author       = {Powell, M. J. D.},
+    year         = 2008,
+    journal      = {IMA J. Numer. Anal.},
+    volume       = 28,
+    pages        = {649--664}
 }
 
 @techreport{Powell_2009,
-    author      = {Powell, M. J. D.},
-    title       = {The {BOBYQA} algorithm for bound constrained optimization without derivatives},
-    number      = {DAMTP 2009/NA06},
-    institution = inst-damtp,
- address = inst-damtp:adr,
- year = {2009},
-}
-
-@article{Powell_2010,
+    title        = {The {BOBYQA} algorithm for bound constrained optimization without derivatives},
     author       = {Powell, M. J. D.},
-    title        = {On the convergence of a wide range of trust region methods for unconstrained optimization},
- journal = j-ima-jna,
-    volume       = {30},
-    _number      = {1},
-    pages        = {289--301},
- year = {2010},
+    year         = 2009,
+    address      = {Cambridge, UK},
+    number       = {DAMTP 2009/NA06},
+    institution  = {Department of Applied Mathematics and Theoretical Physics, University of Cambridge}
 }
 
 @article{Powell_2012,
-    author       = {Powell, M. J. D.},
     title        = {On the convergence of trust region algorithms for unconstrained minimization without derivatives},
- journal = j-coa,
-    volume       = {53},
-    _number      = {2},
-    pages        = {527--555},
- year = {2012},
+    author       = {Powell, M. J. D.},
+    year         = 2012,
+    journal      = {Comput. Optim. Appl.},
+    volume       = 53,
+    pages        = {527--555}
 }
 
 @article{Powell_2013,
-    author       = {Powell, M. J. D.},
     title        = {Beyond symmetric {Broyden} for updating quadratic models in minimization without derivatives},
- journal = j-mp,
-    volume       = {138},
-    _number      = {1--2},
-    pages        = {475--500},
- year = {2013},
+    author       = {Powell, M. J. D.},
+    year         = 2013,
+    journal      = {Math. Program.},
+    volume       = 138,
+    pages        = {475--500}
 }
 
 @article{Powell_2015,
-    author       = {Powell, M. J. D.},
     title        = {On fast trust region methods for quadratic models with linear constraints},
- journal = j-mpc,
-    volume       = {7},
-    _number      = {3},
-    pages        = {237--267},
- year = {2015},
-}
-
-@article{Powell_Yuan_1986,
-    author       = {Powell, M. J. D. and Yuan, Y.},
-    title        = {A recursive quadratic programming algorithm that uses differentiable exact penalty functions},
- journal = j-mp,
-    volume       = {35},
-    _number      = {3},
-    pages        = {265--278},
- year = {1986},
-}
-
-@article{Powell_Yuan_1991,
-    author       = {Powell, M. J. D. and Yuan, Y.},
-    title        = {A trust region algorithm for equality constrained optimization},
- journal = j-mp,
-    volume       = {49},
-    _number      = {1--3},
-    pages        = {189--211},
- year = {1991},
-}
-
-@article{Pshenichnyi_1970a,
-    author       = {Pshenichnyi, B. N.},
-    title        = {Algorithms for general mathematical programming problems},
- journal = j-kib,
-    volume       = {5},
-    pages        = {120--125},
- year = {1970},
-}
-
-@article{Pshenichnyi_1970b,
-    author       = {Pshenichnyi, B. N.},
-    title        = {Newton's method for the solution of systems of equalities and inequalities},
- journal = j-mn,
-    volume       = {8},
-    _number      = {5},
-    pages        = {827--830},
- year = {1970},
-}
-
-@article{Qian_Yu_2021,
-    author       = {Qian, H. and Yu, Y.},
-    title        = {Derivative-free reinforcement learning: a review},
- journal = j-fcs,
-    volume       = {15},
-    _number      = {6},
-    pages        = {156336:1--156336:19},
- year = {2021},
+    author       = {Powell, M. J. D.},
+    year         = 2015,
+    journal      = {Math. Program. Comput.},
+    volume       = 7,
+    pages        = {237--267}
 }
 
 @phdthesis{Ragonneau_2022,
-    author      = {Ragonneau, T. M.},
-    title       = {Model-Based Derivative-Free Optimization Methods and Software},
-    school = inst-ama,
- address = inst-ama:adr,
-    year        = {2022},
-}
-
-@article{Rastrigin_1963,
-    author       = {Rastrigin, L. A.},
-    title        = {The convergence of the random search method in the extremal control of many-parameter system},
- journal = j-arc,
-    volume       = {24},
-    _number      = {10},
-    pages        = {1337--1342},
- year = {1963},
+    title        = {Model-Based Derivative-Free Optimization Methods and Software},
+    author       = {Ragonneau, T. M.},
+    year         = 2022,
+    address      = {Hong Kong},
+    school       = {Department of Applied Mathematics, The Hong Kong Polytechnic University}
 }
 
 @article{Regis_Wild_2017,
-    author       = {Regis, R. G. and Wild, S. M.},
     title        = {{CONORBIT}: constrained optimization by radial basis function interpolation in trust regions},
- journal = j-oms,
-    volume       = {32},
-    _number      = {3},
-    pages        = {552--580},
- year = {2017},
-}
-
-@article{Riberio_Karas_Gonzaga_2008,
-    author       = {Roberio, A. A. and Karas, E. W. and Gonzaga, C. C.},
-    title        = {Global convergence of filter methods for nonlinear programming},
- journal = j-siopt,
-    volume       = {19},
-    _number      = {3},
-    pages        = {1231--1249},
- year = {2008},
+    author       = {Regis, R. G. and Wild, S. M.},
+    year         = 2017,
+    journal      = {Optim. Methods Softw.},
+    volume       = 32,
+    pages        = {552--580}
 }
 
 @article{Rios_Sahinidis_2013,
-    author       = {Rios, L. M. and Sahinidis, N. V.},
     title        = {Derivative-free optimization: a review of algorithms and comparison of software implementations},
- journal = j-jgo,
-    volume       = {56},
-    _number      = {3},
-    pages        = {1247--1293},
- year = {2013},
-}
-
-@article{Robinson_1972a,
-    author       = {Robinson, S. M.},
-    title        = {A quadratically-convergent algorithm for general nonlinear programming problems},
- journal = j-mp,
-    volume       = {3},
-    _number      = {1},
-    pages        = {145--156},
- year = {1972},
-}
-
-@article{Robinson_1972b,
-    author       = {Robinson, S. M.},
-    title        = {Extension of {Newton}'s method to nonlinear functions with values in a cone},
- journal = j-nm,
-    volume       = {19},
-    _number      = {4},
-    pages        = {341--347},
- year = {1972},
-}
-
-@article{Robinson_1974,
-    author       = {Robinson, S. M.},
-    title        = {Perturbed {Kuhn}-{Tucker} points and rates of convergence for a class of nonlinear-programming algorithms},
- journal = j-mp,
-    volume       = {7},
-    _number      = {1},
-    pages        = {1--16},
- year = {1974},
-}
-
-@article{Rockafellar_1973,
-    author       = {Rockafellar, R. T.},
-    title        = {A dual approach to solving nonlinear programming problems by unconstrained optimization},
- journal = j-mp,
-    volume       = {5},
-    _number      = {1},
-    pages        = {354--373},
- year = {1973},
-}
-
-@article{Rockafellar_2022,
-    author       = {Rockafellar, R. T.},
-    title        = {Convergence of augmented {Lagrangian} methods in extensions beyond nonlinear programming},
- journal = j-mp,
- year = {2022},
-}
-
-@article{Rosenbrock_1960,
-    author       = {Rosenbrock, H. H.},
-    title        = {An automatic method for finding the greatest or least value of a function},
- journal = j-cj,
-    volume       = {3},
-    _number      = {3},
-    pages        = {175--184},
- year = {1960},
-}
-
-@inproceedings{Sargent_1974,
-    author    = {Sargent, R. W. H.},
-    title     = {Reduced-gradient and projection methods for nonlinear programming},
-    booktitle = {Numerical Methods for Constrained Optimization},
-    editor    = {Gill, P. E. and Murray, W.},
-    publisher = pub-ap,
- address = pub-hmso:adr,
-    pages     = {149--174},
- year = {1974},
-}
-
-@article{Sartenaer_1997,
-    author       = {Sartenaer, A.},
-    title        = {Automatic determination of an initial trust region in nonlinear programming},
- journal = j-sisc,
-    volume       = {18},
-    _number      = {6},
-    pages        = {1788--1803},
- year = {1997},
+    author       = {Rios, L. M. and Sahinidis, N. V.},
+    year         = 2013,
+    journal      = {J. Global Optim.},
+    volume       = 56,
+    pages        = {1247--1293}
 }
 
 @article{Sauer_Xu_1995,
-    author       = {Sauer, T. and Xu, Y.},
     title        = {On Multivariate Lagrange Interpolation},
- journal = j-mc,
-    volume       = {64},
-    _number      = {211},
-    pages        = {1147--1170},
- year = {1995},
-}
-
-@article{Scheinberg_Toint_2010,
-    author       = {Scheinberg, K. and Toint, Ph. L.},
-    title        = {Self-correcting geometry in model-based algorithms for derivative-free unconstrained optimization},
- journal = j-siopt,
-    volume       = {20},
-    _number      = {6},
-    pages        = {3512--3532},
- year = {2010},
-}
-
-@article{Schittkowski_1981a,
-    author       = {Schittkowski, K.},
-    title        = {The nonlinear programming method of {Wilson}, {Han} and {Powell} with an augmented {Lagrangian} type line search function},
-    subtitle     = {Part 1},
- journal = j-nm,
-    volume       = {38},
-    _number      = {1},
-    pages        = {83--114},
- year = {1981},
-}
-
-@article{Schittkowski_1981b,
-    author       = {Schittkowski, K.},
-    title        = {The nonlinear programming method of {Wilson}, {Han} and {Powell} with an augmented {Lagrangian} type line search function},
-    subtitle     = {Part 2},
- journal = j-nm,
-    volume       = {38},
-    _number      = {1},
-    pages        = {115--127},
- year = {1981},
-}
-
-@article{Schittkowski_1986,
-    author       = {Schittkowski, K.},
-    title        = {{NLPQL}: a fortran subroutine solving constrained nonlinear programming problems},
- journal = j-aor,
-    volume       = {5},
-    pages        = {485--500},
- year = {1986},
-}
-
-@inproceedings{Schittkowski_Yuan_2011,
-    author    = {Schittkowski, K. and Yuan, Y.},
-    title     = {Sequential quadratic programming methods},
-    booktitle = {Wiley Encyclopedia of Operations Research and Management Science},
-    editor    = {Cochran, J. J. and Cox, L. A. and Keskinocak, P. and Kharoufeh, J. P. and Smith, J. C.},
-    publisher = pub-wiley,
- address = pub-wiley:adr-ny,
- year = {2011},
-}
-
-@inproceedings{Shahriari_Etal_2016,
-    author    = {Shahriari, B. and Swersky, K. and Wang, Z. and Adams, R. P. and {De Freitas}, N.},
-    title     = {Taking the human out of the loop: a review of {Bayesian} optimization},
-    booktitle = {Proceedings of the IEEE},
-    volume    = {104},
-    _number   = {1},
-    publisher = pub-ieee,
- address = pub-ieee:adr,
-    pages     = {148--175},
- year = {2016},
-}
-
-@article{Shanno_1978,
-    author       = {Shanno, D. F.},
-    title        = {Conjugate gradient methods with inexact searches},
- journal = j-mor,
-    volume       = {3},
-    _number      = {3},
-    pages        = {244--256},
- year = {1978},
+    author       = {Sauer, T. and Xu, Y.},
+    year         = 1995,
+    journal      = {Math. Comp.},
+    volume       = 64,
+    pages        = {1147--1170}
 }
 
 @article{Shi_Etal_2022,
-    author       = {Shi, H. J. M. and Xuan, M. Q. and Oztoprak, F. and Nocedal, J.},
     title        = {On the numerical performance of derivative-free optimization methods based on finite-difference approximations},
- journal = j-oms,
- year = {2022},
-}
-
-@article{Stark_Parker_1995,
-    author       = {Stark, P. B. and Parker, R. L.},
-    title        = {Bounded-variable least-squares: an algorithm and applications},
- journal = j-cs,
-    volume       = {10},
-    _number      = {2},
-    pages        = {129--141},
- year = {1995},
+    author       = {Shi, H. J. M. and Xuan, M. Q. and Oztoprak, F. and Nocedal, J.},
+    year         = 2022,
+    journal      = {Optim. Methods Softw.}
 }
 
 @article{Steihaug_1983,
-    author       = {Steihaug, T.},
     title        = {The conjugate gradient method and trust regions in large scale optimization},
- journal = j-ima-jna,
-    volume       = {20},
-    _number      = {3},
-    pages        = {626--637},
- year = {1983},
+    author       = {Steihaug, T.},
+    year         = 1983,
+    journal      = {IMA J. Numer. Anal.},
+    volume       = 20,
+    pages        = {626--637}
 }
 
 @article{Sun_Etal_2020,
-    author       = {Sun, Y. and Sahinidis, N. V. and Sundaram, A. and Cheon, M. S.},
     title        = {Derivative-free optimization for chemical product design},
- journal = j-coce,
-    volume       = {27},
-    pages        = {98--106},
- year = {2020},
-}
-
-@book{Sun_Yuan_2006,
-    author    = {Sun, W. and Yuan, Y.},
-    title     = {Optimization Theory and Methods: Nonlinear Programming},
-    series    = s-soia,
-    publisher = pub-springer,
- address = pub-springer:adr-b,
- year = {2006},
+    author       = {Sun, Y. and Sahinidis, N. V. and Sundaram, A. and Cheon, M. S.},
+    year         = 2020,
+    journal      = {Curr. Opin. Chem. Eng.},
+    volume       = 27,
+    pages        = {98--106}
 }
 
 @inproceedings{Toint_1981,
-    author    = {Toint, Ph. L.},
-    title     = {Towards an efficient sparsity exploiting {Newton} method for minimization},
-    booktitle = {Sparse Matrices and Their Uses},
-    editor    = {Duff, I. S.},
-    publisher = pub-ap,
- address = pub-hmso:adr,
-    pages     = {57--88},
- year = {1981},
+    title        = {Towards an efficient sparsity exploiting {Newton} method for minimization},
+    author       = {Toint, {\relax Ph.L}},
+    year         = 1981,
+    booktitle    = {Sparse Matrices and Their Uses},
+    publisher    = {Academic Press},
+    address      = {London, UK},
+    pages        = {57--88},
+    editor       = {Duff, I. S.}
 }
 
 @article{Torczon_1997,
-    author       = {Torczon, V.},
     title        = {On the convergence of pattern search},
- journal = j-siopt,
-    volume       = {7},
-    _number      = {1},
-    pages        = {1--25},
- year = {1997},
-}
-
-@book{Torn_Zilinskas_1989,
-    author    = {T\"{o}rn, A. and \v{Z}ilinskas, A.},
-    title     = {Global Optimization},
-    series    = s-lnsc,
-    publisher = pub-springer,
- address = pub-springer:adr-bh,
- year = {1989},
-}
-
-@article{Troltzsch_2016,
-    author       = {Tr\"{o}ltzsch, A.},
-    title        = {A sequential quadratic programming algorithm for equality-constrained optimization without derivatives},
- journal = j-ol,
-    volume       = {10},
-    _number      = {2},
-    pages        = {383--399},
- year = {2016},
-}
-
-@inproceedings{Troltzsch_Ilic_Siggel_2021,
-    author    = {Tr\"{o}ltzsch, A. and Ilic, C. and Siggel, M.},
-    title     = {{SQPDFO} - a trust-region based algorithm for generally-constrained derivative-free optimization},
-    booktitle = {Application of Mathematics in Technical and Natural Sciences},
-    publisher = pub-aip,
- address = pub-aip:adr,
- year = {2021},
-}
-
-@inproceedings{Hoek_1982,
-    author    = {{Van Der Hoek}, G.},
-    title     = {Asymptotic properties of reduction methods applying linearly equality constrained reduced problems},
-    booktitle = {Algorithms for Constrained Minimization of Smooth Nonlinear Functions},
-    editor    = {Buckley, A. G. and Goffin, J. L.},
-    series    = s-mps,
-    volume    = {16},
-    publisher = pub-springer,
- address = pub-springer:adr-bh,
-    pages     = {162--189},
- year = {1982},
-}
-
-@article{Hooke_Jeeves_1961,
-    author       = {Hooke, R. and Jeeves, T. A.},
-    title        = {Direct search solution of numerical and statistical problems},
- journal = j-jacm,
-    volume       = {8},
-    _number      = {2},
-    pages        = {212--229},
- year = {1961},
-}
-
-@article{Vardi_1985,
-    author       = {Vardi, A.},
-    title        = {A trust region algorithm for equality constrained minimization: convergence properties and implementation},
- journal = {SIAM J. Numer. Anal.},
-    volume       = {22},
-    _number      = {3},
-    pages        = {575--591},
- year = {1985},
+    author       = {Torczon, V.},
+    year         = 1997,
+    journal      = {SIAM J. Optim.},
+    volume       = 7,
+    pages        = {1--25}
 }
 
 @article{Vicente_2013,
-    author       = {Vicente, L. N.},
     title        = {Worst case complexity of direct search},
- journal = j-ejc,
-    volume       = {1},
-    _number      = {1--2},
-    pages        = {143--153},
- year = {2013},
+    author       = {Vicente, L. N.},
+    year         = 2013,
+    journal      = {EURO J. Comput.},
+    volume       = 1,
+    pages        = {143--153}
 }
 
 @article{Virtanen_Etal_2020,
-    author       = {Virtanen, P. and Gommers, R. and Oliphant, T. E. and Haberland, M. and Reddy, T. and Cournapeau, D. and Burovski, E. and Peterson, P. and Weckesser, W. and Bright, J. and {van der Walt}, S. J. and Brett, M. and Wilson, J. and Millman, K. J. and Mayorov, N. and Nelson, A. R. J. and Jones, E. and Kern, R. and Larson, E. and Carey, C. J. and Polat, \.{I} and Feng, Y. and Moore, E. W. and {VanderPlas}, J. and Laxalde, D. and Perktold, J. and Cimrman, R. and Henriksen, I. and Quintero, E. A. and Harris, C. R. and Archibald, A. M. and Ribeiro, A. H. and Pedregosa, F. and {van Mulbregt}, P. and {SciPy 1. 0 contributors}},
     title        = {{SciPy} 1.0: fundamental algorithms for scientific computing in {Python}},
- journal = j-natm,
-    volume       = {17},
-    pages        = {261--272},
- year = {2020},
-}
-
-@article{Xu_Xia_Wang_2021,
-    author       = {Xu, Z. and Xia, Y. and Wang, J.},
-    title        = {Cheaper relaxation and better approximation for multi-ball constrained quadratic optimization and extension},
- journal = j-jgo,
-    volume       = {80},
-    pages        = {341--356},
- year = {2021},
-}
-
-@article{Wang_Yuan_2014,
-    author       = {Wang, X. and Yuan, Y.},
-    title        = {An augmented {Lagrangian} trust region method for equality constrained optimization},
- journal = j-oms,
-    volume       = {30},
-    _number      = {3},
-    pages        = {1--24},
- year = {2014},
-}
-
-@book{Wendland_2005,
-    author    = {Wendland, H.},
-    title     = {Scattered Data Approximation},
-    series    = s-cmacm,
-    publisher = pub-cup,
- address = pub-cup:adr,
- year = {2005},
+    author       = {Virtanen, P. and Gommers, R. and Oliphant, T. E. and Haberland, M. and Reddy, T. and Cournapeau, D. and Burovski, E. and Peterson, P. and Weckesser, W. and Bright, J. and {van der Walt}, S. J. and Brett, M. and Wilson, J. and Millman, K. J. and Mayorov, N. and Nelson, A. R. J. and Jones, E. and Kern, R. and Larson, E. and Carey, C. J. and Polat, \.{I} and Feng, Y. and Moore, E. W. and {VanderPlas}, J. and Laxalde, D. and Perktold, J. and Cimrman, R. and Henriksen, I. and Quintero, E. A. and Harris, C. R. and Archibald, A. M. and Ribeiro, A. H. and Pedregosa, F. and {van Mulbregt}, P. and {SciPy 1. 0 contributors}},
+    year         = 2020,
+    journal      = {Nat. Methods},
+    volume       = 17,
+    pages        = {261--272}
 }
 
 @inproceedings{Wild_2008,
-    author    = {Wild, S. M.},
-    title     = {{MNH}: a derivative-free optimization algorithm using minimal norm {Hessians}},
-    booktitle = {The Tenth Copper Mountain Conference on Iterative Methods},
- year = {2008},
+    title        = {{MNH}: a derivative-free optimization algorithm using minimal norm {Hessians}},
+    author       = {Wild, S. M.},
+    year         = 2008,
+    booktitle    = {The Tenth Copper Mountain Conference on Iterative Methods}
 }
 
 @article{Wild_Regis_Shoemaker_2008,
-    author       = {Wild, S. M. and Regis, R. G. and Shoemaker, C. A.},
     title        = {{ORBIT}: optimization by radial basis function interpolation in trust-regions},
- journal = j-sisc,
-    volume       = {30},
-    _number      = {6},
-    pages        = {3197--3219},
- year = {2008},
-}
-
-@article{Wilkinson_1961,
-    author       = {Wilkinson, J. H.},
-    title        = {Error analysis of direct methods of matrix inversion},
- journal = j-jacm,
-    volume       = {8},
-    _number      = {3},
-    pages        = {281--330},
- year = {1961},
-}
-
-@book{Wilkinson_1963,
-    author    = {Wilkinson, J. H.},
-    title     = {Rounding Errors in Algebraic Processes},
-    series    = s-nas32,
-    publisher = pub-hmso,
- address = pub-hmso:adr,
- year = {1963},
-}
-
-@article{Winfield_1973,
-    author       = {Winfield, D.},
-    title        = {Function minimization by interpolation in a data table},
- journal = j-jima,
-    volume       = {12},
-    pages        = {339--347},
- year = {1973},
-}
-
-@inproceedings{Wright_1995,
-    author    = {Wright, M. H.},
-    title     = {Direct search methods: once scorned, now respectable},
-    booktitle = {Numerical analysis},
-    editor    = {Griffiths, D. F. and Watson, G. A.},
-    publisher = pub-awl,
- address = pub-awl:adr,
-    pages     = {191--208},
- year = {1995},
-}
-
-@article{Wright_2012,
-    author       = {Wright, M. H.},
-    title        = {{Nelder}, {Mead}, and the other simplex method},
- journal = j-dm,
-    volume       = {ISMP},
-    pages        = {271--276},
- year = {2013},
-}
-
-@article{Yamakawa_Fukushima_Ibaraki_1989,
-    author       = {Yamakawa, E. and Fukushima, M. and Ibaraki, T.},
-    title        = {An efficient trust region algorithm for minimizing nondifferentiable composite functions},
- journal = j-sissc,
-    volume       = {10},
-    _number      = {3},
-    pages        = {562--580},
- year = {1989},
-}
-
-@article{Yoon_Shoemaker_1999,
-    author       = {Yoon, J. H. and Shoemaker, C. A.},
-    title        = {Comparison of optimization methods for ground-water bioremediation},
- journal = j-jwrpm,
-    volume       = {125},
-    _number      = {1},
-    pages        = {54--63},
- year = {1999},
-}
-
-@article{Yuan_1984,
-    author       = {Yuan, Y.},
-    title        = {An example of only linear convergence of trust region algorithms for non-smooth optimization},
- journal = j-ima-jna,
-    volume       = {4},
-    _number      = {3},
-    pages        = {327--335},
- year = {1984},
-}
-
-@article{Yuan_1985,
-    author       = {Yuan, Y.},
-    title        = {Conditions for convergence of trust region algorithms for nonsmooth optimization},
- journal = j-mp,
-    volume       = {31},
-    _number      = {2},
-    pages        = {220--228},
- year = {1985},
-}
-
-@article{Yuan_1995,
-    author       = {Yuan, Y.},
-    title        = {On the convergence of the new trust region algorithm},
- journal = j-nm,
-    volume       = {70},
-    pages        = {515--539},
- year = {1995},
-}
-
-@article{Yuan_2000,
-    author       = {Yuan, Y.},
-    title        = {On the truncated conjugate gradient method},
- journal = j-mp,
-    volume       = {87},
-    pages        = {561--573},
- year = {2000},
+    author       = {Wild, S. M. and Regis, R. G. and Shoemaker, C. A.},
+    year         = 2008,
+    journal      = {SIAM J. Sci. Comput.},
+    volume       = 30,
+    pages        = {3197--3219}
 }
 
 @article{Yuan_2015,
-    author       = {Yuan, Y.},
     title        = {Recent advances in trust region algorithms},
- journal = j-mp,
-    volume       = {151},
-    _number      = {1},
-    pages        = {249--281},
- year = {2015},
+    author       = {Yuan, Y.},
+    year         = 2015,
+    journal      = {Math. Program.},
+    volume       = 151,
+    pages        = {249--281}
 }
 
 @phdthesis{Zhang_2012,
-    author      = {Zhang, Z.},
-    title       = {On Derivative-Free Optimization Methods \textnormal{(in Chinese)}},
-    school = inst-cas,
- address = inst-cas:adr,
- year = {2012},
+    title        = {On Derivative-Free Optimization Methods \textnormal{(in Chinese)}},
+    author       = {Zhang, Z.},
+    year         = 2012,
+    address      = {Beijing, CN},
+    school       = {Chinese Academy of Sciences}
 }
 
 @article{Zhang_2014,
-    author       = {Zhang, Z.},
     title        = {{Sobolev} seminorm of quadratic functions with applications to derivative-free optimization},
- journal = j-mp,
-    volume       = {146},
-    _number      = {1--2},
-    pages        = {77--96},
- year = {2014},
+    author       = {Zhang, Z.},
+    year         = 2014,
+    journal      = {Math. Program.},
+    volume       = 146,
+    pages        = {77--96}
 }
 
 @article{Zhang_Conn_Scheinberg_2010,
-    author       = {Zhang, H. and Conn, A. R. and Scheinberg, K.},
     title        = {A derivative-free algorithm for least-squares minimization},
- journal = j-siopt,
-    volume       = {20},
-    _number      = {6},
-    pages        = {3555--3576},
- year = {2010},
-}
-
-@article{Zhang_Zhu_Fan_1993,
-    author       = {Zhang, J. and Zhu, D. and Fan, Y.},
-    title        = {A practical trust-region method for equality constrained optimization problems},
- journal = j-oms,
-    volume       = {2},
-    _number      = {1},
-    pages        = {45--68},
- year = {1993},
-}
-
-@book{Zhigljavsky_1991,
-    author    = {Zhigljavsky, A. A.},
-    title     = {Theory of Global Random Search},
-    series    = s-mass,
-    volume    = {65},
-    publisher = pub-springer,
- address = pub-springer:adr-d,
- year = {1991},
+    author       = {Zhang, H. and Conn, A. R. and Scheinberg, K.},
+    year         = 2010,
+    journal      = {SIAM J. Optim.},
+    volume       = 20,
+    pages        = {3555--3576}
 }
