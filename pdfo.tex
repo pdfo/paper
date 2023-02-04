@@ -128,12 +128,12 @@
 \input{ushyphex}    % hyphenation exceptions for US English
 %
 \journalname{Mathematical Programming Computation}
-\title{PDFO\thanks{%
+\title{PDFO --- A Cross-Platform Package for Powell's Derivative-Free Optimization Solvers\thanks{%
     This work was supported by the University Grants Committee of Hong Kong under the Hong Kong Ph.D. Fellowship Scheme and the Early Career Scheme, and by The Hong Kong Polytechnic University.
 }}
-\subtitle{A Cross-Platform Package for Powell's Derivative-Free Optimization Solvers}
+\subtitle{}
 \titlerunning{}
-\dedication{}
+\dedication{To the memory of late Prof.\ M. J. D. Powell FRS}
 \author{Tom M. Ragonneau \and Zaikun Zhang}
 \authorrunning{}
 \institute{%
@@ -165,8 +165,8 @@
     We also provide overviews on Powell's methods and share some observations on these methods based on experiments conducted using~\gls{pdfo}.
 
     \keywords{First keyword \and Second keyword \and More}
-    \PACS{PACS code1 \and PACS code2 \and more}
     \subclass{MSC code1 \and MSC code2 \and more}
+    \CRclass{CR code1 \and CR code2 \and more}
 \end{abstract}
 
 \section{Introduction}
@@ -758,11 +758,6 @@ More information about the package itself can be found on the \gls{pdfo} website
 The scope of \gls{pdfo} in the future is not limited only to the Powell's \gls{dfo} solvers.
 For instance, the authors are currently working on a new solver for nonlinearly constrained optimization, named \gls{cobyqa}~\cite{Ragonneau_2022}.
 It is aimed to be added to \gls{pdfo}, and other \gls{dfo} solvers may be included in the future.
-
-\begin{acknowledgements}
-    \Gls{pdfo} is dedicated to the memory of late Prof.\ Powell with gratitude for his inspiration and for the treasures he left to us.
-    We are grateful to Prof.\ Ya-xiang Yuan for his everlasting encouragement and support.
-\end{acknowledgements}
 
 \bibliographystyle{spmpsci}
 \bibliography{pdfo}
