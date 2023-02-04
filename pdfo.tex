@@ -584,7 +584,7 @@ See~\cite[\S~3]{Powell_2002} for more information on the updates of~$\rad$ and~$
 \label{ssec:nbloa}
 
 %The major flaw of \gls{uobyqa} is the amount of required interpolation points, which can become prohibitively huge when~$n$ increases.
-%Evaluating models by solving the problem defined by~\eqref{eq:undqitp} and~\eqref{eq:leastchange} copes with this issue by reducing the number of interpolation points, necessitating typically~$\mathcal{O}(n)$ points (the default value~$2n + 1$ being recommended).
+%Evaluating models by solving the problem defined by~\eqref{eq:undqitp}--\eqref{eq:leastchange} copes with this issue by reducing the number of interpolation points, necessitating typically~$\mathcal{O}(n)$ points (the default value~$2n + 1$ being recommended).
 %% If the number of interpolation points was less than or equal to~$n + 1$, the models would remain linear, so that Powell requires the number of points in~$\xpt$ to be at least~$n + 2$ and at most~$(n + 1)(n + 2) / 2$.
 %% As in the fully determined case, the geometry of the interpolation set plays a crucial role, as it influences the accuracy of the quadratic models, and the geometry-improving steps~\cref{eq:biglag} should be also entertained.
 
@@ -652,7 +652,8 @@ It takes for input an optimization problem of the form
     \end{align}
 \end{subequations}
 where~$\xl, \xu \in (\R \cup \set{\pm \infty})^n$,~$\aeq$ and~$\aub$ are real matrices,~$\beq$ and~$\bub$ are real vectors, and~$\ceq$ and~$\cub$ are multivariate functions.
-The problem~\eqref{eq:pdfo} covers every possible case, since all matrices, vectors and functions can be set to zero from a mathematical viewpoint and \gls{pdfo} does not require the constraints~\eqref{eq:pdfo-b},~\eqref{eq:pdfo-l}, and~\eqref{eq:pdfo-nl} to be provided.
+The problem~\eqref{eq:pdfo} covers every possible case, since all matrices, vectors and functions can be set to zero from a mathematical viewpoint and \gls{pdfo} does not
+require the constraints~\eqref{eq:pdfo-b}--\eqref{eq:pdfo-nl} to be provided.
 A broad example of use in MATLAB is shown in Listing~\ref{lst:minex}, where variable names have clear correspondences with the problem~\eqref{eq:pdfo}.
 The value returned by \gls{pdfo} is the best point calculated, evaluated via a merit function.
 \Gls{pdfo} for MATLAB also returns the corresponding optimal value, together with different fields describing the backend calculations and their behaviors.
@@ -675,7 +676,8 @@ The value returned by \gls{pdfo} is the best point calculated, evaluated via a m
 The package \gls{pdfo} preprocesses the arguments provided by the user, detects the type of the problem, and then invokes the Powell's solver that match the best the given problem.
 The initial preprocessing of the arguments includes a handling of their internal types together with some programming-related procedures to allow as much freedom in the problem definition as possible, to make the use of \gls{pdfo} as easy as possible.
 More importantly, \gls{pdfo} preprocesses the constraints provided, to generate a problem as simple as possible.
-For instance, all linear constraints in~\eqref{eq:pdfo-l} that are satisfied for every point in~$\R^n$ are removed and obvious infeasibility in the constraints~\eqref{eq:pdfo-b} and~\eqref{eq:pdfo-l} are detected.
+For instance, all linear constraints in~\eqref{eq:pdfo-l} that are satisfied for every point
+in~$\R^n$ are removed and obvious infeasibility in the constraints~\eqref{eq:pdfo-b}--\eqref{eq:pdfo-l} are detected.
 Another noticeable preprocessing of the constraints made by \gls{pdfo} is the treatment of the linear equality constraints in~\eqref{eq:pdfo-l}.
 As long as these constraints are consistent, they define a subspace of~$\R^n$ of lower dimension, and \gls{pdfo} takes into account this property to generate a new~$(n - \rank \aeq)$-dimensional problem that is exactly equivalent to~\eqref{eq:pdfo}, using the QR factorization of~$\aeq$.
 
