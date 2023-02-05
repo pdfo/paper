@@ -273,7 +273,8 @@ TSWLatexianTemp*
 *.xwm
 
 ## Document specific
-figures/
+experiments/archives/
+experiments/pycutest_cache_holder/
 
 # Visual Studio Code
 
