@@ -1,0 +1,9 @@
+cycler==0.11.0
+hyperopt==0.2.7
+joblib==1.2.0
+matplotlib==3.6.3
+numpy==1.24.1
+pdfo==1.2
+pycutest==1.4
+scikit-learn==1.2.1
+scipy==1.10.0
