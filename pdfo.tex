@@ -624,12 +624,12 @@ To solve the trust-region subproblems~\eqref{eq:trsp}, \gls{newuoa} employs the
 Steihaug-Toint truncated conjugate gradient (TCG) algorithm~\cite{Steihaug_1983,Toint_1981}.
 If the boundary of the trust region is reached, then \gls{newuoa} may make further
 changes to the trust-region step, each one obtained by searching in the two-dimensional space
-spanned by the current step and the corresponding gradient of~$\objm[k]$.
+spanned by the current step and the corresponding gradient of~$\objm[k]$~(see~\cite[\S~5]{Powell_2006}).
 \gls{bobyqa} solves~\eqref{eq:trsp} by an active-set variant of the TCG algorithm. Similar to
 \gls{newuoa}, it may also improve the TCG step by two-dimensional searches if it reaches the
-trust-region boundary.
+trust-region boundary (see~\mbox{\cite[\S~3]{Powell_2009}} and~\cite[\S~6.2.1]{Ragonneau_2022}).
 \gls{lincoa} uses an active-set variant of TCG for trust-region subproblems with linear
-constraints~\cite{Powell_2015}.
+constraints~(see~\cite[\S~3 and \S~5]{Powell_2015} and~\mbox{\cite[\S~6.2.2]{Ragonneau_2022})}.
 
 As we already mentioned, geometry-improving iterations must be entertained when the method detects that~$\objm$ does not represent~$\obj$ accurately enough.
 \Gls{newuoa} employs a technique similar to that of \gls{uobyqa} to solve~\eqref{eq:biglag}.
@@ -765,7 +765,8 @@ We conduct two experiments as follows.
     This means that we evaluate the solvers according to the true objective function, even though the solvers can access only the noisy values produced by~\eqref{eq:noisy-obj}.
 \end{enumerate}
 
-The performance profiles~\cite{Dolan_More_2002,More_Wild_2009} of these experiments are provided in Figures~\ref{fig:ppu-fdiff-plain}--\ref{fig:ppu-fdiff-noisy-6}.
+The performance profiles~\cite{Dolan_More_2002,More_Wild_2009} of these experiments are provided in
+Figures~\mbox{\ref{fig:ppu-fdiff-plain}--\ref{fig:ppu-fdiff-noisy-6}}.
 Broadly speaking, a performance profile plots the proportion of problems solved with respect to the number of function evaluations required to achieve convergence, in a logarithmic scale.
 
 \begin{figure}[ht]
