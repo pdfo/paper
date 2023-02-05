@@ -464,8 +464,8 @@ interpolation problem (see~\cite[\S~5]{Powell_2004b} and~\cite[\S~7]{Powell_2006
 
 The strategy to update~$\xpt$ is crucial.
 It should recycle points from previous iterations, at which the objective function has already been evaluated.
-Meanwhile, it needs to maintain the well-poisedness of the interpolation set, or equivalently, the well conditioning of the interpolation problem~\cite{Sauer_Xu_1995,Conn_Scheinberg_Vicente_2009b}
-%, and ensure the convergence of the optimization algorithm~\cite{Conn_Scheinberg_Vicente_2008a,Conn_Scheinberg_Vicente_2008b, Fasano_Morales_Nocedal_2009,Scheinberg_Toint_2010}.
+Meanwhile, it needs to maintain the well-poisedness of the interpolation set, or equivalently, the
+well conditioning of the interpolation problem~\cite{Sauer_Xu_1995,Conn_Scheinberg_Vicente_2009b}.
 
 At a normal iteration, a point~$\iter^{\trust} \in \R^n$ is computed by solving the trust-region
 subproblem~\eqref{eq:trsp}, and Powell's \gls{dfo} methods update the interpolation set as
@@ -620,9 +620,16 @@ They all set~$\fsetm$ in the trust-region subproblem~\eqref{eq:trsp} to be~$\fse
 \red{A subtlety of \gls{bobyqa} is that the constraints are always respected, for each iterate and
 each point in~$\xpt$.}
 
-When it comes to solving the trust-region subproblems~\eqref{eq:trsp}, \gls{newuoa} employs the
-Steihaug-Toint truncated conjugate gradient algorithm~\cite{Steihaug_1983,Toint_1981}, and
-\gls{bobyqa} and \gls{lincoa} use active-set variants of it. \red{citation}
+To solve the trust-region subproblems~\eqref{eq:trsp}, \gls{newuoa} employs the
+Steihaug-Toint truncated conjugate gradient (TCG) algorithm~\cite{Steihaug_1983,Toint_1981}.
+If the boundary of the trust region is reached, then \gls{newuoa} may make further
+changes to the trust-region step, each one obtained by searching in the two-dimensional space
+spanned by the current step and the corresponding gradient of~$\objm[k]$.
+\gls{bobyqa} solves~\eqref{eq:trsp} by an active-set variant of the TCG algorithm. Similar to
+\gls{newuoa}, it may also improve the TCG step by two-dimensional searches if it reaches the
+trust-region boundary.
+\gls{lincoa} uses an active-set variant of TCG for trust-region subproblems with linear
+constraints~\cite{Powell_2015}.
 
 As we already mentioned, geometry-improving iterations must be entertained when the method detects that~$\objm$ does not represent~$\obj$ accurately enough.
 \Gls{newuoa} employs a technique similar to that of \gls{uobyqa} to solve~\eqref{eq:biglag}.
