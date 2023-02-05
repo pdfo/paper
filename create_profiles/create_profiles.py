@@ -27,6 +27,7 @@ def create_figure(filename, tau, archive=Path(os.path.dirname(os.getcwd()), 'fig
     csvfile = Path(cwd, filename)
     solvers = get_solvers(csvfile, tau)
     tex_standalone = rf"""\documentclass[crop]{{standalone}}
+\usepackage{{mathptmx}}
 \usepackage{{amsmath}}
 \usepackage[dvipsnames]{{xcolor}}
 
@@ -81,6 +82,10 @@ def create_figure(filename, tau, archive=Path(os.path.dirname(os.getcwd()), 'fig
 
 
 if __name__ == '__main__':
-    create_figure('perf-plain-10.csv', 4)
-    create_figure('perf-plain-50.csv', 4)
-    create_figure('perf-noisy-50.csv', 1)
+    create_figure('perf-plain-pdfo-10.csv', 4)
+    create_figure('perf-plain-bfgs_cg_pdfo-50.csv', 3)
+    create_figure('perf-plain-pdfo-50.csv', 4)
+    create_figure('perf-noisy-bfgs_cg_pdfo-50-6.csv', 3)
+    create_figure('perf-noisy-bfgs_cg_pdfo-50-8.csv', 3)
+    create_figure('perf-noisy-bfgs_cg_pdfo-50-10.csv', 3)
+    create_figure('perf-noisy-pdfo-50-2.csv', 1)

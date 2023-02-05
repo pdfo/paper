@@ -3,7 +3,7 @@
 LC := latexmk
 LCFLAGS := -file-line-error -halt-on-error -interaction=nonstopmode
 
-latex: $(basename $(wildcard *.tex))
+latex: pdfo
 
 %: %.tex
 	$(LC) $(LCFLAGS) $^
