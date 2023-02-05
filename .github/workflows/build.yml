@@ -20,25 +20,15 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: Setup Python
-        uses: actions/setup-python@v4
-        with:
-          python-version: '3.10'
-
-      - name: Generate profiles
-        run: |
-          cd create_profiles
-          python create_profiles.py
-
       - name: Generate pdf document
         uses: xu-cheng/latex-action@v2
         with:
-          root_file: pdfo2022.tex
+          root_file: pdfo.tex
           args: -file-line-error -halt-on-error -interaction=nonstopmode
           pre_compile: tlmgr update --self && tlmgr update --all
 
       - name: Store artifacts
         uses: actions/upload-artifact@v3
         with:
-          path: pdfo2022.pdf
+          path: pdfo.pdf
           if-no-files-found: error
