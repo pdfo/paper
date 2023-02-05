@@ -366,6 +366,7 @@ where~$\rad$ is the trust-region radius, and~$\norm{\cdot}$ is the~$\ell_2$-norm
 In this subproblem, the set~$\fsetm \subseteq \R^n$ is a local approximation of the feasible region~$\fset$.
 \Gls{cobyla} defines~$\fsetm$ by linear interpolants of the constraint functions over the set~$\xpt$,
 whereas the other four algorithms take~$\fsetm = \fset$.
+
 \red{
 Both~\gls{bobyqa} and~\gls{lincoa} intends to respect the constraint~$x\in\fset$ when
 solving~\eqref{eq:trsp}, even though the problem is only solved approximately.
@@ -418,14 +419,15 @@ where~$\qspace$ is the space of polynomials on~$\R^n$ of degree at most~$2$, and
     \func_k(Q) = \norm{\nabla^2 Q - \nabla^2 \objm[k - 1]}_{\frob}^2,
 \end{equation}
 which is inspired by the least-change property of quasi-Newton updates~\cite{Dennis_Schnabel_1979}, although other functionals are possible~(see~\cite{Conn_Toint_1996,Bandeira_Scheinberg_Vicente_2012,Powell_2013,Zhang_2014} for example).
+The first model~$\objm[1]$ is obtained by setting~$\objm[0] = 0$.
 Powell~\cite{Powell_2013} referred to his approach as the \emph{symmetric Broyden update} of
 quadratic models (see also~\cite[\S~3.6]{Zhang_2012} and~\cite[\S~2.4.2]{Ragonneau_2022}).
 It can be regarded as a derivative-free version of the \gls{psb} quasi-Newton update~\cite{Powell_1970b}, which minimizes the functional~$\func_k$ among all quadratic polynomials that fulfill~$Q(\iter) = \obj(\iter)$, $\nabla Q(\iter) = \nabla \obj(\iter)$, and~$\nabla Q(\iter[k - 1]) = \nabla \obj(\iter[k - 1])$ (see~\cite[Theorem~4.2]{Dennis_Schnabel_1979}), with~$\iter$ and~$\iter[k - 1]$ being the current and the previous iterates, respectively.
-The interpolation problem~\mbox{\eqref{eq:undqitp}--\eqref{eq:leastchange}} is a convex quadratic programming problem with respect to the coefficients of the quadratic model.
+The interpolation problem~\mbox{\eqref{eq:undqitp}--\eqref{eq:leastchange}} is a convex quadratic
+programming problem with respect to the coefficients of the quadratic model.
 
 \paragraph{\textnormal{\textbf{Solving the interpolation problem.}}}
 
-\red{
 Powell's algorithms do not solve the interpolation problems~\eqref{eq:litpls}, \eqref{eq:qitpls},
 and~\mbox{\eqref{eq:undqitp}--\eqref{eq:leastchange}} from scratch.
 \gls{cobyla} maintains the inverse of the coefficient matrix for~\eqref{eq:litpls}
@@ -446,7 +448,7 @@ iteration modifies the coefficient matrix and its inverse by rank-$2$ updates.
 In addition, the columns of this inverse matrix readily provide the coefficients of Lagrange
 functions that make the interpolation problem~\mbox{\eqref{eq:undqitp}--\eqref{eq:leastchange}}
 easy to solve~(see~\mbox{\cite[\S~3]{Powell_2004b}})
-}
+
 
 \paragraph{\textnormal{\textbf{The base point.}}}
 
@@ -474,7 +476,6 @@ where~$y_k^{\drop} \in \xpt$ is chosen to improve the well-poisedness of~$\xpt[k
 Note that~$y_k^{\drop}$ is selected after evaluating~$\iter^{\trust}$.
 Recall that Powell's methods update the inverse of either the coefficient matrix of the
 interpolation system or the corresponding \kkt system using the Sherman-Morrison-Woodbury formula.
-\red{
 In order to keep the interpolation problem well-conditioned, $y_k^{\drop}$ is chosen
 to enlarge the denominator in this formula, which is also the ratio between
 the determinants of the old and new coefficient matrices.\footnote{
@@ -496,9 +497,6 @@ is~$\tau$).
 However, Powell's methods do not choose the point~$y_k^\drop$ merely according to this denominator, but also
 takes into account its distance to the trust-region center, giving a higher priority to farther
 points (see, e.g.,~\cite[equation~(56)]{Powell_2002} and~\cite[equations~(7.4)--(7.5)]{Powell_2006}).
-%Indeed, the determinant of the above-mentioned coefficient matrix is proportional to this
-%denominator (see~\cite[\S~2]{Powell_2001} and~\cite[Lemma~1]{Powell_2004c}).
-}
 
 When the methods detect that~$\objm$ does not represent~$\obj$ accurately enough, they will attempt
 to improve the well-poisedness of the interpolation set.
@@ -572,18 +570,6 @@ then the second stage uses the resultant freedom in $x$ to minimize the lineariz
 function~$\objm$ within the trust region subject to no increase in any greatest violation of the
 linearized constraints.
 
-%by imagining that~$\rad[k]$ is replaced with a constant continuously increasing
-%from zero to~$\rad[k]$, which would generate a piecewise linear path from~$\iter[k]$ to the solution of this problem.
-%The trust-region subproblem solver of \gls{cobyla} follows this path to locate the solution.
-%%by updating the active sets of the linear constraints~\eqref{eq:cobylarg}.
-%However, the trust-region constraint~$\norm{x - \iter} \le \rad$ and the region~\eqref{eq:cobylarg} may contradict each others, in which case the trial point is chosen to solve approximately
-
-
-%As we already mentioned, it is essential to maintain a good geometry of~$\xpt$ to ensure the accuracy of the models.
-%When the geometry of~$\xpt$ turns out inadequate for producing accurate models, \gls{cobyla}
-%sets~\eqref{eq:xpt-update-geo} with~$\iter^{\geo}$ chosen on the direction perpendicular to the face of~$\xpt$ (regarded as a simplex) that is to the opposite of~$\iter^{\drop}$.
-%This replacement tends to increase the volume of the simplex engendered by the interpolation set,
-%and hence, improves the conditioning of the interpolation system~\eqref{eq:itpls}.
 
 \subsection{\glsfmtshort{uobyqa}}
 \label{ssec:uobyqa}
@@ -615,10 +601,11 @@ See~\cite[\S~3]{Powell_2002} for more information on the updates of~$\rad$ and~$
 \subsection{\glsfmtshort{newuoa}, \glsfmtshort{bobyqa}, and \glsfmtshort{lincoa}}
 \label{ssec:nbloa}
 
-%The major flaw of \gls{uobyqa} is the amount of required interpolation points, which can become prohibitively huge when~$n$ increases.
-%Evaluating models by solving the problem defined by~\eqref{eq:undqitp}--\eqref{eq:leastchange} copes with this issue by reducing the number of interpolation points, necessitating typically~$\mathcal{O}(n)$ points (the default value~$2n + 1$ being recommended).
-%% If the number of interpolation points was less than or equal to~$n + 1$, the models would remain linear, so that Powell requires the number of points in~$\xpt$ to be at least~$n + 2$ and at most~$(n + 1)(n + 2) / 2$.
-%% As in the fully determined case, the geometry of the interpolation set plays a crucial role, as it influences the accuracy of the quadratic models, and the geometry-improving steps~\cref{eq:biglag} should be also entertained.
+\red{
+If the number of interpolation points was less than or equal to~$n + 1$, the models would remain
+linear, so that Powell requires the number of points in~$\xpt$ to be at least~$n + 2$ and at
+most~$(n + 1)(n + 2) / 2$.
+}
 
 Later on, based on the underdetermined quadratic interpolation introduced in Subsection~\ref{ssec:iptprob},
 Powell developed his last three \gls{dfo} solvers, namely \gls{newuoa}~\cite{Powell_2006,Powell_2008}, \gls{bobyqa}~\cite{Powell_2009}, and \gls{lincoa}.
@@ -629,16 +616,10 @@ It is worth mentioning that Powell \emph{never} published a paper to introduce \
 
 As their names suggest, \gls{newuoa}, \gls{bobyqa}, and \gls{lincoa} aim at solving unconstrained,
 bound-constrained, and linearly constrained problems respectively.
-% All three use the underdetermined interpolation technique described above to build the quadratic models, so that \gls{newuoa} is more suitable than \gls{uobyqa} for solving problems with a relatively high dimension.
 They all set~$\fsetm$ in the trust-region subproblem~\eqref{eq:trsp} to be~$\fset$, corresponding the whole space for \gls{newuoa}, a box for \gls{bobyqa} and a polyhedron for \gls{lincoa}.
 \red{A subtlety of \gls{bobyqa} is that the constraints are always respected, for each iterate and
 each point in~$\xpt$.}
-% Therefore, the geometry-improving subproblem~\cref{eq:biglag} should be adapted to incorporate the bound constraints, which makes its resolution more difficult.
 
-% As we already mentioned, at most one point of the interpolation set is altered at each iteration,
-%which leads to an at-most rank-$2$ update of the \kkt matrix of the variational problem~\cref{eq:varmod}.
-% This remark suggests that it can be much more efficient to update such \kkt matrix instead of computing it from scratch at each iteration.
-% Powell derived an updating formula in~\cite{Powell_2004b} that requires only~$\mathcal{O}(N^2)$ operations instead of~$\mathcal{O}(N^3)$ if the computation was made from scratch with no loss of accuracy, where~$N$ denotes the number of interpolation points.
 When it comes to solving the trust-region subproblems~\eqref{eq:trsp}, \gls{newuoa} employs the
 Steihaug-Toint truncated conjugate gradient algorithm~\cite{Steihaug_1983,Toint_1981}, and
 \gls{bobyqa} and \gls{lincoa} use active-set variants of it. \red{citation}
