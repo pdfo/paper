@@ -3,8 +3,8 @@
 \RequirePackage{fix-cm}
 \documentclass[
     smallextended,  % one column (second format)
-    draft,          % to make overfull boxes visible
-    % final,        % the opposite of draft
+    %draft,          % to make overfull boxes visible
+    final,        % the opposite of draft
     % referee,      % required to produce a hardcopy for the referee with a special layout (bigger interline spacing)
 ]{svjour3}
 %
@@ -16,11 +16,11 @@
 \usepackage{booktabs}
 \usepackage{caption}
 \usepackage[acronym]{glossaries-extra}
-\usepackage{xspace}
 \usepackage{graphicx}
 \usepackage{ifthen}
 \usepackage[final]{listings}
 \usepackage{lstautogobble}
+\usepackage[bb=dsfontserif,cal=cm]{mathalpha}
 \usepackage{siunitx}
 \usepackage{subcaption}
 \usepackage{url}
@@ -127,6 +127,38 @@
 }
 %
 \input{ushyphex}    % hyphenation exceptions for US English
+
+%
+\usepackage[final]{microtype}
+\usepackage[nobottomtitles*]{titlesec}  % no section title at the bottom of pages
+\interfootnotelinepenalty=10000  % prevent footnote from running to the next page
+% no line break in inline math
+\interdisplaylinepenalty=10000
+\relpenalty=10000
+\binoppenalty=10000
+% no widow or orphan lines
+\clubpenalty=10000
+\widowpenalty=10000
+\displaywidowpenalty=10000
+\usepackage{xspace}
+
+% Cross-referencing and colorization
+\usepackage[final,hyperfootnotes=false]{hyperref}
+\usepackage[dvipsnames]{xcolor}
+\usepackage{url}
+\hypersetup{
+    colorlinks=true,
+    linkcolor=OliveGreen,
+    anchorcolor=black,
+    citecolor=MidnightBlue,
+    filecolor=black,
+    menucolor=black,
+    runcolor=black,
+    urlcolor=black,
+}
+\newcommand{\red}{\textcolor{red}}
+\newcommand{\kkt}{KKT\xspace}
+
 %
 \journalname{Mathematical Programming Computation}
 \title{PDFO --- A Cross-Platform Package for Powell's Derivative-Free Optimization Solvers}
@@ -148,8 +180,6 @@
 }
 \date{Received: date / Accepted: date}
 %
-\newcommand{\red}{\textcolor{red}}
-\newcommand{\kkt}{KKT\xspace}
 \begin{document}
 
 \maketitle
@@ -341,7 +371,7 @@ solving~\eqref{eq:trsp}, even though the problem is only solved approximately.
 \subsubsection{The interpolation problem}
 \label{ssec:iptprob}
 
-\paragraph{Fully determined interpolation.}
+\paragraph{\textnormal{\textbf{Fully determined interpolation.}}}
 
 The interpolation condition~\eqref{eq:itpls} is essentially a linear system.
 Given a base point~$y^{\base}\in \R^n$, which may depend on~$k$, a linear model~$\objm$ takes the
@@ -367,7 +397,7 @@ Even though most of these points will be reused at the subsequent iterations so 
 function evaluations needed per iteration is tiny (see Section~\ref{ssec:iptset}), we must perform~$(n + 1)(n + 2) / 2$ function evaluations during the very first iteration.
 This is impractical unless~$n$ is small, which motivates the use of underdetermined quadratic interpolation.
 
-\paragraph{Underdetermined quadratic interpolation.}
+\paragraph{\textnormal{\textbf{Underdetermined quadratic interpolation.}}}
 
 In this case, models are established according to the interpolation condition~\eqref{eq:itpls} with~$\abs{\xpt}$ less than~$(n + 1)(n + 2) / 2$, the remaining degrees of freedom being taken up by minimizing a certain functional to promote the regularity of the quadratic model.
 More specifically, this means to establish~$\objm$ by solving
@@ -390,7 +420,8 @@ quadratic models (see also~\cite[\S~3.6]{Zhang_2012} and~\cite[\S~2.4.2]{Ragonne
 It can be regarded as a derivative-free version of the \gls{psb} quasi-Newton update~\cite{Powell_1970b}, which minimizes the functional~$\func_k$ among all quadratic polynomials that fulfill~$Q(\iter) = \obj(\iter)$, $\nabla Q(\iter) = \nabla \obj(\iter)$, and~$\nabla Q(\iter[k - 1]) = \nabla \obj(\iter[k - 1])$ (see~\cite[Theorem~4.2]{Dennis_Schnabel_1979}), with~$\iter$ and~$\iter[k - 1]$ being the current and the previous iterates, respectively.
 The interpolation problem~\eqref{eq:undqitp}--\eqref{eq:leastchange} is a convex quadratic programming problem with respect to the coefficients of the quadratic model.
 
-\paragraph{Solving the interpolation problem.}
+\paragraph{\textnormal{\textbf{Solving the interpolation problem.}}}
+
 \red{
 Powell's algorithms do not solve the interpolation problems~\eqref{eq:litpls}, \eqref{eq:qitpls},
 and~\eqref{eq:undqitp} from scratch.
@@ -410,10 +441,11 @@ of~\eqref{eq:undqitp}--\eqref{eq:leastchange}. The update is also done by the
 Sherman-Morrison-Woodbury formula as detailed in~\cite[\S~2]{Powell_2004c}. In this case, each
 iteration modifies the coefficient matrix and its inverse by rank-$2$ updates.
 In addition, the columns of this inverse matrix also readily provide the coefficients of Lagrange
-functions that make the interpolation problem~\eqref{eq:undqitp}--\eqref{eq:leastchange}~(see~\cite[\S~3]{Powell_2004b}) easy to solve.
+functions that make the interpolation problem~\eqref{eq:undqitp}--\eqref{eq:leastchange}
+easy to solve~(see~\cite[\S~3]{Powell_2004b})
 }
 
-\paragraph{The base point.}
+\paragraph{\textnormal{\textbf{The base point.}}}
 
 The choice of the base point~$y^{\base}$ is also worth mentioning.
 \Gls{cobyla} sets~$y^{\base}$ to the center~$x_k$ of the current trust region.
@@ -532,7 +564,7 @@ as the trust region and the region~\eqref{eq:cobylarg} may not intersect.
 \end{equation}
 is solved, where~$[t]_{-} = \max \set{0, -t}$ for any~$t\in \R$.
 In doing so, the method attempts to reduce the~$\ell_{\infty}$-violation of the linearized constraints within the trust region.
-If the solution to~\eqref{eq:cobyla_sp1} lies strictly in the trust region,
+If the first stage finds a point in the interior of the trust region,
 then the second stage uses the resultant freedom in $x$ to minimize the linearized objective
 function~$\objm(x)$ within the trust region subject to no increase in any greatest violation of the
 linearized constraints.
