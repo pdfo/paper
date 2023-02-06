@@ -745,41 +745,99 @@ The pdfo function is designed to be compatible with the fmincon function availab
 %\end{matlablst}
 
 
+\subsection{Problem preprocessing}
+\label{subsec:pdfo-preprocessing}
 
-The package \gls{pdfo} preprocesses the arguments provided by the user, detects the type of the problem, and then invokes the Powell's solver that match the best the given problem.
-The initial preprocessing of the arguments includes a handling of their internal types together with some programming-related procedures to allow as much freedom in the problem definition as possible, to make the use of \gls{pdfo} as easy as possible.
-More importantly, \gls{pdfo} preprocesses the constraints provided, to generate a problem as simple as possible.
-For instance, all linear constraints in~\eqref{eq:pdfo-l} that are satisfied for every point
-in~$\R^n$ are removed and obvious infeasibility in the constraints~\mbox{\eqref{eq:pdfo-b}--\eqref{eq:pdfo-l}} are detected.
-Another noticeable preprocessing of the constraints made by \gls{pdfo} is the treatment of the linear equality constraints in~\eqref{eq:pdfo-l}.
-As long as these constraints are consistent, they define a subspace of~$\R^n$ of lower dimension, and \gls{pdfo} takes into account this property to generate a new~$(n - \rank \aeq)$-dimensional problem that is exactly equivalent to~\eqref{eq:pdfo}, using the QR factorization of~$\aeq$.
+\gls{pdfo} preprocesses the input of the user in order to fit the data structure expected by
+Powell's Fortran code.
 
-A crucial point of \gls{bobyqa} and \gls{lincoa} is that they require the initial guess to be feasible, so that \gls{pdfo} attempts to project the provided initial guess onto the feasible set (\gls{lincoa} would otherwise increase the coefficients of the right-hand side of the linear constraints to make the initial guess feasible).
-Another main feature of \gls{pdfo} is its solver selection mechanism.
-When a constrained problem is received, the selected solver is the one corresponding to the most general constraint provided.
-For example, when \gls{pdfo} receives a problem that admits both bound constraints~\eqref{eq:pdfo-b}
-and linear constraints~\eqref{eq:pdfo-l}, \gls{lincoa} will be chosen.
-It is possible on some examples that \gls{lincoa} gives better results than \gls{bobyqa} on bound-constrained problems.
-This is likely because \gls{bobyqa} is a feasible method, while \gls{lincoa} may visit infeasible points (but on an engineering problem, these points may be unassessable).
-At last, when \gls{pdfo} receives an unconstrained problem, it will attempt to solve it with \gls{uobyqa} when its size is reasonable ($2 \le n \le 8$, say), and with \gls{newuoa} otherwise.
-We note that \gls{uobyqa} cannot handle problem with univariate objective function.
+For example, \gls{lincoa} needs a feasible starting point to work properly, unless the problem is
+infeasible. If the starting point is not feasible, then \gls{lincoa} would modify the right-hand
+sides of the linear constraints to make it feasible and then solve the modified problem.
+Therefore, for linearly constrained problems, \gls{pdfo} attempts to project the user-provided
+starting point onto the feasible region before passing the problem to the Fortran code, so that
+a feasible problem will not be modified by~\gls{lincoa}.
 
-The authors wanted to keep the source code of all solvers in its original states, but introduced some minor revisions and corrections.
-A new parameter has been added to allow each solver to exit whenever a target value has been reached, and a flag of termination has been included in the returned values.
-A revision has also been made to the source code of \gls{cobyla}.
-In the original version, trial points may be discarded prematurely, before the update of the penalty coefficient of the merit function.
-This has been revised in \gls{pdfo}.
-The authors also detected some minor bugs on failure exits, for which some returned values might not have been updated.
-Although very rarely, \gls{lincoa} might moreover encounter infinite cycling, even on well-conditioned problems.
-These bugs have been patched.
-\Gls{pdfo} also handle more carefully ill-conditioned problems, for which NaN values (resulting, e.g., from a division by zero) may occur.
-These values might cause infinite cycling or segmentation faults in the original code.
-In the early stage of \gls{pdfo}, such errors occurred on the CUTEst problems~\cite{Gould_Orban_Toint_2015} DANWOODLS or GAUSS1LS for example.
-NaN values detected in the objective or constraint functions are managed using extreme barriers, but NaN values encountered in the variables internal to the Fortran code result in an early exit.
-Besides, when interfacing Fortran with Python and MATLAB, rounding errors occurred in the problem's variables, which led in extreme cases to failures.
-For example, when using \gls{pdfo}, the user may provided initial and final trust-region radii~$\rad[\text{beg}]$ and~$\rad[\text{end}]$ (respectively set to~$1$ and~$10^{-6}$ by default).
-If these values are chosen to be very close, although the condition~$\rad[\text{beg}] \le \rad[\text{end}]$ is satisfied in the MATLAB or Python code, the Fortran code may receive perturbed values with~$\rad[\text{beg}] > \rad[\text{end}]$, leading to failure exit in the original code.
-Therefore, the conditions required by Powell are ensured in the Fortran code directly.
+Another noticeable preprocessing of the constraints made by \gls{pdfo} is the treatment of the
+linear equality constraints in~\eqref{eq:pdfo-l}.
+As long as these constraints are consistent, we reformulate~\eqref{eq:pdfo} into
+an~$(n - \rank \aeq)$-dimensional problem by eliminating these constraints.  This is done using a
+QR factorization of~$\aeq$. The main motivation for this reformation comes again from~\gls{lincoa},
+which accepts only linear inequality constraints. An alternative approach is to write a linear
+equality constraint as two inequalities, but our approach reduces the dimension of the problem,
+which is beneficial for the efficiency of \gls{dfo} solvers in general.
+
+
+\subsection{Automatic selection of the solver}
+\label{subsec:solver-selection}
+
+\gls{pdfo} can detect the type of the problem according to the input and then select automatically
+the solver to invoke according to the type.
+When a problem is received, unless the user specifies the solver to use, \gls{pdfo} selects a solver as follows.
+\begin{enumerate}
+    \item If the problem is unconstrained, then \gls{uobyqa} is selected when~$2 \le n \le 8$, and \gls{newuoa} is selected when~$n = 1$ or~$n > 8$.
+    \item If the problem is bound-constrained, then \gls{bobyqa} is selected.
+    \item If the problem is linearly constrained, then \gls{lincoa} is selected.
+    \item Otherwise, \gls{cobyla} is selected.
+\end{enumerate}
+
+For the unconstrained case, we select \gls{uobyqa} for small problems because it is more efficient, and the number~$8$ is set according to our experiments on the CUTEst problems.
+We note that Powell's implementation of \gls{uobyqa} cannot handle problems with univariate objective functions, for which \gls{newuoa} is invoked.
+
+\gls{pdfo} also selects a solver in this way if the user specifies a solver that is incapable of
+solving the problem received.
+
+\subsection{Bug fixes in the Fortran source code}
+\label{subsec:bug-corrections}
+
+The current version of \gls{pdfo} also fixes several bugs in the Fortran source code, particularly the following ones.
+\begin{enumerate}
+    \item The solvers may encounter infinite loops.
+    This is because the exit conditions of some loops cannot be met because variables involved in these conditions become NaN values due to floating point exceptions.
+    \item The Fortran code may encounter memory errors due to uninitialized variables that are used as indices.
+    This is because some variables are initialized according to conditions that can never be met due to NaN values, similar to the previous case.
+    \item \Gls{cobyla} may not return the best point that is evaluated; sometimes, it returns a point with a large constraint violation, even though the initial guess is feasible.
+    This is because \gls{cobyla} may discard points that are not considered good according to the current merit function, depending on a penalty parameter.
+    However, when this penalty parameter is updated, a discarded point may turn out to be the best point according the updated merit function.
+\end{enumerate}
+In \gls{pdfo}, these bugs are fixed.
+
+
+
+%The package \gls{pdfo} preprocesses the arguments provided by the user, detects the type of the problem, and then invokes the Powell's solver that match the best the given problem.
+%The initial preprocessing of the arguments includes a handling of their internal types together with some programming-related procedures to allow as much freedom in the problem definition as possible, to make the use of \gls{pdfo} as easy as possible.
+%More importantly, \gls{pdfo} preprocesses the constraints provided, to generate a problem as simple as possible.
+%For instance, all linear constraints in~\eqref{eq:pdfo-l} that are satisfied for every point
+%in~$\R^n$ are removed and obvious infeasibility in the constraints~\mbox{\eqref{eq:pdfo-b}--\eqref{eq:pdfo-l}} are detected.
+%Another noticeable preprocessing of the constraints made by \gls{pdfo} is the treatment of the linear equality constraints in~\eqref{eq:pdfo-l}.
+%As long as these constraints are consistent, they define a subspace of~$\R^n$ of lower dimension, and \gls{pdfo} takes into account this property to generate a new~$(n - \rank \aeq)$-dimensional problem that is exactly equivalent to~\eqref{eq:pdfo}, using the QR factorization of~$\aeq$.
+
+%A crucial point of \gls{bobyqa} and \gls{lincoa} is that they require the initial guess to be feasible, so that \gls{pdfo} attempts to project the provided initial guess onto the feasible set (\gls{lincoa} would otherwise increase the coefficients of the right-hand side of the linear constraints to make the initial guess feasible).
+%Another main feature of \gls{pdfo} is its solver selection mechanism.
+%When a constrained problem is received, the selected solver is the one corresponding to the most general constraint provided.
+%For example, when \gls{pdfo} receives a problem that admits both bound constraints~\eqref{eq:pdfo-b}
+%and linear constraints~\eqref{eq:pdfo-l}, \gls{lincoa} will be chosen.
+%It is possible on some examples that \gls{lincoa} gives better results than \gls{bobyqa} on bound-constrained problems.
+%This is likely because \gls{bobyqa} is a feasible method, while \gls{lincoa} may visit infeasible points (but on an engineering problem, these points may be unassessable).
+%At last, when \gls{pdfo} receives an unconstrained problem, it will attempt to solve it with \gls{uobyqa} when its size is reasonable ($2 \le n \le 8$, say), and with \gls{newuoa} otherwise.
+%We note that \gls{uobyqa} cannot handle problem with univariate objective function.
+
+%The authors wanted to keep the source code of all solvers in its original states, but introduced some minor revisions and corrections.
+%A new parameter has been added to allow each solver to exit whenever a target value has been reached, and a flag of termination has been included in the returned values.
+%A revision has also been made to the source code of \gls{cobyla}.
+%In the original version, trial points may be discarded prematurely, before the update of the penalty coefficient of the merit function.
+%This has been revised in \gls{pdfo}.
+%The authors also detected some minor bugs on failure exits, for which some returned values might not have been updated.
+%Although very rarely, \gls{lincoa} might moreover encounter infinite cycling, even on well-conditioned problems.
+%These bugs have been patched.
+%\Gls{pdfo} also handle more carefully ill-conditioned problems, for which NaN values (resulting, e.g., from a division by zero) may occur.
+%These values might cause infinite cycling or segmentation faults in the original code.
+%In the early stage of \gls{pdfo}, such errors occurred on the CUTEst problems~\cite{Gould_Orban_Toint_2015} DANWOODLS or GAUSS1LS for example.
+%NaN values detected in the objective or constraint functions are managed using extreme barriers, but NaN values encountered in the variables internal to the Fortran code result in an early exit.
+%Besides, when interfacing Fortran with Python and MATLAB, rounding errors occurred in the problem's variables, which led in extreme cases to failures.
+%For example, when using \gls{pdfo}, the user may provided initial and final trust-region radii~$\rad[\text{beg}]$ and~$\rad[\text{end}]$ (respectively set to~$1$ and~$10^{-6}$ by default).
+%If these values are chosen to be very close, although the condition~$\rad[\text{beg}] \le \rad[\text{end}]$ is satisfied in the MATLAB or Python code, the Fortran code may receive perturbed values with~$\rad[\text{beg}] > \rad[\text{end}]$, leading to failure exit in the original code.
+%Therefore, the conditions required by Powell are ensured in the Fortran code directly.
 
 
 \section{Numerical results}
