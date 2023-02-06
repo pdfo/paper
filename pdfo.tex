@@ -8,6 +8,7 @@
     % referee,      % required to produce a hardcopy for the referee with a special layout (bigger interline spacing)
 ]{svjour3}
 %
+%\usepackage{mathptmx}   % PostScript Times fonts (they may not look quite natural).
 %
 \usepackage{amsfonts}
 \usepackage{amsmath}
@@ -19,7 +20,7 @@
 \usepackage{ifthen}
 \usepackage[final]{listings}
 \usepackage{lstautogobble}
-%\usepackage{siunitx}
+\usepackage{siunitx}
 \usepackage{subcaption}
 \usepackage{url}
 \usepackage{xargs}
@@ -202,7 +203,8 @@
     % When a problem can be solved by multiple algorithms (for example, an unconstrained problem can be solved by all five algorithms), the selection is made based on experimental results on the CUTEst problems.
     We also provide an overview on Powell's methods and share some observations on these methods based on experiments conducted using~\gls{pdfo}.
 
-    \keywords{First keyword \and Second keyword \and More}
+    \keywords{Derivative-free optimization \and solver \and COBYLA \and UOBYQA \and NEWUOA \and
+    BOBYQA \and LINCOA}
     \subclass{65K05 \and 90C30 \and 90C56 \and 90-04}
     %\CRclass{CR code1 \and CR code2 \and more}
 \end{abstract}
@@ -658,17 +660,17 @@ The geometry-improving step of \gls{lincoa} is more complex, as it involves calc
 approximate solutions to~\eqref{eq:biglag}.
 It computes
 \begin{enumerate}
-    \item the point that maximizes~$\abs{\ell_{\drop}(\cdot)}$ within the trust region on the lines
+    \item the point that maximizes~$\abs{\ell_k^{\drop}}$ within the trust region on the lines
         through~$\iter$ and another point in~$\xpt$,
-    \item a point obtained by a gradient step that maximizes~$\abs{\ell_{\drop}(\cdot)}$ within the trust region, and
-    \item a point obtained by a projected gradient step that maximizes~$\abs{\ell_{\drop}(\cdot)}$ within the trust region, the projection being made onto the null space of the constraints that are considered active at~$\iter$.
+    \item a point obtained by a gradient step that maximizes~$\abs{\ell_k^{\drop}}$ within the trust region, and
+    \item a point obtained by a projected gradient step that maximizes~$\abs{\ell_k^{\drop}}$ within the trust region, the projection being made onto the null space of the constraints that are considered active at~$\iter$.
 \end{enumerate}
 Note that the first two cases completely disregard the linear constraints (i.e.~$x\in\fsetm \equiv
 \fset$), while the third case
 considers only the active constraints.
-\gls{lincoa} first selects the point among the first two alternatives for larger value of~$\abs{\ell_{\drop}(\cdot)}$.
+\gls{lincoa} first selects the point among the first two alternatives for larger value of~$\abs{\ell_k^{\drop}}$.
 Further, this point is replaced with the third alternative if the latter nearly satisfies the linear
-constraints while rendering a value of~$\abs{\ell_{\drop}(\cdot)}$ that is not too small compared with the above one.
+constraints while rendering a value of~$\abs{\ell_k^{\drop}}$ that is not too small compared with the above one.
 
 \red{
 Both~\gls{bobyqa} and~\gls{lincoa} intends to respect the constraint~$x\in\fset$ when
