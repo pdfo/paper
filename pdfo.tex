@@ -8,7 +8,6 @@
     % referee,      % required to produce a hardcopy for the referee with a special layout (bigger interline spacing)
 ]{svjour3}
 %
-\usepackage{mathptmx}   % PostScript Times fonts
 %
 \usepackage{amsfonts}
 \usepackage{amsmath}
@@ -20,8 +19,7 @@
 \usepackage{ifthen}
 \usepackage[final]{listings}
 \usepackage{lstautogobble}
-\usepackage[bb=dsfontserif,cal=cm]{mathalpha}
-\usepackage{siunitx}
+%\usepackage{siunitx}
 \usepackage{subcaption}
 \usepackage{url}
 \usepackage{xargs}
@@ -167,12 +165,13 @@
 \newcommand{\newuoafun}{\texttt{newuoa}\xspace}
 \newcommand{\bobyqafun}{\texttt{bobyqa}\xspace}
 \newcommand{\lincoafun}{\texttt{lincoa}\xspace}
+\renewcommand{\baselinestretch}{1.1}
 
 %
 \journalname{Mathematical Programming Computation}
 \title{PDFO --- A Cross-Platform Package for Powell's Derivative-Free Optimization Solvers}
 \subtitle{}
-\titlerunning{}
+\titlerunning{PDFO}
 \dedication{To the memory of late Prof.\ M. J. D. Powell FRS}
 \author{Tom M. Ragonneau \and Zaikun Zhang}
 \authorrunning{}
@@ -327,7 +326,7 @@ papers~\cite{Rios_Sahinidis_2013,Custodio_Scheinberg_Vicente_2017,Larson_Menicke
 \section{Powell's derivative-free algorithms}
 \label{sec:powell}
 
-Powell published his first \gls{dfo} algorithm based on conjugate directions in 1964~\cite{Powell_1964}\footnote{According to Google Scholar, this is Powell's second published paper and also the second most cited work.
+Powell published in 1964 his first \gls{dfo} algorithm based on conjugate directions~\cite{Powell_1964}\footnote{According to Google Scholar, this is Powell's second published paper and also the second most cited work.
 The earliest and meanwhile most cited one is his paper on the DFP method~\cite{Fletcher_Powell_1963},
 co-authored with Fletcher and published in 1963. DFP is not a DFO algorithm but the first
 quasi-Newton method. The least-change property~\cite{Dennis_Schnabel_1979} of quasi-Newton methods
@@ -400,7 +399,8 @@ Similarly, if~$\objm$ is a quadratic model, then~\eqref{eq:itpls} is equivalent 
     \objm(y^{\base}) + (y -y^{\base})^{\T} \nabla \objm(y^{\base})
     + \frac{1}{2}(y-y^{\base})^{\T}  \nabla^2 \objm(y^{\base}) (y-y^{\base}) = \obj(y),  \quad y \in \xpt,
 \end{equation}
-a linear system with unknowns~$\objm(y^\base) \in \R$, $\nabla \objm(y^\base) \in \R^n$, and~$\nabla^2 \objm(y^{\base})\in\R^{n \times n}$, the degrees of freedom being~$(n + 1)(n + 2) / 2$ due to the symmetry of~$\nabla^2 \objm(y^\base)$.
+a linear system with unknowns~$\objm(y^\base) \in \R$, $\nabla \objm(y^\base) \!\in\! \R^n$,
+and~$\nabla^2 \objm(y^{\base})\!\in\!\R^{n \times n}$, the degrees of freedom being~$(n + 1)(n + 2) / 2$ due to the symmetry of~$\nabla^2 \objm(y^\base)$.
 \Gls{uobyqa} constructs quadratic models by the system~\eqref{eq:qitpls}.
 To decide a quadratic model~$\objm$ completely by the linear system~\eqref{eq:qitpls} alone,
 \gls{uobyqa} requires that~$\xpt$ contains~$(n+1)(n+2)/2$ points, and~$f$ should have been evaluated at all these points before this linear system can be formed.
@@ -489,24 +489,24 @@ interpolation system or the corresponding \kkt system using the Sherman-Morrison
 In order to keep the interpolation problem well-conditioned, $y_k^{\drop}$ is chosen
 to enlarge the denominator in this formula, which is also the ratio between
 the determinants of the old and new coefficient matrices.\footnote{
-    Let~$W$ be a square matrix, and~$W_+ = W + UV^\T$, where $U$ and~$V$ are two
+    Let~$W$ be a square matrix, and consider~$W_+ = W + UV^\T$, where $U$ and~$V$ are two
     matrices of the same size and $UV^\T$ has the same size as $W$.
-    Then~$\det(W_+) = \det(W)\det(I+V^\T W^{-1}U)$, and the
+    Then $\det(W_+) = \det(W)\det(I+V^\T W^{-1}U)$, and the
     Sherman-Morrison-Woodbury formula
-    is~$W_+^{-1} = W^{-1} -W^{-1}U(I+V^\T W^{-1}U)^{-1} V^\T W^{-1}$, assuming that both~$W$
+    is $W_+^{-1} = W^{-1} -W^{-1}U(I+V^\T W^{-1}U)^{-1} V^\T W^{-1}$, assuming that both~$W$
     and~$(I+V^\T W^{-1}U)$ are nonsingular. The number~$\det(I+V^\T W^{-1}U)$ is the only
     denominator involved in the numerical computation of the formula.
 }
 In fully determined interpolation, the aforementioned denominator is~$\ell_k^\drop(\iter^{\trust})$,
 where~$\ell_k^\drop$ is the Lagrange function associated with~$\xpt$ corresponding to~$y_k^\drop$
-(see~\mbox{\cite[\S~2]{Powell_2001}}, particularly equations~(10)--(13)).
+(see~\mbox{\cite[\S~2]{Powell_2001}}, particularly \mbox{equations~(10)--(13)}).
 In underdetermined quadratic interpolation, the denominator is lower
 bounded by~$[\ell_k^{\drop}(\iter^{\trust})]^2$ (see~\mbox{\cite[\S~2]{Powell_2004c}}, particularly
 equation~(2.12) and Lemma~1, where the denominator is $\sigma$, and~$\ell_k^{\drop}(\iter^{\trust})$
 is~$\tau$).
 However, Powell's methods do not choose the point~$y_k^\drop$ merely according to this denominator, but also
 takes into account its distance to the trust-region center, giving a higher priority to farther
-points (see, e.g.,~\cite[equation~(56)]{Powell_2002} and~\cite[equations~(7.4)--(7.5)]{Powell_2006}).
+points, as we can see in~\cite[equation~(56)]{Powell_2002} and~\cite[equations~(7.4)--(7.5)]{Powell_2006}, for example.
 
 An alternative update of the interpolation set takes place
 when the methods detect that~$\objm$ does not represent~$\obj$ accurately enough, attempting
@@ -641,7 +641,7 @@ trust-region boundary~\mbox{\cite[\S~3]{Powell_2009}}.
 \gls{lincoa} uses another active-set variant of TCG to solve the trust-region
 subproblem~\eqref{eq:trsp} with linear constraints~\cite[\S~3 and \S~5]{Powell_2015}.
 An easily accessible description of the TCG algorithms employed by \gls{bobyqa} and \gls{lincoa}
-can be found in~\cite[\S~6.2.1 and \S~6.2.2]{Ragonneau_2022}).
+can be found in~\cite[\S~6.2.1 and \S~6.2.2]{Ragonneau_2022}.
 \gls{newuoa}, \gls{bobyqa}, and \gls{lincoa} manage the trust-region radius in a way similar to
 \gls{uobyqa}, imposing a lower bound~$\radlb$ on~$\rad$ when updating~$\rad$.
 
@@ -685,9 +685,11 @@ defined even when the linear constraints are not satisfied.
 \section{The \gls{pdfo} package}
 \label{sec:pdfo}
 
-This section details the main features of PDFO, including the signature of the main
-function, the problem preprocessing, the solver selection, and the bug fixes. Before starting, we
-emphasize that PDFO does not re-implement Powell’s solvers but rather enables Python and MATLAB
+This section details the main features of \gls{pdfo}, including the signature of the main
+function, the problem preprocessing, the solver selection, and the bug fixes.
+
+Before starting, we
+emphasize that \gls{pdfo} does not re-implement Powell’s solvers but rather enables Python and MATLAB
 to call Powell's Fortran implementation.
 At a low level, it uses F2PY~\cite{Peterson_2009} to interface Python with Fortran, and MEX to
 interface it with MATLAB, although users never need such knowledge to employ~\gls{pdfo}.
@@ -708,14 +710,14 @@ It takes for input an optimization problem of the form
 \end{subequations}
 where~$\obj$, $\ceq$, and~$\cub$ are real-valued functions. The bound constraints are given
 by~$n$-dimensional vectors~$\xl$ and~$\xu$, which may take infinite values. The linear constraints
-are formulated by real matrices~$\aeq$ and~$\aub$ together with real vectors~$\beq$ and~$\bub$ with
+are formulated by real matrices~$\aeq$ and~$\aub$ together with real vectors~$\beq$ and~$\bub$ of
 proper sizes. Being a specialization of~\eqref{eq:nlc}, problem~\eqref{eq:pdfo} is broad enough to
 cover numerous real applications of~\gls{dfo}.
 
 In the Python version of~\gls{pdfo}, the signature of the~\pdfofun function is compatible with
 the \texttt{minimize} function available in the \texttt{scipy.optimize} module of
 SciPy~\cite{Virtanen_Etal_2020}. It can be invoked in exactly
-the same way as calling \texttt{minimize} except that \pdfofun does not accept derivative arguments.
+the same way as \texttt{minimize} except that \pdfofun does not accept derivative arguments.
 The MATLAB version of~\gls{pdfo} designs the~\pdfofun function following the signature of
 the \texttt{fmincon} function available in the Optimization Toolbox of MATLAB.
 In both Python and MATLAB, users can check the detailed syntax of~\pdfofun by the
@@ -748,7 +750,7 @@ which is beneficial for the efficiency of \gls{dfo} solvers in general.
 \subsection{Automatic selection of the solver}
 \label{subsec:solver-selection}
 
-When invoking the~\pdfofun function, the user can specify the solver to call in the backend.
+When invoking the~\pdfofun function, the user may specify the solver to call in the backend.
 However, if the user does not do so or chooses a solver that is incapable of solving the problem (e.g., \gls{uobyqa} cannot solve
 constrained problems), then \pdfofun issues a warning and selects the solver as follows.
 \begin{enumerate}
@@ -763,7 +765,7 @@ and the number~$8$ is set according to our experiments on the CUTEst~\cite{Gould
 We note that Powell's implementation of \gls{uobyqa} cannot handle problems with univariate
 objective functions, for which \gls{newuoa} is chosen.
 
-In addition to the \pdfofun function, PDFO also provides functions named~\cobylafun,
+In addition to the \pdfofun function, \gls{pdfo} also provides functions named~\cobylafun,
 \texttt{uobyqa}, \newuoafun, \bobyqafun, and~\lincoafun, which invoke the
 corresponding solvers directly. However, it is highly recommended to call the solvers
 via the~\pdfofun function.
@@ -780,10 +782,12 @@ The current version of \gls{pdfo} fixes several bugs in the Fortran source code,
     This is because some indices are initialized according to conditions that can never be met due to NaN values, similar to the previous case.
     \item \Gls{cobyla} may not return the best point that is evaluated; sometimes, it returns a point with a large constraint violation, even though the initial guess is feasible.
     This is because \gls{cobyla} may discard points that are not considered good according to the current merit function, depending on a penalty parameter.
-    However, when this penalty parameter is updated, a discarded point may turn out to be the best point according the updated merit function.
+    However, when this penalty parameter is updated, a discarded point may turn out to be the best
+    one according the updated merit function.
 \end{enumerate}
 
-
+\gls{pdfo} allows the users to call Powell's code without these patches by setting the
+option~\texttt{classical} to true. However, this is not recommended except for research purposes.
 
 %The package \gls{pdfo} preprocesses the arguments provided by the user, detects the type of the problem, and then invokes the Powell's solver that match the best the given problem.
 %The initial preprocessing of the arguments includes a handling of their internal types together with some programming-related procedures to allow as much freedom in the problem definition as possible, to make the use of \gls{pdfo} as easy as possible.
@@ -967,7 +971,7 @@ A description of the datasets employed is provided in Table~\ref{tab:htdata}.
     \end{tabular}
 \end{table}
 
-A dataset~$\mathcal{P}$ is formed of two parts: a training dataset~$\mathcal{L}$ and a testing dataset~$\mathcal{T}$, with~$\mathcal{P} = \mathcal{L} \sqcup \mathcal{T}$.
+A dataset~$\mathcal{P}$ is divided into two disjoint parts: a training dataset~$\mathcal{L}$ and a testing dataset~$\mathcal{T}$, with~$\mathcal{P} = \mathcal{L} \cup \mathcal{T}$.
 
 The problem we consider is as follows.
 We want to maximize the~$5$-fold \gls{auc} validation score of the \gls{svm} trained on~$\mathcal{L}$ with respect to the hyperparameters~$C$ and~$\gamma$.
