@@ -220,7 +220,10 @@ Our aim is to wrap Powell's Fortran code into a package named \gls{pdfo}, which 
 For each supported language, \gls{pdfo} provides a simple function that can invoke one of Powell's solvers according to the user's request (if any) or according to the type of the problem to solve.
 The current release (Version 1.2) of \gls{pdfo} supports Python and MATLAB, with more languages to be covered in the future.
 The signature of the Python subroutine is consistent with the \texttt{minimize} function of the SciPy optimization library; the signature of the MATLAB subroutine is consistent with the \texttt{fmincon} function of the MATLAB Optimization Toolbox.
-\gls{pdfo} is cross-platform, and available on Linux, macOS, and Windows at once.
+\gls{pdfo} is cross-platform, and available on Linux, macOS, and Windows at
+\begin{center}
+    \url{https://www.pdfo.net/}.
+\end{center}
 It has been downloaded more than \num{48000} times as of January 2023.
 Moreover, it is one of the optimization engines in GEMSEO~\cite{Gallard_Etal_2018}\footnote{\url{https: //gemseo.readthedocs.io/en/stable/}.}, an industrial software package for Multidisciplinary Design Optimization (MDO).
 
@@ -251,7 +254,8 @@ However, \gls{pdfo} has several features that distinguishes itself from others.
     \item \emph{Fault tolerance.}
     \Gls{pdfo} takes care of failures in the evaluation of the objective or constraint functions when NaN or infinite values are returned.
     In case of such failures, \gls{pdfo} will not exit but will try to progress.
-    Moreover, \gls{pdfo} ensures that the returned solution is not a point where the evaluation fails, while the original code of Powell may return a point whose objective function value is numerically NaN.
+    Moreover, \gls{pdfo} ensures that the returned solution is not a point where the evaluation fails, while the original code of Powell may return a point whose objective function value is
+    numerically~NaN.
 
     \item \emph{Problem preprocessing.}
     \Gls{pdfo} preprocesses the inputs to simplify the problem and reformulate it to meet the requirements of Powell's solvers.
@@ -333,7 +337,7 @@ constrained problems), \gls{uobyqa}~\cite{Powell_2002}~(for unconstrained proble
 bound-constrained problems), and \gls{lincoa} (for linearly constrained problems).
 Moreover, Powell implemented these algorithms into Fortran solvers and made the code publicly available.
 They are the cornerstones of \gls{pdfo}.
-In this section, we will provide an overview of these five algorithms, starting with a sketch in
+This section provides an overview of these five algorithms, starting with a sketch in
 Section~\ref{ssec:sketch} and then presenting more details afterwards.
 
 \subsection{A sketch of the algorithms}
@@ -669,18 +673,15 @@ defined even when the linear constraints are not satisfied.
 }
 
 
-\section{An interface for the Powell's derivative-free solvers}
+\section{The \gls{pdfo} package}
 \label{sec:pdfo}
 
-Powell implemented all five methods in Fortran 77, in a very robust and efficient manner.
-However, fewer people are using Fortran in our present-day world, and Fortran 77 has quite old standards.
-The authors developed therefore \gls{pdfo}, an acronym for ``\glsxtrlong{pdfo}.''
-It is a cross-platform package providing Python and MATLAB interfaces for using all five Powell's \gls{dfo} solvers, available for Linux, macOS, and Windows at
-\begin{center}
-    \url{https://www.pdfo.net/}.
-\end{center}
-\Gls{pdfo} does not reimplement Powell's solvers, but rather links the modern languages Python and MATLAB with the Fortran source code.
-At a low level, it uses F2PY~\cite{Peterson_2009} to interface Python with Fortran, and MEX to interface it with MATLAB.
+This section details the main features of PDFO, including the signature of the main
+function, the problem preprocessing, the solver selection, and the bug fixes. Before starting, we
+emphasize that PDFO does not re-implement Powell’s solvers but rather enables Python and MATLAB
+to call Powell's Fortran implementation.
+At a low level, it uses F2PY~\cite{Peterson_2009} to interface Python with Fortran, and MEX to
+interface it with MATLAB, although users never need such knowledge to employ~\gls{pdfo}.
 
 \subsection{Main structure of the package}
 
