@@ -67,7 +67,7 @@
 \newcommand{\obj}{f}
 \newcommand{\posp}[2][]{#1[#2#1]_+}
 \newcommand{\qspace}[1][n]{\mathcal{Q}\ifthenelse{\equal{#1}{}}{}{_{#1}}}
-\newcommand{\radalt}[1][k]{\tilde{\Delta}\ifthenelse{\equal{#1}{}}{}{_{#1}}}
+\newcommand{\radalt}[1][k]{\bar{\Delta}\ifthenelse{\equal{#1}{}}{}{_{#1}}}
 \newcommand{\rad}[1][k]{\Delta\ifthenelse{\equal{#1}{}}{}{_{#1}}}
 \newcommand{\radlb}[1][k]{\rho\ifthenelse{\equal{#1}{}}{}{_{#1}}}
 \newcommand{\set}[2][]{#1\{#2#1\}}
@@ -367,10 +367,6 @@ In this subproblem, the set~$\fsetm \subseteq \R^n$ is a local approximation of 
 \Gls{cobyla} defines~$\fsetm$ by linear interpolants of the constraint functions over the set~$\xpt$,
 whereas the other four algorithms take~$\fsetm = \fset$.
 
-\red{
-Both~\gls{bobyqa} and~\gls{lincoa} intends to respect the constraint~$x\in\fset$ when
-solving~\eqref{eq:trsp}, even though the problem is only solved approximately.
-}
 
 \subsubsection{The interpolation problem}
 \label{ssec:iptprob}
@@ -396,7 +392,8 @@ Similarly, if~$\objm$ is a quadratic model, then~\eqref{eq:itpls} is equivalent 
 \end{equation}
 a linear system with unknowns~$\objm(y^\base) \in \R$, $\nabla \objm(y^\base) \in \R^n$, and~$\nabla^2 \objm(y^{\base})\in\R^{n \times n}$, the degrees of freedom being~$(n + 1)(n + 2) / 2$ due to the symmetry of~$\nabla^2 \objm(y^\base)$.
 \Gls{uobyqa} constructs quadratic models by the system~\eqref{eq:qitpls}.
-To decide a quadratic model~$\objm$ completely by the linear system~\eqref{eq:qitpls} alone, it is necessary that~$\xpt$ contains~$(n+2)(n+1)/2$ points, and~$f$ should have been evaluated at all these points before this linear system can be formed.
+To decide a quadratic model~$\objm$ completely by the linear system~\eqref{eq:qitpls} alone,
+\gls{uobyqa} requires that~$\xpt$ contains~$(n+1)(n+2)/2$ points, and~$f$ should have been evaluated at all these points before this linear system can be formed.
 Even though most of these points will be reused at the subsequent iterations so that the number of
 function evaluations needed per iteration is tiny (see Section~\ref{ssec:iptset}), we must perform~$(n + 1)(n + 2) / 2$ function evaluations during the very first iteration.
 This is impractical unless~$n$ is small, which motivates the use of underdetermined quadratic interpolation.
@@ -463,16 +460,19 @@ interpolation problem (see~\cite[\S~5]{Powell_2004b} and~\cite[\S~7]{Powell_2006
 \label{ssec:iptset}
 
 The strategy to update~$\xpt$ is crucial.
-It should recycle points from previous iterations, at which the objective function has already been evaluated.
-Meanwhile, it needs to maintain the well-poisedness of the interpolation set, or equivalently, the
-well conditioning of the interpolation problem~\cite{Sauer_Xu_1995,Conn_Scheinberg_Vicente_2009b}.
+It should recycle points from previous iterations, at which the objective and constraint functions
+have already been evaluated.
+Meanwhile, it needs to maintain the geometry of the interpolation set so that it is well poised,
+or equivalently,
+the interpolation problem is well conditioned~\cite{Sauer_Xu_1995,Conn_Scheinberg_Vicente_2009b}.
 
 At a normal iteration, a point~$\iter^{\trust} \in \R^n$ is computed by solving the trust-region
 subproblem~\eqref{eq:trsp}, and Powell's \gls{dfo} methods update the interpolation set as
-\begin{equation*}
+\begin{equation}
+    \label{eq:xpt-update-tr}
     \xpt[k + 1] = \big(\xpt \cup \set{\iter^{\trust}}\big) \setminus \set{y_k^{\drop}},
-\end{equation*}
-where~$y_k^{\drop} \in \xpt$ is chosen to improve the well-poisedness of~$\xpt[k + 1]$.
+\end{equation}
+where~$y_k^{\drop} \in \xpt$ is chosen to maintain the well-poisedness of~$\xpt[k + 1]$.
 Note that~$y_k^{\drop}$ is selected after evaluating~$\iter^{\trust}$.
 Recall that Powell's methods update the inverse of either the coefficient matrix of the
 interpolation system or the corresponding \kkt system using the Sherman-Morrison-Woodbury formula.
@@ -498,8 +498,9 @@ However, Powell's methods do not choose the point~$y_k^\drop$ merely according t
 takes into account its distance to the trust-region center, giving a higher priority to farther
 points (see, e.g.,~\cite[equation~(56)]{Powell_2002} and~\cite[equations~(7.4)--(7.5)]{Powell_2006}).
 
-When the methods detect that~$\objm$ does not represent~$\obj$ accurately enough, they will attempt
-to improve the well-poisedness of the interpolation set.
+An alternative update of the interpolation set takes place
+when the methods detect that~$\objm$ does not represent~$\obj$ accurately enough, attempting
+to improve the geometry of the set.
 In this case, the methods first select a point~$y_k^{\drop} \in \xpt$ to drop from~$\xpt$, and then set
 \begin{equation}
     \label{eq:xpt-update-geo}
@@ -527,12 +528,11 @@ and \gls{lincoa}, the denominator is lower bounded by $[\ell_k^{\drop}(x)]^2$.
 Indeed, \gls{newuoa} also tries maximizing the denominator directly when~\eqref{eq:biglag}
 fails to render a large enough denominator, which does not happen often~(see~\cite[\S~6]{Powell_2006}).
 
-\red{
-Since this problem is solved approximately, \gls{lincoa} may select a point~$\iter^{\geo}$
-outside~$\fset$, making it an infeasible method.
-In contrast, \gls{bobyqa} enforces~$\iter^{\geo}$ to lie in $\fset$ so that the points it visits
-always satisfy the bound constraints.
-}
+Given the two possible updates~\eqref{eq:xpt-update-tr} and~\eqref{eq:xpt-update-geo} of the
+interpolation set, it is clear that the number of interpolation points remains a constant.
+As mentioned earlier, the number is~$n+1$ in \gls{cobyla} and~$(n+1)(n+2)/2$ in \gls{uobyqa}.
+\gls{newuoa}, \gls{bobyqa}, and \gls{lincoa} set this number to an integer in~$[n+2, (n+1)(n+2)/2]$.
+
 
 \subsection{\glsfmtshort{cobyla}}
 \label{ssec:cobyla}
@@ -570,6 +570,13 @@ then the second stage uses the resultant freedom in $x$ to minimize the lineariz
 function~$\objm$ within the trust region subject to no increase in any greatest violation of the
 linearized constraints.
 
+\gls{cobyla} assesses the quality of iterates and updates the trust-region radius according to
+an~$\ell_\infty$ merit function and a reduction ratio based on the merit
+function~(see~\cite[equations~(5),~(9), and~(10)]{Powell_1994}). It never increases
+the trust-region radius, and reduces the trust-region radius if the geometry of~$\xpt$ is acceptable
+but the trust-region trial point~$\iter^\trust$ is too close to~$\iter$ or renders a reduction ratio
+that is too small (see~\cite[equation~(11)]{Powell_1994}).%
+
 
 \subsection{\glsfmtshort{uobyqa}}
 \label{ssec:uobyqa}
@@ -601,12 +608,6 @@ See~\cite[\S~3]{Powell_2002} for more information on the updates of~$\rad$ and~$
 \subsection{\glsfmtshort{newuoa}, \glsfmtshort{bobyqa}, and \glsfmtshort{lincoa}}
 \label{ssec:nbloa}
 
-\red{
-If the number of interpolation points was less than or equal to~$n + 1$, the models would remain
-linear, so that Powell requires the number of points in~$\xpt$ to be at least~$n + 2$ and at
-most~$(n + 1)(n + 2) / 2$.
-}
-
 Later on, based on the underdetermined quadratic interpolation introduced in Subsection~\ref{ssec:iptprob},
 Powell developed his last three \gls{dfo} solvers, namely \gls{newuoa}~\cite{Powell_2006,Powell_2008}, \gls{bobyqa}~\cite{Powell_2009}, and \gls{lincoa}.
 \Gls{bobyqa} and \gls{lincoa} are named respectively after ``\glsxtrlong{bobyqa}'' and
@@ -617,8 +618,6 @@ It is worth mentioning that Powell \emph{never} published a paper to introduce \
 As their names suggest, \gls{newuoa}, \gls{bobyqa}, and \gls{lincoa} aim at solving unconstrained,
 bound-constrained, and linearly constrained problems respectively.
 They all set~$\fsetm$ in the trust-region subproblem~\eqref{eq:trsp} to be~$\fset$, corresponding the whole space for \gls{newuoa}, a box for \gls{bobyqa} and a polyhedron for \gls{lincoa}.
-\red{A subtlety of \gls{bobyqa} is that the constraints are always respected, for each iterate and
-each point in~$\xpt$.}
 
 To solve the trust-region subproblems~\eqref{eq:trsp}, \gls{newuoa} employs the
 Steihaug-Toint truncated conjugate gradient (TCG) algorithm~\cite{Steihaug_1983,Toint_1981}.
@@ -630,20 +629,42 @@ spanned by the current step and the corresponding gradient of~$\objm[k]$~(see~\c
 trust-region boundary (see~\mbox{\cite[\S~3]{Powell_2009}} and~\cite[\S~6.2.1]{Ragonneau_2022}).
 \gls{lincoa} uses an active-set variant of TCG for trust-region subproblems with linear
 constraints~(see~\cite[\S~3 and \S~5]{Powell_2015} and~\mbox{\cite[\S~6.2.2]{Ragonneau_2022})}.
+\gls{newuoa}, \gls{bobyqa}, and \gls{lincoa} manage the trust-region radius in a way similar to
+\gls{uobyqa}, imposing a lower bound~$\radlb$ on~$\rad$ when updating~$\rad$.
 
-As we already mentioned, geometry-improving iterations must be entertained when the method detects that~$\objm$ does not represent~$\obj$ accurately enough.
-\Gls{newuoa} employs a technique similar to that of \gls{uobyqa} to solve~\eqref{eq:biglag}.
-However, if~$\iter^{\geo}$ does not render a sufficiently big absolute value of the above-mentioned denominator, then \gls{newuoa} attempts to maximize the denominator directly within a trust region.
-When it comes to \gls{bobyqa}, it estimates two approximate solutions to~\eqref{eq:biglag} and chooses the best one.
-The geometry-improving step of \gls{lincoa} is more complex, as it involves estimating three approximate solutions to~\eqref{eq:biglag}.
+When solving the geometry-improving subproblem~\eqref{eq:biglag},
+\gls{newuoa} first takes $\iter \pm \radalt (y_k^\drop - \iter)/\|y_k^\drop -\iter\|$,
+with the sign that provides the larger value of~$\ell_k^\drop$, and then revises it by
+a procedure similar to the two-dimensional searches that improve the TCG step for~\eqref{eq:trsp}.
+\gls{bobyqa} computes two approximate solutions to~\eqref{eq:biglag} and chooses the better one:
+the first one solves~\eqref{eq:biglag} with an additional constraint that~$x$ is located on the
+straight lines through~$\iter$ and another point in~$\xpt$, and the second is obtained by a Cauchy
+step for~\eqref{eq:biglag}.
+The geometry-improving step of \gls{lincoa} is more complex, as it involves calculating three
+approximate solutions to~\eqref{eq:biglag}.
 It computes
 \begin{enumerate}
-    \item the point that maximizes~$\abs{\ell_{\drop}(\cdot)}$ within the trust region on the lines through~$\iter$ and other points in~$\xpt$,
+    \item the point that maximizes~$\abs{\ell_{\drop}(\cdot)}$ within the trust region on the lines
+        through~$\iter$ and another point in~$\xpt$,
     \item a point obtained by a gradient step that maximizes~$\abs{\ell_{\drop}(\cdot)}$ within the trust region, and
     \item a point obtained by a projected gradient step that maximizes~$\abs{\ell_{\drop}(\cdot)}$ within the trust region, the projection being made onto the null space of the constraints that are considered active at~$\iter$.
 \end{enumerate}
-The procedure first selects the point among the first two alternatives that provide the larger value of~$\abs{\ell_{\drop}(\cdot)}$.
-Further, this point is replaced with the third alternative if the latter provides a value of~$\abs{\ell_{\drop}(\cdot)}$ that is not too small compared with the above one, while being nearly feasible.
+Note that the first two cases completely disregard the linear constraints (i.e.~$x\in\fsetm \equiv
+\fset$), while the third case
+considers only the active constraints.
+\gls{lincoa} first selects the point among the first two alternatives for larger value of~$\abs{\ell_{\drop}(\cdot)}$.
+Further, this point is replaced with the third alternative if the latter nearly satisfies the linear
+constraints while rendering a value of~$\abs{\ell_{\drop}(\cdot)}$ that is not too small compared with the above one.
+
+\red{
+Both~\gls{bobyqa} and~\gls{lincoa} intends to respect the constraint~$x\in\fset$ when
+solving~\eqref{eq:trsp}, even though the problem is only solved approximately.
+}
+Since this problem is solved approximately, \gls{lincoa} may select a point~$\iter^{\geo}$
+outside~$\fset$, making it an infeasible method.
+In contrast, \gls{bobyqa} enforces~$\iter^{\geo}$ to lie in $\fset$ so that the points it visits
+always satisfy the bound constraints.
+\red{A subtlety of \gls{bobyqa} is that the constraints are always respected, for each iterate and each point in~$\xpt$.}
 
 \section{An interface for the Powell's derivative-free solvers}
 \label{sec:pdfo}
