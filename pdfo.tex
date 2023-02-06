@@ -161,6 +161,12 @@
 }
 \newcommand{\red}{\textcolor{red}}
 \newcommand{\kkt}{KKT\xspace}
+\newcommand{\pdfofun}{\texttt{pdfo}\xspace}
+\newcommand{\cobylafun}{\texttt{cobyla}\xspace}
+\newcommand{\uobyqafun}{\texttt{uobyqa}\xspace}
+\newcommand{\newuoafun}{\texttt{newuoa}\xspace}
+\newcommand{\bobyqafun}{\texttt{bobyqa}\xspace}
+\newcommand{\lincoafun}{\texttt{lincoa}\xspace}
 
 %
 \journalname{Mathematical Programming Computation}
@@ -624,16 +630,18 @@ As their names suggest, \gls{newuoa}, \gls{bobyqa}, and \gls{lincoa} aim at solv
 bound-constrained, and linearly constrained problems respectively.
 They all set~$\fsetm$ in the trust-region subproblem~\eqref{eq:trsp} to be~$\fset$, corresponding the whole space for \gls{newuoa}, a box for \gls{bobyqa} and a polyhedron for \gls{lincoa}.
 
-To solve the trust-region subproblems~\eqref{eq:trsp}, \gls{newuoa} employs the
-Steihaug-Toint truncated conjugate gradient (TCG) algorithm~\cite{Steihaug_1983,Toint_1981}.
-If the boundary of the trust region is reached, then \gls{newuoa} may make further
+To solve the trust-region subproblem~\eqref{eq:trsp}, \gls{newuoa} employs the
+Steihaug-Toint truncated conjugate gradient (TCG) algorithm~\cite{Steihaug_1983,Toint_1981};
+if the boundary of the trust region is reached, then \gls{newuoa} may make further
 changes to the trust-region step, each one obtained by searching in the two-dimensional space
-spanned by the current step and the corresponding gradient of~$\objm[k]$~(see~\cite[\S~5]{Powell_2006}).
-\gls{bobyqa} solves~\eqref{eq:trsp} by an active-set variant of the TCG algorithm. Similar to
-\gls{newuoa}, it may also improve the TCG step by two-dimensional searches if it reaches the
-trust-region boundary (see~\mbox{\cite[\S~3]{Powell_2009}} and~\cite[\S~6.2.1]{Ragonneau_2022}).
-\gls{lincoa} uses an active-set variant of TCG for trust-region subproblems with linear
-constraints~(see~\cite[\S~3 and \S~5]{Powell_2015} and~\mbox{\cite[\S~6.2.2]{Ragonneau_2022})}.
+spanned by the current step and the corresponding gradient of the trust-region model~\cite[\S~5]{Powell_2006}.
+\gls{bobyqa} solves~\eqref{eq:trsp} by an active-set variant of the TCG algorithm, and
+it may also improve the TCG step by two-dimensional searches if it reaches the
+trust-region boundary~\mbox{\cite[\S~3]{Powell_2009}}.
+\gls{lincoa} uses another active-set variant of TCG to solve the trust-region
+subproblem~\eqref{eq:trsp} with linear constraints~\cite[\S~3 and \S~5]{Powell_2015}.
+An easily accessible description of the TCG algorithms employed by \gls{bobyqa} and \gls{lincoa}
+can be found in~\cite[\S~6.2.1 and \S~6.2.2]{Ragonneau_2022}).
 \gls{newuoa}, \gls{bobyqa}, and \gls{lincoa} manage the trust-region radius in a way similar to
 \gls{uobyqa}, imposing a lower bound~$\radlb$ on~$\rad$ when updating~$\rad$.
 
@@ -686,8 +694,8 @@ interface it with MATLAB, although users never need such knowledge to employ~\gl
 
 \subsection{Signature of the main function}
 
-The philosophy of \gls{pdfo} is simple: providing a single function to solve \gls{dfo} problems
-with or without constraints, calling Powell's Fortran solvers in the backend.
+The philosophy of \gls{pdfo} is simple: providing a single function named~\pdfofun to solve
+\gls{dfo} problems with or without constraints, calling Powell's Fortran solvers in the backend.
 It takes for input an optimization problem of the form
 \begin{subequations}
     \label{eq:pdfo}
@@ -704,45 +712,14 @@ are formulated by real matrices~$\aeq$ and~$\aub$ together with real vectors~$\b
 proper sizes. Being a specialization of~\eqref{eq:nlc}, problem~\eqref{eq:pdfo} is broad enough to
 cover numerous real applications of~\gls{dfo}.
 
-PDFO provides the following Python functions: pdfo, uobyqa, newuoa, bobyqa, lincoa, and cobyla.
-
-The pdfo function can automatically identify the type of your problem and the call one of Powell's solvers. The other five functions call the solver indicated by their names. It is highly recommended to use pdfo instead of uobyqa, newuoa, etc.
-
-The pdfo function is designed to be compatible with the minimize function available in the scipy.optimize module of SciPy. You can call pdfo in exactly the same way as calling minimize except that pdfo does not accept derivative arguments.
-
-For detailed syntax of these functions, use the standard help command of Python. For example,
-
-\texttt{
- from pdfo import pdfo; help(pdfo)
- }
-
- PDFO provides the following MATLAB functions: pdfo, uobyqa, newuoa, bobyqa, lincoa, and cobyla.
-
-The pdfo function can automatically identify the type of your problem and then call one of Powell's Fortran solvers. The other five functions call the solver indicated by their names. It is highly recommended to use pdfo instead of uobyqa, newuoa, etc.
-
-The pdfo function is designed to be compatible with the fmincon function available in the Optimization Toolbox of MATLAB. You can call pdfo in the same way as calling fmincon.
-
-
-%The problem~\eqref{eq:pdfo} covers every possible case, since all matrices, vectors and functions can be set to zero from a mathematical viewpoint and \gls{pdfo} does not
-%require the constraints~\mbox{\eqref{eq:pdfo-b}--\eqref{eq:pdfo-nl}} to be provided.
-%A broad example of use in MATLAB is shown in Listing~\ref{lst:minex}, where variable names have clear correspondences with the problem~\eqref{eq:pdfo}.
-%The value returned by \gls{pdfo} is the best point calculated, evaluated via a merit function.
-%\Gls{pdfo} for MATLAB also returns the corresponding optimal value, together with different fields describing the backend calculations and their behaviors.
-
-%\begin{matlablst}[%
-%    caption=An elementary example of \gls{pdfo} in MATLAB,
-%    label=lst:minex
-%]
-%    x = pdfo(@fun,x0,Aineq,bineq,Aeq,beq,lb,ub,@con);
-
-%    function fx = fun(x)
-%    ...
-%    end
-
-%    function [cineq,ceq] = con(x)
-%    ...
-%    end
-%\end{matlablst}
+In the Python version of~\gls{pdfo}, the signature of the~\pdfofun function is compatible with
+the \texttt{minimize} function available in the \texttt{scipy.optimize} module of
+SciPy~\cite{Virtanen_Etal_2020}. It can be invoked in exactly
+the same way as calling \texttt{minimize} except that \pdfofun does not accept derivative arguments.
+The MATLAB version of~\gls{pdfo} designs the~\pdfofun function following the signature of
+the \texttt{fmincon} function available in the Optimization Toolbox of MATLAB.
+In both Python and MATLAB, users can check the detailed syntax of~\pdfofun by the
+standard~\texttt{help} command.
 
 
 \subsection{Problem preprocessing}
@@ -771,36 +748,40 @@ which is beneficial for the efficiency of \gls{dfo} solvers in general.
 \subsection{Automatic selection of the solver}
 \label{subsec:solver-selection}
 
-\gls{pdfo} can detect the type of the problem according to the input and then select automatically
-the solver to invoke according to the type.
-When a problem is received, unless the user specifies the solver to use, \gls{pdfo} selects a solver as follows.
+When invoking the~\pdfofun function, the user can specify the solver to call in the backend.
+However, if the user does not do so or chooses a solver that is incapable of solving the problem (e.g., \gls{uobyqa} cannot solve
+constrained problems), then \pdfofun issues a warning and selects the solver as follows.
 \begin{enumerate}
     \item If the problem is unconstrained, then \gls{uobyqa} is selected when~$2 \le n \le 8$, and \gls{newuoa} is selected when~$n = 1$ or~$n > 8$.
     \item If the problem is bound-constrained, then \gls{bobyqa} is selected.
     \item If the problem is linearly constrained, then \gls{lincoa} is selected.
     \item Otherwise, \gls{cobyla} is selected.
 \end{enumerate}
+The problem type is detected automatically according to the input.
+In the unconstrained case, we select \gls{uobyqa} for small problems because it is more efficient,
+and the number~$8$ is set according to our experiments on the CUTEst~\cite{Gould_Orban_Toint_2015} problems.
+We note that Powell's implementation of \gls{uobyqa} cannot handle problems with univariate
+objective functions, for which \gls{newuoa} is chosen.
 
-For the unconstrained case, we select \gls{uobyqa} for small problems because it is more efficient, and the number~$8$ is set according to our experiments on the CUTEst problems.
-We note that Powell's implementation of \gls{uobyqa} cannot handle problems with univariate objective functions, for which \gls{newuoa} is invoked.
-
-\gls{pdfo} also selects a solver in this way if the user specifies a solver that is incapable of
-solving the problem received.
+In addition to the \pdfofun function, PDFO also provides functions named~\cobylafun,
+\texttt{uobyqa}, \newuoafun, \bobyqafun, and~\lincoafun, which invoke the
+corresponding solvers directly. However, it is highly recommended to call the solvers
+via the~\pdfofun function.
 
 \subsection{Bug fixes in the Fortran source code}
 \label{subsec:bug-corrections}
 
-The current version of \gls{pdfo} also fixes several bugs in the Fortran source code, particularly the following ones.
+The current version of \gls{pdfo} fixes several bugs in the Fortran source code, particularly the following ones.
 \begin{enumerate}
     \item The solvers may encounter infinite loops.
-    This is because the exit conditions of some loops cannot be met because variables involved in these conditions become NaN values due to floating point exceptions.
-    \item The Fortran code may encounter memory errors due to uninitialized variables that are used as indices.
-    This is because some variables are initialized according to conditions that can never be met due to NaN values, similar to the previous case.
+    This happens when the exit conditions of a loop can never be met because variables involved in
+    these conditions become~NaN values due to floating point exceptions.
+    \item The Fortran code may encounter memory errors due to uninitialized indices.
+    This is because some indices are initialized according to conditions that can never be met due to NaN values, similar to the previous case.
     \item \Gls{cobyla} may not return the best point that is evaluated; sometimes, it returns a point with a large constraint violation, even though the initial guess is feasible.
     This is because \gls{cobyla} may discard points that are not considered good according to the current merit function, depending on a penalty parameter.
     However, when this penalty parameter is updated, a discarded point may turn out to be the best point according the updated merit function.
 \end{enumerate}
-In \gls{pdfo}, these bugs are fixed.
 
 
 
