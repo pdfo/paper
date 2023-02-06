@@ -617,7 +617,8 @@ Powell developed his last three \gls{dfo} solvers, namely \gls{newuoa}~\cite{Pow
 \Gls{bobyqa} and \gls{lincoa} are named respectively after ``\glsxtrlong{bobyqa}'' and
 ``\glsxtrlong{lincoa}'', but Powell~\cite{Powell_2006,Powell_2008} did not specify the meaning
 of~\gls{newuoa}, which is likely an acronym for ``\glsxtrlong{newuoa}.''
-It is worth mentioning that Powell \emph{never} published a paper to introduce \gls{lincoa}, and~\cite{Powell_2015} discusses only the resolution of its trust-region subproblem.
+It is worth mentioning that Powell \emph{never} published a paper to introduce \gls{lincoa},
+and~\cite{Powell_2015} discusses only how to solve its trust-region subproblem.
 
 As their names suggest, \gls{newuoa}, \gls{bobyqa}, and \gls{lincoa} aim at solving unconstrained,
 bound-constrained, and linearly constrained problems respectively.
@@ -683,9 +684,10 @@ to call Powell's Fortran implementation.
 At a low level, it uses F2PY~\cite{Peterson_2009} to interface Python with Fortran, and MEX to
 interface it with MATLAB, although users never need such knowledge to employ~\gls{pdfo}.
 
-\subsection{Main structure of the package}
+\subsection{Signature of the main function}
 
-The philosophy of \gls{pdfo} is simple: providing to users a single function to solve a \gls{dfo} problem.
+The philosophy of \gls{pdfo} is simple: providing a single function to solve \gls{dfo} problems
+with or without constraints, calling Powell's Fortran solvers in the backend.
 It takes for input an optimization problem of the form
 \begin{subequations}
     \label{eq:pdfo}
@@ -696,27 +698,53 @@ It takes for input an optimization problem of the form
                             & \quad \cub(x) \le 0, \quad \ceq(x) = 0, \label{eq:pdfo-nl}
     \end{align}
 \end{subequations}
-where~$\xl, \xu \in (\R \cup \set{\pm \infty})^n$,~$\aeq$ and~$\aub$ are real matrices,~$\beq$ and~$\bub$ are real vectors, and~$\ceq$ and~$\cub$ are multivariate functions.
-The problem~\eqref{eq:pdfo} covers every possible case, since all matrices, vectors and functions can be set to zero from a mathematical viewpoint and \gls{pdfo} does not
-require the constraints~\mbox{\eqref{eq:pdfo-b}--\eqref{eq:pdfo-nl}} to be provided.
-A broad example of use in MATLAB is shown in Listing~\ref{lst:minex}, where variable names have clear correspondences with the problem~\eqref{eq:pdfo}.
-The value returned by \gls{pdfo} is the best point calculated, evaluated via a merit function.
-\Gls{pdfo} for MATLAB also returns the corresponding optimal value, together with different fields describing the backend calculations and their behaviors.
+where~$\obj$, $\ceq$, and~$\cub$ are real-valued functions. The bound constraints are given
+by~$n$-dimensional vectors~$\xl$ and~$\xu$, which may take infinite values. The linear constraints
+are formulated by real matrices~$\aeq$ and~$\aub$ together with real vectors~$\beq$ and~$\bub$ with
+proper sizes. Being a specialization of~\eqref{eq:nlc}, problem~\eqref{eq:pdfo} is broad enough to
+cover numerous real applications of~\gls{dfo}.
 
-\begin{matlablst}[%
-    caption=An elementary example of \gls{pdfo} in MATLAB,
-    label=lst:minex
-]
-    x = pdfo(@fun,x0,Aineq,bineq,Aeq,beq,lb,ub,@con);
+PDFO provides the following Python functions: pdfo, uobyqa, newuoa, bobyqa, lincoa, and cobyla.
 
-    function fx = fun(x)
-    ...
-    end
+The pdfo function can automatically identify the type of your problem and the call one of Powell's solvers. The other five functions call the solver indicated by their names. It is highly recommended to use pdfo instead of uobyqa, newuoa, etc.
 
-    function [cineq,ceq] = con(x)
-    ...
-    end
-\end{matlablst}
+The pdfo function is designed to be compatible with the minimize function available in the scipy.optimize module of SciPy. You can call pdfo in exactly the same way as calling minimize except that pdfo does not accept derivative arguments.
+
+For detailed syntax of these functions, use the standard help command of Python. For example,
+
+\texttt{
+ from pdfo import pdfo; help(pdfo)
+ }
+
+ PDFO provides the following MATLAB functions: pdfo, uobyqa, newuoa, bobyqa, lincoa, and cobyla.
+
+The pdfo function can automatically identify the type of your problem and then call one of Powell's Fortran solvers. The other five functions call the solver indicated by their names. It is highly recommended to use pdfo instead of uobyqa, newuoa, etc.
+
+The pdfo function is designed to be compatible with the fmincon function available in the Optimization Toolbox of MATLAB. You can call pdfo in the same way as calling fmincon.
+
+
+%The problem~\eqref{eq:pdfo} covers every possible case, since all matrices, vectors and functions can be set to zero from a mathematical viewpoint and \gls{pdfo} does not
+%require the constraints~\mbox{\eqref{eq:pdfo-b}--\eqref{eq:pdfo-nl}} to be provided.
+%A broad example of use in MATLAB is shown in Listing~\ref{lst:minex}, where variable names have clear correspondences with the problem~\eqref{eq:pdfo}.
+%The value returned by \gls{pdfo} is the best point calculated, evaluated via a merit function.
+%\Gls{pdfo} for MATLAB also returns the corresponding optimal value, together with different fields describing the backend calculations and their behaviors.
+
+%\begin{matlablst}[%
+%    caption=An elementary example of \gls{pdfo} in MATLAB,
+%    label=lst:minex
+%]
+%    x = pdfo(@fun,x0,Aineq,bineq,Aeq,beq,lb,ub,@con);
+
+%    function fx = fun(x)
+%    ...
+%    end
+
+%    function [cineq,ceq] = con(x)
+%    ...
+%    end
+%\end{matlablst}
+
+
 
 The package \gls{pdfo} preprocesses the arguments provided by the user, detects the type of the problem, and then invokes the Powell's solver that match the best the given problem.
 The initial preprocessing of the arguments includes a handling of their internal types together with some programming-related procedures to allow as much freedom in the problem definition as possible, to make the use of \gls{pdfo} as easy as possible.
