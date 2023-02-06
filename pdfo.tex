@@ -500,7 +500,7 @@ points (see, e.g.,~\cite[equation~(56)]{Powell_2002} and~\cite[equations~(7.4)--
 
 An alternative update of the interpolation set takes place
 when the methods detect that~$\objm$ does not represent~$\obj$ accurately enough, attempting
-to improve the geometry of the set.
+to improve the geometry of the interpolation set.
 In this case, the methods first select a point~$y_k^{\drop} \in \xpt$ to drop from~$\xpt$, and then set
 \begin{equation}
     \label{eq:xpt-update-geo}
@@ -636,10 +636,11 @@ When solving the geometry-improving subproblem~\eqref{eq:biglag},
 \gls{newuoa} first takes $\iter \pm \radalt (y_k^\drop - \iter)/\|y_k^\drop -\iter\|$,
 with the sign that provides the larger value of~$\ell_k^\drop$, and then revises it by
 a procedure similar to the two-dimensional searches that improve the TCG step for~\eqref{eq:trsp}.
+(see~\cite[\S~6]{Powell_2006})
 \gls{bobyqa} computes two approximate solutions to~\eqref{eq:biglag} and chooses the better one:
 the first one solves~\eqref{eq:biglag} with an additional constraint that~$x$ is located on the
 straight lines through~$\iter$ and another point in~$\xpt$, and the second is obtained by a Cauchy
-step for~\eqref{eq:biglag}.
+step for~\eqref{eq:biglag} (see~\cite[\S~3]{Powell_2009}).
 The geometry-improving step of \gls{lincoa} is more complex, as it involves calculating three
 approximate solutions to~\eqref{eq:biglag}.
 It computes
@@ -658,13 +659,15 @@ constraints while rendering a value of~$\abs{\ell_{\drop}(\cdot)}$ that is not t
 
 \red{
 Both~\gls{bobyqa} and~\gls{lincoa} intends to respect the constraint~$x\in\fset$ when
-solving~\eqref{eq:trsp}, even though the problem is only solved approximately.
+solving the trust-region subproblem~\eqref{eq:trsp}, even though this subproblem is only solved
+approximately.
+For the geometry-improving subproblem~\eqref{eq:biglag}, \gls{bobyqa} keeps the bound constraints
+satisfied, whereas \gls{lincoa} may violate the linear constraints.
+As a consequence, \gls{bobyqa} evaluates the objective function~$\obj$ only at feasible points,
+but~\gls{lincoa} occasionally performs the evaluation at infeasible points, requiring~$\obj$ to be
+defined even when the linear constraints are not satisfied.
 }
-Since this problem is solved approximately, \gls{lincoa} may select a point~$\iter^{\geo}$
-outside~$\fset$, making it an infeasible method.
-In contrast, \gls{bobyqa} enforces~$\iter^{\geo}$ to lie in $\fset$ so that the points it visits
-always satisfy the bound constraints.
-\red{A subtlety of \gls{bobyqa} is that the constraints are always respected, for each iterate and each point in~$\xpt$.}
+
 
 \section{An interface for the Powell's derivative-free solvers}
 \label{sec:pdfo}
