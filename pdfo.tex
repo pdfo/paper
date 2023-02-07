@@ -172,6 +172,7 @@
 }
 \newcommand{\red}{\textcolor{red}}
 \newcommand{\kkt}{KKT\xspace}
+\newcommand{\hugefun}{\texttt{HUGEFUN}\xspace}
 \newcommand{\pdfofun}{\texttt{pdfo}\xspace}
 \newcommand{\cobylafun}{\texttt{cobyla}\xspace}
 \newcommand{\uobyqafun}{\texttt{uobyqa}\xspace}
@@ -281,8 +282,8 @@ However, \gls{pdfo} has several features that distinguishes itself from others.
     %In addition, \gls{pdfo} provides \gls{cobyla} in double precision, whereas Powell used single precision when he implemented it in the 1990s.
 
     \item \emph{Fault tolerance.}
-    \Gls{pdfo} takes care of failures in the evaluation of the objective or constraint functions when NaN values are returned.
-    In case of such failures, \gls{pdfo} will not exit but will try to progress.
+    \Gls{pdfo} tolerates failures of function evaluations when NaN values are returned.
+    In case of such failures, \gls{pdfo} will not exit but try to progress.
     %Moreover, \gls{pdfo} ensures that the returned solution is not a point where the evaluation
     %fails, while the original code of Powell may return a point whose objective function value is numerically~NaN.
 
@@ -704,8 +705,10 @@ defined even when the linear constraints are not satisfied.
 \section{The \gls{pdfo} package}
 \label{sec:pdfo}
 
-This section details the main features of \gls{pdfo}, including the signature of the main
-function, the problem preprocessing, the solver selection, and the bug fixes.
+This section details the main features of \gls{pdfo}, in particular the signature of the main
+function, problem preprocessing, solver selection, bug fixes, and handling failures of function
+evaluations. For other features of~\gls{pdfo}, we refer to its homepage
+at~\url{https://www.pdfo.net/}.
 
 Before starting, we
 emphasize that \gls{pdfo} does not re-implement Powell’s solvers but rather enables Python and MATLAB
@@ -811,7 +814,29 @@ option~\texttt{classical} to true. However, this is not recommended.
 
 \subsection{Handling failures of function evaluations}
 
-\gls{pdfo} can tolerate failures of function evaluations 
+\gls{pdfo} tolerates NaN values returned by function evaluations. Such a value can be used to
+indicate failures of function evaluations, which are common in applications of~\gls{dfo}.
+
+To cope with NaN values, \gls{pdfo} applies a moderated extreme barrier.
+Suppose that~$\obj(\tilde{x})$ is evaluated to NaN at a certain~$\tilde{x}\in\R^n$.
+\gls{pdfo} takes the viewpoint that~$\tilde{x}$ violates a hidden
+constraint~\mbox{\cite{LeDigabel_Wild_2015,Audet_Caporossi_Jacquet_2020}}.
+Hence it replaces NaN with a large but finite number~\hugefun~(e.g., $10^{30}$)
+before passing~$\obj(\tilde{x})$ to the Fortran solver, so that the solver can continue to progress while
+penalizing~$\tilde{x}$. Indeed, since Powell's solvers construct trust-region models by interpolation,
+all points that are close to~$\tilde{x}$ will be penalized.
+Similar things are done when the constraint functions return NaN.
+A caveat is that setting~$\obj(\tilde{x})$ to \hugefun may lead to
+extreme values or even NaN in the coefficients of the interpolation models, but Powell's solvers
+turn out to be quite tolerant of such values.
+
+The original extreme barrier approach sets~\hugefun to~$\infty$, which is inappropriate for
+methods based on interpolation. In fact, we also moderate~$\obj(\tilde{x})$ to~$\hugefun$ if it is
+actually evaluated to~$\infty$.
+Our approach is clearly naive, but it is better than terminating the solver once function
+evaluations fail. There exist other more refined approaches~\cite{Audet_Caporossi_Jacquet_2020},
+which will be explored in the future.
+
 
 %The package \gls{pdfo} preprocesses the arguments provided by the user, detects the type of the problem, and then invokes the Powell's solver that match the best the given problem.
 %The initial preprocessing of the arguments includes a handling of their internal types together with some programming-related procedures to allow as much freedom in the problem definition as possible, to make the use of \gls{pdfo} as easy as possible.
