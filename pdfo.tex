@@ -707,7 +707,7 @@ defined even when the linear constraints are not satisfied.
 
 This section details the main features of \gls{pdfo}, in particular the signature of the main
 function, problem preprocessing, solver selection, bug fixes, and handling failures of function
-evaluations. For other features of~\gls{pdfo}, we refer to its homepage
+evaluations. For more features of~\gls{pdfo}, we refer to its homepage
 at~\url{https://www.pdfo.net/}.
 
 Before starting, we
@@ -802,8 +802,10 @@ The current version of \gls{pdfo} patches several bugs in the Fortran source cod
     these conditions become~NaN values due to floating point exceptions.
     \item The Fortran code may encounter memory errors due to uninitialized indices.
     This is because some indices are initialized according to conditions that can never be met due to NaN values, similar to the previous case.
-    \item \Gls{cobyla} may not return the best point that is evaluated; sometimes, it returns a point with a large constraint violation, even though the initial guess is feasible.
-    This is because \gls{cobyla} may discard points that are not considered good according to the current merit function, depending on a penalty parameter.
+    \item \Gls{cobyla} may not return the best point that is evaluated; sometimes, it returns
+    a point with a large constraint violation, even though the starting point is feasible.
+    This is because \gls{cobyla} discard points that are not considered good according to
+    the $\ell_\infty$ merit function, depending on a penalty parameter.
     However, when this penalty parameter is updated, a discarded point may turn out to be the best
     one according the updated merit function.
 \end{enumerate}

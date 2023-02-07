@@ -79,13 +79,14 @@ def create_figure(csvfile, pdffile, tau, archive=Path(os.path.dirname(os.getcwd(
 
 
 def create_all_figures():
-    create_figure("archives/perf/plain/1-10/perf-bobyqa_cobyla_lincoa_newuoa_uobyqa-unconstrained.csv", "perf-plain-pdfo-10.pdf", 4)
-    create_figure("archives/perf/plain/1-50/perf-bfgs_cg_newuoa-unconstrained.csv", "perf-plain-bfgs_cg_pdfo-50.pdf", 3)
-    create_figure("archives/perf/plain/1-50/perf-bobyqa_cobyla_lincoa_newuoa-unconstrained.csv", "perf-plain-pdfo-50.pdf", 4)
-    create_figure("archives/perf/noisy/1-50/rerun-10_type-relative_level-1e-06/perf-bfgs_cg_newuoa-unconstrained.csv", "perf-noisy-bfgs_cg_pdfo-50-6.pdf", 3)
-    create_figure("archives/perf/noisy/1-50/rerun-10_type-relative_level-1e-08/perf-bfgs_cg_newuoa-unconstrained.csv", "perf-noisy-bfgs_cg_pdfo-50-8.pdf", 3)
-    create_figure("archives/perf/noisy/1-50/rerun-10_type-relative_level-1e-10/perf-bfgs_cg_newuoa-unconstrained.csv", "perf-noisy-bfgs_cg_pdfo-50-10.pdf", 3)
-    create_figure("archives/perf/noisy/1-50/rerun-10_type-relative_level-0.01/perf-bobyqa_cobyla_lincoa_newuoa-unconstrained.csv", "perf-noisy-pdfo-50-2.pdf", 1)
+    for prec in range(10):
+        create_figure("archives/perf/plain/1-10/perf-bobyqa_cobyla_lincoa_newuoa_uobyqa-unconstrained.csv", "perf-plain-pdfo-10.pdf", prec)
+        create_figure("archives/perf/plain/1-50/perf-bfgs_cg_newuoa-unconstrained.csv", "perf-plain-bfgs_cg_pdfo-50.pdf", prec)
+        create_figure("archives/perf/plain/1-50/perf-bobyqa_cobyla_lincoa_newuoa-unconstrained.csv", "perf-plain-pdfo-50.pdf", prec)
+        create_figure("archives/perf/noisy/1-50/rerun-10_type-relative_level-1e-06/perf-bfgs_cg_newuoa-unconstrained.csv", "perf-noisy-bfgs_cg_pdfo-50-6.pdf", prec)
+        create_figure("archives/perf/noisy/1-50/rerun-10_type-relative_level-1e-08/perf-bfgs_cg_newuoa-unconstrained.csv", "perf-noisy-bfgs_cg_pdfo-50-8.pdf", prec)
+        create_figure("archives/perf/noisy/1-50/rerun-10_type-relative_level-1e-10/perf-bfgs_cg_newuoa-unconstrained.csv", "perf-noisy-bfgs_cg_pdfo-50-10.pdf", prec)
+        create_figure("archives/perf/noisy/1-50/rerun-10_type-relative_level-0.01/perf-bobyqa_cobyla_lincoa_newuoa-unconstrained.csv", "perf-noisy-pdfo-50-2.pdf", prec)
 
 
 if __name__ == "__main__":
