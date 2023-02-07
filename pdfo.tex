@@ -43,6 +43,7 @@
 \newcommand{\C}{\mathbb{C}}
 \newcommand{\F}{\mathbb{F}}
 \newcommand{\N}{\mathbb{N}}
+\newcommand{\NN}{\mathrm{N}}
 \newcommand{\Q}{\mathbb{Q}}
 \newcommand{\R}{\mathbb{R}}
 \newcommand{\T}{\mathsf{T}}
@@ -600,7 +601,7 @@ then the second stage uses the resultant freedom in $x$ to minimize the lineariz
 function~$\objm$ within the trust region subject to no increase in any greatest violation of the
 linearized constraints.
 
-\gls{cobyla} assesses the quality of iterates and updates the trust-region radius according to
+\gls{cobyla} assesses the quality of points and updates the trust-region radius according to
 an~$\ell_\infty$ merit function and a reduction ratio based on the merit
 function~(see~\cite[equations~(5),~(9), and~(10)]{Powell_1994}). It never increases
 the trust-region radius, and reduces the trust-region radius if the geometry of~$\xpt$ is acceptable
@@ -799,15 +800,15 @@ The current version of \gls{pdfo} patches several bugs in the Fortran source cod
 \begin{enumerate}
     \item The solvers may encounter infinite loops.
     This happens when the exit conditions of a loop can never be met because variables involved in
-    these conditions become~NaN values due to floating point exceptions.
+    these conditions become~NaN due to floating point exceptions.
     \item The Fortran code may encounter memory errors due to uninitialized indices.
-    This is because some indices are initialized according to conditions that can never be met due to NaN values, similar to the previous case.
-    \item \Gls{cobyla} may not return the best point that is evaluated; sometimes, it returns
-    a point with a large constraint violation, even though the starting point is feasible.
-    This is because \gls{cobyla} discard points that are not considered good according to
-    the $\ell_\infty$ merit function, depending on a penalty parameter.
-    However, when this penalty parameter is updated, a discarded point may turn out to be the best
-    one according the updated merit function.
+    This is because some indices are initialized according to conditions that can never be met due to NaN, similar to the previous case.
+    %\item \Gls{cobyla} may not return the best point that is evaluated; sometimes, it returns
+    %a point with a large constraint violation, even though the starting point is feasible.
+    %Upon termination, \gls{cobyla} returns the last~$\iter$, which is the best point in the
+    %last~$\xpt$ according to the last~$\ell_\infty$ merit function, depending on a penalty parameter.
+    %However, the solver may have previously visited even better points, which were discarded because
+    %they were not considered good according to an earlier penalty parameter.
 \end{enumerate}
 
 \gls{pdfo} allows the users to call Powell's code without these patches by setting the
@@ -903,42 +904,56 @@ We conduct two experiments as follows.
     For each problem, the objective function is evaluated by
     \begin{equation}
         \label{eq:noisy-obj}
-        \tilde{\obj}(\iter[]) \eqdef [1 + \epsilon(\iter[])] \obj(\iter[]),
+        \tilde{\obj}(\iter[]) \eqdef [1 + \sigma R(\iter[])] \obj(\iter[]),
     \end{equation}
-    where~$\epsilon(\iter[]) \sim N(0, \sigma^2)$.
+    where~$R(\iter[]) \sim \NN(0, 1)$.
     Each problem is solved ten times with each solver.
     In the convergence test~\eqref{eq:cvt},~$\obj_{\ast}$ is either the least value of~$\obj$ obtained by all solvers during these ten runs, or the value obtained in the previous noise-free experiment, whichever is smaller.
     Note that the convergence test~\eqref{eq:cvt} uses the values of~$\obj$ and not those of~$\tilde{\obj}$.
-    This means that we evaluate the solvers according to the true objective function, even though the solvers can access only the noisy values produced by~\eqref{eq:noisy-obj}.
+    This means that we assess the solvers according to the true objective function, even though the
+    solvers receive only the noisy values produced by~\eqref{eq:noisy-obj}.
 \end{enumerate}
 
 The performance profiles~\cite{Dolan_More_2002,More_Wild_2009} of these experiments are provided in
 Figures~\mbox{\ref{fig:ppu-fdiff-plain}--\ref{fig:ppu-fdiff-noisy-6}}.
 Broadly speaking, a performance profile plots the proportion of problems solved with respect to the number of function evaluations required to achieve convergence, in a logarithmic scale.
 
-\begin{figure}[ht]
-    \begin{subfigure}{.48\textwidth}
+\begin{figure}[htbp]
+    \begin{subfigure}{.32\textwidth}
         \centering
         \includegraphics[width=\textwidth]{perf-plain-bfgs_cg_pdfo-50.pdf}
-        \caption{Noise-free experiment}
+        \caption{$\sigma = 0$}
         \label{fig:ppu-fdiff-plain}
     \end{subfigure}
     \hfill
-    \begin{subfigure}{.48\textwidth}
+    \begin{subfigure}{.32\textwidth}
         \centering
         \includegraphics[width=\textwidth]{perf-noisy-bfgs_cg_pdfo-50-10.pdf}
-        \caption{Noisy experiment with~$\sigma = 10^{-10}$}
-    \end{subfigure}
-    \begin{subfigure}{.48\textwidth}
-        \centering
-        \includegraphics[width=\textwidth]{perf-noisy-bfgs_cg_pdfo-50-8.pdf}
-        \caption{Noisy experiment with~$\sigma = 10^{-8}$}
+        \caption{$\sigma = 10^{-10}$}
     \end{subfigure}
     \hfill
-    \begin{subfigure}{.48\textwidth}
+    \begin{subfigure}{.32\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{perf-noisy-bfgs_cg_pdfo-50-10.pdf}
+        \caption{$\sigma = 10^{-10}$}
+    \end{subfigure}
+    \begin{subfigure}{.32\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{perf-noisy-bfgs_cg_pdfo-50-8.pdf}
+        \caption{$\sigma = 0$}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}{.32\textwidth}
         \centering
         \includegraphics[width=\textwidth]{perf-noisy-bfgs_cg_pdfo-50-6.pdf}
-        \caption{Noisy experiment with~$\sigma = 10^{-6}$}
+        \caption{$\sigma = 10^{-10}$}
+        \label{fig:ppu-fdiff-noisy-6}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}{.32\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{perf-noisy-bfgs_cg_pdfo-50-6.pdf}
+        \caption{$\sigma = 10^{-8}$}
         \label{fig:ppu-fdiff-noisy-6}
     \end{subfigure}
     \caption{Performance profiles of \gls{newuoa}, \gls{bfgs}, and \gls{cg} on problems of dimension at most~$50$}
@@ -953,8 +968,6 @@ We rather keep the default value provided for the solvers \gls{bfgs} and \gls{cg
 As commented in~\cite{Shi_Etal_2022}, the performance of methods based on finite differences is encouraging when there is no noise, yet much more care is needed when the problems are noisy.
 \Gls{newuoa} performs robustly with the noise according to this experiment, which agrees with the observations in~\cite{Shi_Etal_2022}.
 
-We also mention that no conclusive comparison can be made between \gls{bfgs} and \gls{cg} according to Figures~\ref{fig:ppu-fdiff-plain}--\ref{fig:ppu-fdiff-noisy-6}.
-In fact, as pointed out in~\cite{Gould_Scott_2016}, when there are more than two solvers to compare, performance profiles have limitations when ranking the solvers, except for the one that outperforms the others (if any), such as \gls{newuoa} in Figures~\ref{fig:ppu-fdiff-plain}--\ref{fig:ppu-fdiff-noisy-6}.
 
 \subsection{Comparison on the CUTEst library}
 
