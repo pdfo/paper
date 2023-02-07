@@ -24,6 +24,18 @@
 \usepackage{subcaption}
 \usepackage{url}
 \usepackage{xargs}
+% Get back the upright capital Greek letters
+\DeclareMathSymbol{\Gamma}{\mathalpha}{operators}{"00}
+\DeclareMathSymbol{\Delta}{\mathalpha}{operators}{"01}
+\DeclareMathSymbol{\Theta}{\mathalpha}{operators}{"02}
+\DeclareMathSymbol{\Lambda}{\mathalpha}{operators}{"03}
+\DeclareMathSymbol{\Xi}{\mathalpha}{operators}{"04}
+\DeclareMathSymbol{\Pi}{\mathalpha}{operators}{"05}
+\DeclareMathSymbol{\Sigma}{\mathalpha}{operators}{"06}
+\DeclareMathSymbol{\Upsilon}{\mathalpha}{operators}{"07}
+\DeclareMathSymbol{\Phi}{\mathalpha}{operators}{"08}
+\DeclareMathSymbol{\Psi}{\mathalpha}{operators}{"09}
+\DeclareMathSymbol{\Omega}{\mathalpha}{operators}{"0A}
 %
 \DeclareMathOperator*\argmin{arg\,min}
 \DeclareMathOperator\range{\mathcal{R}}
@@ -130,7 +142,7 @@
 \input{ushyphex}    % hyphenation exceptions for US English
 
 %
-\usepackage[final]{microtype}
+%\usepackage[final]{microtype}
 %\usepackage[nobottomtitles*]{titlesec}  % no section title at the bottom of pages
 % N.B. titlesec changes the behavior of ``\paragraph'', adding a line break.
 \interfootnotelinepenalty=10000  % prevent footnote from running to the next page
@@ -203,7 +215,7 @@
     % When a problem can be solved by multiple algorithms (for example, an unconstrained problem can be solved by all five algorithms), the selection is made based on experimental results on the CUTEst problems.
     We also provide an overview on Powell's methods and share some observations on these methods based on experiments conducted using~\gls{pdfo}.
 
-    \keywords{Derivative-free optimization \and solver \and COBYLA \and UOBYQA \and NEWUOA \and
+    \keywords{Derivative-free optimization \and model-based methods \and COBYLA \and UOBYQA \and NEWUOA \and
     BOBYQA \and LINCOA}
     \subclass{65K05 \and 90C30 \and 90C56 \and 90-04}
     %\CRclass{CR code1 \and CR code2 \and more}
@@ -217,8 +229,8 @@ This is the case, for example, if the objective function does not have an explic
 Optimization problems of such kind arise from automatic error analysis~\cite{Higham_1993,Higham_2002}, machine learning~\cite{Ghanbari_Scheinberg_2017}, analog circuit design~\cite{Latorre_Etal_2019}, aircraft engineering~\cite{Gazaix_Etal_2019}, and chemical product design~\cite{Sun_Etal_2020}, to name but a few.
 These problems motivate the development of optimization algorithms that use only function values but not derivatives, also known as \gls{dfo} algorithms.
 
-Between 1994 and 2015, Powell developed five algorithms to tackle unconstrained and constrained problems without using derivatives, namely~\gls{cobyla}~\cite{Powell_1994}, \gls{uobyqa}~\cite{Powell_2002}, \gls{newuoa}~\cite{Powell_2006}, \gls{bobyqa}~\cite{Powell_2009}, and \gls{lincoa}.
-Powell did not only propose these algorithms but also implemented them into publicly available solvers, paying great attention to the stability and complexity of their numerical linear algebra computations.
+Powell developed five algorithms to tackle unconstrained and constrained problems without using derivatives, namely~\gls{cobyla}~\cite{Powell_1994}, \gls{uobyqa}~\cite{Powell_2002}, \gls{newuoa}~\cite{Powell_2006}, \gls{bobyqa}~\cite{Powell_2009}, and \gls{lincoa}.
+He did not only propose these algorithms but also implemented them into publicly available solvers, paying great attention to the stability and complexity of their numerical linear algebra computations.
 Renowned for their robustness and efficiency, these solvers are used in a wide spectrum of applications, for instance, aeronautical engineering~\cite{Gallard_Etal_2018}, astronomy~\cite{Biviano_Etal_2013,Mamon_Biviano_Boue_2013}, computer vision~\cite{Izadinia_Shan_Seitz_2017}, robotics~\cite{Mombaur_Truong_Laumond_2010}, and statistics~\cite{Bates_Etal_2015}.
 
 However, Powell coded the solvers in Fortran 77, an old-fashion language that damps the enthusiasm of many users to exploit these solvers in their projects.
@@ -232,7 +244,8 @@ The signature of the Python subroutine is consistent with the \texttt{minimize} 
     \url{https://www.pdfo.net/}.
 \end{center}
 It has been downloaded more than \num{48000} times as of January 2023.
-Moreover, it is one of the optimization engines in GEMSEO~\cite{Gallard_Etal_2018}\footnote{\url{https: //gemseo.readthedocs.io/en/stable/}.}, an industrial software package for Multidisciplinary Design Optimization (MDO).
+Moreover, it is one of the optimization engines in GEMSEO~\cite{Gallard_Etal_2018},
+an industrial software package for Multidisciplinary Design Optimization (MDO).
 
 \Gls{pdfo} is not the first attempt to facilitate the usage of Powell's solvers in languages other than Fortran.
 Various efforts have been made in this direction.
@@ -241,33 +254,37 @@ However, \gls{pdfo} has several features that distinguishes itself from others.
 
 \begin{enumerate}
     \item \emph{Comprehensiveness.}
-    To the best of our knowledge, \gls{pdfo} is the only package that provides all of \gls{cobyla}, \gls{uobyqa}, \gls{newuoa}, \gls{bobyqa}, and \gls{lincoa} with a uniform interface.
+    To the best of our knowledge, \gls{pdfo} is the only package that provides all of \gls{cobyla},
+    \gls{uobyqa}, \gls{newuoa}, \gls{bobyqa}, and \gls{lincoa} with a \emph{uniform interface}.
     In addition to homogenizing the usage, such an interface eases the comparison between these solvers in case multiple of them are able to tackle a given problem.
     By doing so, we may gain insights that cannot be obtained otherwise into the behavior of the solvers.
     %, as will be illustrated in~\cref{sec:fake}.
 
     \item \emph{Solver selection.}
-    When using \gls{pdfo}, the user can specifically call one of Powell's solvers. Nevertheless, if the user does not specify any solver, \gls{pdfo} will automatically select a solver according to the given problem.
+    %When using \gls{pdfo}, the user can specifically call one of Powell's solvers. If the user does not specify any solver,
+    \gls{pdfo} can automatically select a solver for a given problem.
     The selection takes into consideration the performance of the solvers on the CUTEst~\cite{Gould_Orban_Toint_2015} problem set.
     %Interestingly, it turns out that the solver with the best performance may not be the most intuitive one.
     %For example, \gls{newuoa} is not always the best choice for solving an unconstrained problem.
 
-    \item \emph{Code patching.}
-    During the development of \gls{pdfo}, we spotted some bugs in the original Fortran code, which led to infinite cycling or segmentation faults on ill-conditioned problems.
-    The bugs have been patched in \gls{pdfo}.
-    %We also provide an option that can enforce the package to use the original code of Powell without the patches, which is not recommended except for research.
-    In addition, \gls{pdfo} provides \gls{cobyla} in double precision, whereas Powell used single precision when he implemented it in the 1990s.
-
-    \item \emph{Fault tolerance.}
-    \Gls{pdfo} takes care of failures in the evaluation of the objective or constraint functions when NaN or infinite values are returned.
-    In case of such failures, \gls{pdfo} will not exit but will try to progress.
-    Moreover, \gls{pdfo} ensures that the returned solution is not a point where the evaluation fails, while the original code of Powell may return a point whose objective function value is
-    numerically~NaN.
-
     \item \emph{Problem preprocessing.}
     \Gls{pdfo} preprocesses the inputs to simplify the problem and reformulate it to meet the requirements of Powell's solvers.
-    For instance, if the problem has linear constraints~$\aeq x = \beq$, \gls{pdfo} rewrites it into a problem on the null space of~$\aeq$, eliminating such constraints and reducing the problem's dimension.
-    As another example, the starting point of a linearly constrained problem is projected onto the feasible region, because \gls{lincoa} needs a feasible starting point to work properly.
+    %For instance, if the problem has linear constraints~$\aeq x = \beq$, \gls{pdfo} rewrites it into a problem on the null space of~$\aeq$, eliminating such constraints and reducing the problem's dimension.
+    %As another example, the starting point of a linearly constrained problem is projected onto the feasible region, because \gls{lincoa} needs a feasible starting point to work properly.
+
+    \item \emph{Code patching.}
+        \gls{pdfo} patches several bugs in the Fortran code.
+        Such bugs can lead to serious problems such as infinite cycling or memory errors.
+    %During the development of \gls{pdfo}, we spotted some bugs in the original Fortran code, which led to infinite cycling or segmentation faults on ill-conditioned problems.
+    %The bugs have been patched in \gls{pdfo}.
+    %We also provide an option that can enforce the package to use the original code of Powell without the patches, which is not recommended except for research.
+    %In addition, \gls{pdfo} provides \gls{cobyla} in double precision, whereas Powell used single precision when he implemented it in the 1990s.
+
+    \item \emph{Fault tolerance.}
+    \Gls{pdfo} takes care of failures in the evaluation of the objective or constraint functions when NaN values are returned.
+    In case of such failures, \gls{pdfo} will not exit but will try to progress.
+    %Moreover, \gls{pdfo} ensures that the returned solution is not a point where the evaluation
+    %fails, while the original code of Powell may return a point whose objective function value is numerically~NaN.
 
     \item \emph{Additional options.}
     \Gls{pdfo} includes options for the user to control the solvers in some manners that are useful in practice.
@@ -775,7 +792,7 @@ via the~\pdfofun function.
 \subsection{Bug fixes in the Fortran source code}
 \label{subsec:bug-corrections}
 
-The current version of \gls{pdfo} fixes several bugs in the Fortran source code, particularly the following ones.
+The current version of \gls{pdfo} patches several bugs in the Fortran source code, particularly the following ones.
 \begin{enumerate}
     \item The solvers may encounter infinite loops.
     This happens when the exit conditions of a loop can never be met because variables involved in
@@ -789,7 +806,11 @@ The current version of \gls{pdfo} fixes several bugs in the Fortran source code,
 \end{enumerate}
 
 \gls{pdfo} allows the users to call Powell's code without these patches by setting the
-option~\texttt{classical} to true. However, this is not recommended except for research purposes.
+option~\texttt{classical} to true. However, this is not recommended.
+
+
+\subsection{Handling failures of function evaluations}
+
 
 %The package \gls{pdfo} preprocesses the arguments provided by the user, detects the type of the problem, and then invokes the Powell's solver that match the best the given problem.
 %The initial preprocessing of the arguments includes a handling of their internal types together with some programming-related procedures to allow as much freedom in the problem definition as possible, to make the use of \gls{pdfo} as easy as possible.
