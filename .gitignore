@@ -1,5 +1,4 @@
 # Old version
-
 old/
 
 # LaTeX
@@ -274,7 +273,7 @@ TSWLatexianTemp*
 *.xwm
 
 ## Document specific
-experiments/archives/
+experiments/archives/storage/
 experiments/pycutest_cache_holder/
 
 # Visual Studio Code

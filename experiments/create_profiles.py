@@ -22,6 +22,7 @@ def get_solvers(csvfile, tau):
 
 def create_figure(csvfile, pdffile, tau, archive=Path(os.path.dirname(os.getcwd()), "figures")):
     csvfile = Path(csvfile)
+    pdffile = Path(pdffile)
     solvers = get_solvers(csvfile, tau)
     tex_standalone = rf"""\documentclass[crop]{{standalone}}
 \usepackage{{mathptmx}}
@@ -64,29 +65,29 @@ def create_figure(csvfile, pdffile, tau, archive=Path(os.path.dirname(os.getcwd(
 \insertprofiles{{{solvers}}}{{{csvfile}}}{{{tau}}}
 \end{{document}}
     """
-    with open(csvfile.stem + ".tex", "w") as fd:
+    with open(pdffile.stem + ".tex", "w") as fd:
         fd.write(tex_standalone)
-    command = ["pdflatex", csvfile.stem + ".tex"]
-    process = subprocess.Popen(command, stdout=subprocess.DEVNULL)
+    command = ["pdflatex", pdffile.stem + ".tex"]
+    process = subprocess.Popen(command)  # , stdout=subprocess.DEVNULL
     process.wait()
-    os.remove(csvfile.stem + ".aux")
-    os.remove(csvfile.stem + ".log")
-    os.remove(csvfile.stem + ".tex")
+    os.remove(pdffile.stem + ".aux")
+    os.remove(pdffile.stem + ".log")
+    os.remove(pdffile.stem + ".tex")
     Path(archive).mkdir(parents=True, exist_ok=True)
     figure = Path(archive, pdffile)
-    os.rename(csvfile.stem + ".pdf", figure)
+    os.rename(pdffile.stem + ".pdf", figure)
     print(figure)
 
 
 def create_all_figures():
-    for prec in range(10):
-        create_figure("archives/perf/plain/1-10/perf-bobyqa_cobyla_lincoa_newuoa_uobyqa-unconstrained.csv", "perf-plain-pdfo-10.pdf", prec)
-        create_figure("archives/perf/plain/1-50/perf-bfgs_cg_newuoa-unconstrained.csv", "perf-plain-bfgs_cg_pdfo-50.pdf", prec)
-        create_figure("archives/perf/plain/1-50/perf-bobyqa_cobyla_lincoa_newuoa-unconstrained.csv", "perf-plain-pdfo-50.pdf", prec)
-        create_figure("archives/perf/noisy/1-50/rerun-10_type-relative_level-1e-06/perf-bfgs_cg_newuoa-unconstrained.csv", "perf-noisy-bfgs_cg_pdfo-50-6.pdf", prec)
-        create_figure("archives/perf/noisy/1-50/rerun-10_type-relative_level-1e-08/perf-bfgs_cg_newuoa-unconstrained.csv", "perf-noisy-bfgs_cg_pdfo-50-8.pdf", prec)
-        create_figure("archives/perf/noisy/1-50/rerun-10_type-relative_level-1e-10/perf-bfgs_cg_newuoa-unconstrained.csv", "perf-noisy-bfgs_cg_pdfo-50-10.pdf", prec)
-        create_figure("archives/perf/noisy/1-50/rerun-10_type-relative_level-0.01/perf-bobyqa_cobyla_lincoa_newuoa-unconstrained.csv", "perf-noisy-pdfo-50-2.pdf", prec)
+    for prec in range(1, 10):
+        create_figure("archives/perf/plain/1-10/perf-bobyqa_cobyla_lincoa_newuoa_uobyqa-unconstrained.csv", f"perf-plain-pdfo-10-{prec}.pdf", prec)
+        create_figure("archives/perf/plain/1-50/perf-bfgs_cg_newuoa-unconstrained.csv", f"perf-plain-bfgs_cg_pdfo-50-{prec}.pdf", prec)
+        create_figure("archives/perf/plain/1-50/perf-bobyqa_cobyla_lincoa_newuoa-unconstrained.csv", f"perf-plain-pdfo-50-{prec}.pdf", prec)
+        create_figure("archives/perf/noisy/1-50/rerun-10_type-relative_level-1e-06/perf-bfgs_cg_newuoa-unconstrained.csv", f"perf-noisy-bfgs_cg_pdfo-50-6-{prec}.pdf", prec)
+        create_figure("archives/perf/noisy/1-50/rerun-10_type-relative_level-1e-08/perf-bfgs_cg_newuoa-unconstrained.csv", f"perf-noisy-bfgs_cg_pdfo-50-8-{prec}.pdf", prec)
+        create_figure("archives/perf/noisy/1-50/rerun-10_type-relative_level-1e-10/perf-bfgs_cg_newuoa-unconstrained.csv", f"perf-noisy-bfgs_cg_pdfo-50-10-{prec}.pdf", prec)
+        create_figure("archives/perf/noisy/1-50/rerun-10_type-relative_level-0.01/perf-bobyqa_cobyla_lincoa_newuoa-unconstrained.csv", f"perf-noisy-pdfo-50-2-{prec}.pdf", prec)
 
 
 if __name__ == "__main__":
