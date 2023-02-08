@@ -32,6 +32,7 @@ def create_figure(csvfile, pdffile, tau, archive=Path(os.path.dirname(os.getcwd(
 % Enhanced support for graphics
 \usepackage{{pgfplots}}
 \usepackage{{pgfplotstable}}
+\usepackage{{xstring}}
 \pgfplotsset{{compat=1.18}}
 \pgfplotscreateplotcyclelist{{profiles}}{{%
     thick,mark=none,NavyBlue,solid\\%
