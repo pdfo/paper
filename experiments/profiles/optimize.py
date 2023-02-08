@@ -42,7 +42,7 @@ class Minimizer:
             options["eliminate_lin_eq"] = False
             res = pdfo.pdfo(self.eval, self.problem.x0, method=method, bounds=bounds, constraints=constraints, options=options)
             success = res.success
-        elif self.solver.lower() == "pdfo_nb":
+        elif self.solver.lower() == "pdfo-(no-barrier)":
             bounds = pdfonobarriers.Bounds(self.problem.xl, self.problem.xu)
             constraints = []
             if self.problem.m_lin_ineq > 0:
@@ -74,7 +74,7 @@ class Minimizer:
         return success, np.array(self.fun_history, copy=True), np.array(self.maxcv_history, copy=True)
 
     def validate(self):
-        valid_solvers = {"cobyla", "pdfo", "pdfo_nb"}
+        valid_solvers = {"cobyla", "pdfo", "pdfo-(no-barrier)"}
         if self.problem.type not in "quadratic other":
             valid_solvers.update({"lincoa"})
             if self.problem.type not in "adjacency linear":

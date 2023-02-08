@@ -84,6 +84,7 @@ def create_all_figures():
         create_figure("archives/perf/plain/1-10/perf-bobyqa_cobyla_lincoa_newuoa_uobyqa-unconstrained.csv", f"perf-plain-pdfo-10-{prec}.pdf", prec)
         create_figure("archives/perf/plain/1-50/perf-bfgs_cg_newuoa-unconstrained.csv", f"perf-plain-bfgs_cg_pdfo-50-{prec}.pdf", prec)
         create_figure("archives/perf/plain/1-50/perf-bobyqa_cobyla_lincoa_newuoa-unconstrained.csv", f"perf-plain-pdfo-50-{prec}.pdf", prec)
+        create_figure("archives/perf/nan/1-50/rate-0.01/perf-bfgs_cg_pdfo_pdfo-(no-barrier)-unconstrained.csv", f"perf-nan-bfgs_cg_pdfo-50-0.01-{prec}.pdf", prec)
         create_figure("archives/perf/noisy/1-50/rerun-10_type-relative_level-1e-06/perf-bfgs_cg_newuoa-unconstrained.csv", f"perf-noisy-bfgs_cg_pdfo-50-6-{prec}.pdf", prec)
         create_figure("archives/perf/noisy/1-50/rerun-10_type-relative_level-1e-08/perf-bfgs_cg_newuoa-unconstrained.csv", f"perf-noisy-bfgs_cg_pdfo-50-8-{prec}.pdf", prec)
         create_figure("archives/perf/noisy/1-50/rerun-10_type-relative_level-1e-10/perf-bfgs_cg_newuoa-unconstrained.csv", f"perf-noisy-bfgs_cg_pdfo-50-10-{prec}.pdf", prec)

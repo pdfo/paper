@@ -22,7 +22,7 @@ if __name__ == "__main__":
 
     # Generate the performance and data profiles on the problems containing NaNs.
     profiles = Profiles(1, 50, "unconstrained", feature="nan", nan_rate=0.01)
-    profiles(["pdfo", "pdfo_nb", "bfgs", "cg"])
+    profiles(["pdfo", "pdfo-(no-barrier)", "bfgs", "cg"])
     del profiles
 
     # Generate the performance and data profiles on the noisy problems with n <= 50 and different noise levels.
