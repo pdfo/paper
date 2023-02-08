@@ -68,7 +68,7 @@ def create_figure(csvfile, pdffile, tau, archive=Path(os.path.dirname(os.getcwd(
     with open(pdffile.stem + ".tex", "w") as fd:
         fd.write(tex_standalone)
     command = ["pdflatex", pdffile.stem + ".tex"]
-    process = subprocess.Popen(command)  # , stdout=subprocess.DEVNULL
+    process = subprocess.Popen(command, stdout=subprocess.DEVNULL)
     process.wait()
     os.remove(pdffile.stem + ".aux")
     os.remove(pdffile.stem + ".log")
@@ -88,6 +88,10 @@ def create_all_figures():
         create_figure("archives/perf/noisy/1-50/rerun-10_type-relative_level-1e-08/perf-bfgs_cg_newuoa-unconstrained.csv", f"perf-noisy-bfgs_cg_pdfo-50-8-{prec}.pdf", prec)
         create_figure("archives/perf/noisy/1-50/rerun-10_type-relative_level-1e-10/perf-bfgs_cg_newuoa-unconstrained.csv", f"perf-noisy-bfgs_cg_pdfo-50-10-{prec}.pdf", prec)
         create_figure("archives/perf/noisy/1-50/rerun-10_type-relative_level-0.01/perf-bobyqa_cobyla_lincoa_newuoa-unconstrained.csv", f"perf-noisy-pdfo-50-2-{prec}.pdf", prec)
+        create_figure("archives/perf/noisy/1-50/rerun-10_type-relative_level-0.001/perf-bobyqa_cobyla_lincoa_newuoa-unconstrained.csv", f"perf-noisy-pdfo-50-3-{prec}.pdf", prec)
+        create_figure("archives/perf/noisy/1-50/rerun-10_type-relative_level-0.0001/perf-bobyqa_cobyla_lincoa_newuoa-unconstrained.csv", f"perf-noisy-pdfo-50-4-{prec}.pdf", prec)
+        create_figure("archives/perf/noisy/1-50/rerun-10_type-relative_level-1e-05/perf-bobyqa_cobyla_lincoa_newuoa-unconstrained.csv", f"perf-noisy-pdfo-50-5-{prec}.pdf", prec)
+        create_figure("archives/perf/noisy/1-50/rerun-10_type-relative_level-1e-06/perf-bobyqa_cobyla_lincoa_newuoa-unconstrained.csv", f"perf-noisy-pdfo-50-6-{prec}.pdf", prec)
 
 
 if __name__ == "__main__":

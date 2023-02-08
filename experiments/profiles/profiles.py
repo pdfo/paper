@@ -36,6 +36,9 @@ class Profiles:
         #   3.3. rerun: number of experiment runs (default is 10).
         # 4. digits[0-9]+: only the first digits of the objective function
         #   values are significant (the other are randomized).
+        # 5. nan: the objective function values are sometimes replaced by NaN.
+        #   The following keyword arguments may be supplied:
+        #   5.1. nan_rate: Rate of NaNs (default is 0.1).
         self.n_min = n_min
         self.n_max = n_max
         self.m_min = m_min
@@ -105,6 +108,8 @@ class Profiles:
         elif signif:
             self.feature = "digits"
             options["digits"] = int(signif.group(1))
+        elif self.feature == "nan":
+            options["rate"] = kwargs.get("nan_rate", 0.1)
         elif self.feature != "plain":
             raise NotImplementedError
         return options
@@ -367,4 +372,8 @@ class Profiles:
             else:
                 fx_rounded = round(f, self.feature_options["digits"] - int(np.floor(np.log10(np.abs(f)))) - 1)
             f = fx_rounded + (f - fx_rounded) * np.abs(np.sin(np.sin(np.sin(self.feature_options["digits"])) + np.sin(1e8 * f) + np.sum(np.sin(np.abs(1e8 * x))) + np.sin(x.size)))
+        elif self.feature == "nan":
+            rng = np.random.default_rng(int(1e8 * abs(np.sin(self.feature_options["rate"]) + np.sum(np.sin(np.abs(np.sin(1e8 * x)))))))
+            if rng.uniform() <= self.feature_options["rate"]:
+                f = np.nan
         return f

@@ -1,5 +1,6 @@
 import numpy as np
 import pdfo
+import pdfonobarriers
 from scipy import optimize
 
 
@@ -41,6 +42,21 @@ class Minimizer:
             options["eliminate_lin_eq"] = False
             res = pdfo.pdfo(self.eval, self.problem.x0, method=method, bounds=bounds, constraints=constraints, options=options)
             success = res.success
+        elif self.solver.lower() == "pdfo_nb":
+            bounds = pdfonobarriers.Bounds(self.problem.xl, self.problem.xu)
+            constraints = []
+            if self.problem.m_lin_ineq > 0:
+                constraints.append(pdfonobarriers.LinearConstraint(self.problem.a_ineq, -np.inf, self.problem.b_ineq))
+            if self.problem.m_lin_eq > 0:
+                constraints.append(pdfonobarriers.LinearConstraint(self.problem.a_eq, self.problem.b_eq, self.problem.b_eq))
+            if self.problem.m_nonlin_ineq > 0:
+                constraints.append(pdfonobarriers.NonlinearConstraint(self.problem.c_ineq, -np.inf, np.zeros(self.problem.m_nonlin_ineq)))
+            if self.problem.m_nonlin_eq > 0:
+                constraints.append(pdfonobarriers.NonlinearConstraint(self.problem.c_eq, np.zeros(self.problem.m_nonlin_eq), np.zeros(self.problem.m_nonlin_eq)))
+            options["maxfev"] = self.max_eval
+            options["eliminate_lin_eq"] = False
+            res = pdfonobarriers.pdfonobarriers(self.eval, self.problem.x0, bounds=bounds, constraints=constraints, options=options)
+            success = res.success
         else:
             bounds = optimize.Bounds(self.problem.xl, self.problem.xu)
             constraints = []
@@ -58,7 +74,7 @@ class Minimizer:
         return success, np.array(self.fun_history, copy=True), np.array(self.maxcv_history, copy=True)
 
     def validate(self):
-        valid_solvers = {"cobyla", "pdfo"}
+        valid_solvers = {"cobyla", "pdfo", "pdfo_nb"}
         if self.problem.type not in "quadratic other":
             valid_solvers.update({"lincoa"})
             if self.problem.type not in "adjacency linear":
