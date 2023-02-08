@@ -96,9 +96,9 @@
 \newabbreviation{psb}{PSB}{Powell's symmetric Broyden}
 \newabbreviation{rbf}{RBF}{radial basis function}
 \newabbreviation{roc}{ROC}{receiver operating characteristic}
-\newabbreviation{rs}{RS}{random search}
+\newabbreviation{rs}{RS}{Random Search}
 \newabbreviation{svm}{SVM}{support vector machine}
-\newabbreviation{tpe}{TPE}{tree of Parzen estimators}
+\newabbreviation{tpe}{TPE}{Tree-Structured Parzen Estimator}
 \newacronym{bobyqa}{BOBYQA}{Bound Optimization BY Quadratic Approximation}
 \newacronym{bfgs}{BFGS}{Broyden-Fletcher-Goldfarb-Shanno}
 \newacronym{cg}{CG}{Conjugate Gradient}
@@ -258,8 +258,8 @@ However, \gls{pdfo} has several features that distinguishes itself from others.
     \item \emph{Comprehensiveness.}
     To the best of our knowledge, \gls{pdfo} is the only package that provides all of \gls{cobyla},
     \gls{uobyqa}, \gls{newuoa}, \gls{bobyqa}, and \gls{lincoa} with a \emph{uniform interface}.
-    In addition to homogenizing the usage, such an interface eases the comparison between these solvers in case multiple of them are able to tackle a given problem.
-    By doing so, we may gain insights that cannot be obtained otherwise into the behavior of the solvers.
+    %In addition to homogenizing the usage, such an interface eases the comparison between these solvers in case multiple of them are able to tackle a given problem.
+    %By doing so, we may gain insights that cannot be obtained otherwise into the behavior of the solvers.
     %, as will be illustrated in~\cref{sec:fake}.
 
     \item \emph{Solver selection.}
@@ -684,22 +684,21 @@ It computes
     \item a point obtained by a gradient step that maximizes~$\abs{\ell_k^{\drop}}$ within the trust region, and
     \item a point obtained by a projected gradient step that maximizes~$\abs{\ell_k^{\drop}}$ within the trust region, the projection being made onto the null space of the constraints that are considered active at~$\iter$.
 \end{enumerate}
-Note that the first two cases completely disregard the linear constraints (i.e.~$x\in\fsetm \equiv
+Note that the first two cases disregard the linear constraints (i.e.~$x\in\fsetm \equiv
 \fset$), while the third case
 considers only the active constraints.
-\gls{lincoa} first selects the point among the first two alternatives for larger value of~$\abs{\ell_k^{\drop}}$.
+\gls{lincoa} first selects the point among the first two alternatives for a larger value of~$\abs{\ell_k^{\drop}}$.
 Further, this point is replaced with the third alternative if the latter nearly satisfies the linear
 constraints while rendering a value of~$\abs{\ell_k^{\drop}}$ that is not too small compared with the above one.
 
 \red{
-Both~\gls{bobyqa} and~\gls{lincoa} intends to respect the constraint~$x\in\fset$ when
-solving the trust-region subproblem~\eqref{eq:trsp}, even though this subproblem is only solved
-approximately.
-For the geometry-improving subproblem~\eqref{eq:biglag}, \gls{bobyqa} keeps the bound constraints
-satisfied, whereas \gls{lincoa} may violate the linear constraints.
-As a consequence, \gls{bobyqa} evaluates the objective function~$\obj$ only at feasible points,
-but~\gls{lincoa} occasionally performs the evaluation at infeasible points, requiring~$\obj$ to be
-defined even when the linear constraints are not satisfied.
+\gls{bobyqa} respects the bound constraints~$x\in\fsetm \equiv \fset$ when
+solving the trust-region subproblem~\eqref{eq:trsp} and the geometry-improving subproblem~\eqref{eq:biglag},
+even though these problems are solved approximately. It also chooses the initial interpolation
+set~$\xpt[1]$ within the bounds. Therefore, \gls{bobyqa} is a feasible method.
+In contrast, \gls{lincoa} may violate the linear constraints when solving the geometry-improving
+subproblem and when setting up the initial interpolation set. Consequently, \gls{lincoa} is
+an infeasible method, which requires~$\obj$ to be defined even when the linear constraints are not satisfied.
 }
 
 
@@ -709,7 +708,7 @@ defined even when the linear constraints are not satisfied.
 This section details the main features of \gls{pdfo}, in particular the signature of the main
 function, problem preprocessing, solver selection, bug fixes, and handling failures of function
 evaluations. For more features of~\gls{pdfo}, we refer to its homepage
-at~\url{https://www.pdfo.net/}.
+at~\url{https://www-1.pdfo.net/}.
 
 Before starting, we
 emphasize that \gls{pdfo} does not re-implement Powell’s solvers but rather enables Python and MATLAB
@@ -822,7 +821,7 @@ indicate failures of function evaluations, which are common in applications of~\
 
 To cope with NaN values, \gls{pdfo} applies a moderated extreme barrier.
 Suppose that~$\obj(\tilde{x})$ is evaluated to NaN at a certain~$\tilde{x}\in\R^n$.
-\gls{pdfo} takes the viewpoint that~$\tilde{x}$ violates a hidden
+\gls{pdfo} takes the view that~$\tilde{x}$ violates a hidden
 constraint~\mbox{\cite{LeDigabel_Wild_2015,Audet_Caporossi_Jacquet_2020}}.
 Hence it replaces NaN with a large but finite number~\hugefun~(e.g., $10^{30}$)
 before passing~$\obj(\tilde{x})$ to the Fortran solver, so that the solver can continue to progress while
@@ -877,8 +876,16 @@ which will be explored in the future.
 %Therefore, the conditions required by Powell are ensured in the Fortran code directly.
 
 
-\section{Numerical results}
+\section{Numerical experiments}
 \label{sec:numerical}
+
+This section presents some numerical experiments on \gls{pdfo}.
+Since Powell's solvers are widely used as benchmarks in the study of \gls{dfo}
+algorithms, we decide not to repeat their comparisons with standard \gls{dfo} solvers, which are
+already available in literature~\cite{More_Wild_2009,Rios_Sahinidis_2013}.
+Instead, we will compare them with two classes of solvers
+finite difference
+
 
 \subsection{Comparison with methods based on finite differences}
 \label{ssec:fd}
@@ -921,38 +928,38 @@ Broadly speaking, a performance profile plots the proportion of problems solved 
 \begin{figure}[htbp]
     \begin{subfigure}{.32\textwidth}
         \centering
-        \includegraphics[width=\textwidth]{perf-plain-bfgs_cg_pdfo-50.pdf}
+        \includegraphics[width=\textwidth]{perf-plain-bfgs_cg_pdfo-50-1.pdf}
         \caption{$\sigma = 0$}
         \label{fig:ppu-fdiff-plain}
     \end{subfigure}
     \hfill
     \begin{subfigure}{.32\textwidth}
         \centering
-        \includegraphics[width=\textwidth]{perf-noisy-bfgs_cg_pdfo-50-10.pdf}
+        \includegraphics[width=\textwidth]{perf-noisy-bfgs_cg_pdfo-50-10-1.pdf}
         \caption{$\sigma = 10^{-10}$}
     \end{subfigure}
     \hfill
     \begin{subfigure}{.32\textwidth}
         \centering
-        \includegraphics[width=\textwidth]{perf-noisy-bfgs_cg_pdfo-50-10.pdf}
+        \includegraphics[width=\textwidth]{perf-noisy-bfgs_cg_pdfo-50-10-1.pdf}
         \caption{$\sigma = 10^{-10}$}
     \end{subfigure}
     \begin{subfigure}{.32\textwidth}
         \centering
-        \includegraphics[width=\textwidth]{perf-noisy-bfgs_cg_pdfo-50-8.pdf}
+        \includegraphics[width=\textwidth]{perf-noisy-bfgs_cg_pdfo-50-8-1.pdf}
         \caption{$\sigma = 0$}
     \end{subfigure}
     \hfill
     \begin{subfigure}{.32\textwidth}
         \centering
-        \includegraphics[width=\textwidth]{perf-noisy-bfgs_cg_pdfo-50-6.pdf}
+        \includegraphics[width=\textwidth]{perf-noisy-bfgs_cg_pdfo-50-6-1.pdf}
         \caption{$\sigma = 10^{-10}$}
         \label{fig:ppu-fdiff-noisy-6}
     \end{subfigure}
     \hfill
     \begin{subfigure}{.32\textwidth}
         \centering
-        \includegraphics[width=\textwidth]{perf-noisy-bfgs_cg_pdfo-50-6.pdf}
+        \includegraphics[width=\textwidth]{perf-noisy-bfgs_cg_pdfo-50-6-1.pdf}
         \caption{$\sigma = 10^{-8}$}
         \label{fig:ppu-fdiff-noisy-6}
     \end{subfigure}
@@ -983,14 +990,14 @@ This is because it uses only linear models to approximate the objective and cons
 \begin{figure}[ht]
     \begin{subfigure}{.48\textwidth}
         \centering
-        \includegraphics[width=\textwidth]{perf-plain-pdfo-10.pdf}
+        \includegraphics[width=\textwidth]{perf-plain-pdfo-10-1.pdf}
         \caption{Dimension at most~$10$.}
         \label{fig:ppu-10}
     \end{subfigure}
     \hfill
     \begin{subfigure}{.48\textwidth}
         \centering
-        \includegraphics[width=\textwidth]{perf-plain-pdfo-50.pdf}
+        \includegraphics[width=\textwidth]{perf-plain-pdfo-50-1.pdf}
         \caption{Dimension at most~$50$.}
         \label{fig:ppu-50}
     \end{subfigure}
@@ -1002,7 +1009,7 @@ Figure~\ref{fig:ppun-50} presents the performance profiles on the same unconstra
 
 \begin{figure}[ht]
     \centering
-    \includegraphics[width=.48\textwidth]{perf-noisy-pdfo-50-2.pdf}
+    \includegraphics[width=.48\textwidth]{perf-noisy-pdfo-50-2-1.pdf}
     \caption{Performance profile of Powell's \glsfmtshort{dfo} solvers on noisy problems of dimension at most~$50$}
     \label{fig:ppun-50}
 \end{figure}
@@ -1015,8 +1022,8 @@ It seems that the linear models of \gls{cobyla} are more robust to noise, but we
 
 We now consider the more practical problem of the hyperparameter tuning of a \gls{svm}.
 The model we consider is a~$C$-SVC~\cite{Chang_Lin_2011} for binary classification problems with an \gls{rbf} kernel, admitting two hyperparameters: a regularization parameter~$C > 0$ and a kernel coefficient~$\gamma > 0$.
-We want to compare the performance of \gls{pdfo} with a prominent Bayesian optimization method and \gls{rs}.
-To this end, we use the Python package \texttt{hyperopt}~\cite{Bergstra_Yamins_Cox_2013} for solving the optimization problems, which provides both \gls{tpe} and \gls{rs} methods.
+We compare \gls{pdfo} with \gls{tpe} and \gls{rs}, two standard solvers
+in the Python package \texttt{hyperopt}~\cite{Bergstra_Yamins_Cox_2013} for hyperparameter tuning.
 Our experiments are based on binary classifications problems from the LIBSVM datasets\footnote{\url{https://www.csie.ntu.edu.tw/~cjlin/libsvmtools/datasets/}.}.
 A description of the datasets employed is provided in Table~\ref{tab:htdata}.
 
