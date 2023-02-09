@@ -86,7 +86,6 @@ class Profiles:
     def __call__(self, solvers, names=None, options=None, load=True, **kwargs):
         if names is None:
             names = list(solvers)
-        solvers = list(map(str.lower, solvers))
         if options is None:
             options = [{} for _ in range(len(solvers))]
 
@@ -118,7 +117,7 @@ class Profiles:
 
     def get_profiles_path(self, solvers):
         if not isinstance(solvers, str):
-            solvers = "_".join(sorted(solvers))
+            solvers = "_".join(sorted(solvers)).lower()
         pdf_perf_path = Path(self.perf_dir, f"perf-{solvers}-{self.constraints.replace(' ', '_')}.pdf")
         csv_perf_path = Path(self.perf_dir, f"perf-{solvers}-{self.constraints.replace(' ', '_')}.csv")
         txt_perf_path = Path(self.perf_dir, f"perf-{solvers}-{self.constraints.replace(' ', '_')}.txt")
@@ -237,7 +236,7 @@ class Profiles:
                 x = np.repeat(perf[:, j], 2)[1:]
                 x = np.r_[0, x[0], x, penalty * perf_ratio_max]
                 raw_perf[:, i_col + j + 1] = x
-                plt.plot(x, y, label=names[j].upper())
+                plt.plot(x, y, label=names[j])
             plt.xlim(0, 1.1 * perf_ratio_max)
             plt.ylim(0, 1)
             plt.xlabel(r"$\log_2(\mathrm{NF}/\mathrm{NF}_{\min})$")
@@ -261,7 +260,7 @@ class Profiles:
                 x = np.repeat(data[:, j], 2)[1:]
                 x = np.r_[0, x[0], x, penalty * data_ratio_max]
                 raw_data[:, i_col + j + 1] = x
-                plt.plot(x, y, label=names[j].upper())
+                plt.plot(x, y, label=names[j])
             plt.xlim(0, 1.1 * data_ratio_max)
             plt.ylim(0, 1)
             plt.xlabel(r"Number of simplex gradients")
@@ -274,7 +273,7 @@ class Profiles:
         pdf_perf.close()
         with open(csv_perf_path, "w") as fd:
             csv_perf = csv.writer(fd)
-            header_perf = np.array([[f"y{i}", *[f"x{i}_{s.upper()}" for s in solvers]] for i in range(log_tau_min, log_tau_max + 1)])
+            header_perf = np.array([[f"y{i}", *[f"x{i}_{s}" for s in solvers]] for i in range(log_tau_min, log_tau_max + 1)])
             csv_perf.writerow(header_perf.flatten())
             csv_perf.writerows(raw_perf)
         with open(txt_perf_path, "w") as fd:
@@ -284,7 +283,7 @@ class Profiles:
         pdf_data.close()
         with open(csv_data_path, "w") as fd:
             csv_data = csv.writer(fd)
-            header_data = np.array([[f"y{i}", *[f"x{i}_{s.upper()}" for s in solvers]] for i in range(log_tau_min, log_tau_max + 1)])
+            header_data = np.array([[f"y{i}", *[f"x{i}_{s}" for s in solvers]] for i in range(log_tau_min, log_tau_max + 1)])
             csv_data.writerow(header_data.flatten())
             csv_data.writerows(raw_data)
         with open(txt_data_path, "w") as fd:
