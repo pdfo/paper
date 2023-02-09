@@ -21,7 +21,7 @@ if __name__ == "__main__":
     del profiles
 
     # Generate the performance and data profiles on the problems containing NaNs.
-    profiles = Profiles(1, 50, "unconstrained", feature="nan", nan_rate=0.01)
+    profiles = Profiles(1, 50, "unconstrained", feature="nan", nan_rate=0.01, rerun=1)
     profiles(["pdfo", "pdfo-(no-barrier)", "bfgs", "cg"])
     del profiles
 

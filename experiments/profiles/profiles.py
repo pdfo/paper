@@ -61,7 +61,7 @@ class Profiles:
             # feature's options. We exclude the options that are redundant with
             # the feature (e.g., if feature="Lq", then p=0.25).
             options_suffix = dict(self.feature_options)
-            if self.feature != "noisy":
+            if self.feature not in ["noisy", "digits", "nan"]:
                 del options_suffix["rerun"]
             if self.feature in ["Lq", "Lh", "L1"]:
                 del options_suffix["p"]
@@ -108,8 +108,10 @@ class Profiles:
         elif signif:
             self.feature = "digits"
             options["digits"] = int(signif.group(1))
+            options["rerun"] = int(kwargs.get("rerun", 10))
         elif self.feature == "nan":
             options["rate"] = kwargs.get("nan_rate", 0.1)
+            options["rerun"] = int(kwargs.get("rerun", 10))
         elif self.feature != "plain":
             raise NotImplementedError
         return options
@@ -162,7 +164,7 @@ class Profiles:
 
         # Determine the least merit function values obtained on each problem.
         f_min = np.min(merits, (1, 2, 3))
-        if self.feature in ["digits", "noisy"]:
+        if self.feature in ["noisy", "digits", "nan"]:
             logger.info(f'Starting the computations with feature="plain"')
             rerun_sav = self.feature_options["rerun"]
             feature_sav = self.feature
