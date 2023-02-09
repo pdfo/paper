@@ -375,7 +375,7 @@ class Profiles:
                 fx_rounded = round(f, self.feature_options["digits"] - int(np.floor(np.log10(np.abs(f)))) - 1)
             f = fx_rounded + (f - fx_rounded) * np.abs(np.sin(np.sin(np.sin(self.feature_options["digits"])) + np.sin(1e8 * f) + np.sum(np.sin(np.abs(1e8 * x))) + np.sin(x.size)))
         elif self.feature == "nan":
-            rng = np.random.default_rng(int(1e8 * abs(np.sin(self.feature_options["rate"]) + np.sum(np.sin(np.abs(np.sin(1e8 * x)))))))
+            rng = np.random.default_rng(int(1e8 * abs(np.sin(k) + np.sin(self.feature_options["rate"]) + np.sum(np.sin(np.abs(np.sin(1e8 * x)))))))
             if rng.uniform() <= self.feature_options["rate"]:
                 f = np.nan
         return f
