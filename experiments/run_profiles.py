@@ -10,21 +10,22 @@ if __name__ == "__main__":
     cwd = os.getcwd()
 
     # Generate the performance and data profiles on the plain problems with n <= 10.
-    profiles = Profiles(1, 10, "unconstrained")
-    profiles(["newuoa", "bobyqa", "lincoa", "cobyla", "uobyqa"])
-    del profiles
+    # profiles = Profiles(1, 10, "unconstrained")
+    # profiles(["newuoa", "bobyqa", "lincoa", "cobyla", "uobyqa"])
+    # del profiles
 
     # Generate the performance and data profiles on the plain problems with n <= 50.
-    profiles = Profiles(1, 50, "unconstrained")
-    profiles(["newuoa", "bfgs", "cg"])
-    profiles(["newuoa", "bobyqa", "lincoa", "cobyla"])
-    del profiles
+    # profiles = Profiles(1, 50, "unconstrained")
+    # profiles(["newuoa", "bfgs", "cg"])
+    # profiles(["newuoa", "bobyqa", "lincoa", "cobyla"])
+    # del profiles
 
     # Generate the performance and data profiles on the problems containing NaNs.
-    for rerun in [1, 10]:
+    for rerun in [1]:
         profiles = Profiles(1, 50, "unconstrained", feature="nan", nan_rate=0.01, rerun=rerun)
-        profiles(["pdfo", "pdfo-(no-barrier)", "bfgs", "cg"])
+        profiles(["pdfo", "pdfo-(no-barrier)", "bfgs", "cg"], load=False)
         del profiles
+    exit()
 
     # Generate the performance and data profiles on the noisy problems with n <= 50 and different noise levels.
     for noise_level in [1e-10, 1e-8, 1e-6]:
