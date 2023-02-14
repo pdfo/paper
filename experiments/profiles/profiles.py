@@ -266,7 +266,7 @@ class Profiles:
                 y = np.r_[0, 0, y, y[-1]]
                 raw_perf[:, i_col + 2 * j] = x
                 raw_perf[:, i_col + 2 * j + 1] = y
-                plt.plot(x, y, label=names[j])
+                plt.plot(x, y, label=names[j].replace("-", " "))
             plt.xlim(0, 1.1 * perf_ratio_max)
             plt.ylim(0, 1)
             plt.xlabel(r"$\log_2(\mathrm{NF}/\mathrm{NF}_{\min})$")
@@ -289,7 +289,7 @@ class Profiles:
                 y = np.r_[0, 0, y, y[-1]]
                 raw_data[:, i_col + 2 * j] = x
                 raw_data[:, i_col + 2 * j + 1] = y
-                plt.plot(x, y, label=names[j])
+                plt.plot(x, y, label=names[j].replace("-", " "))
             plt.xlim(0, 1.1 * data_ratio_max)
             plt.ylim(0, 1)
             plt.xlabel(r"Number of simplex gradients")
