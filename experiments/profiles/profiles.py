@@ -16,6 +16,14 @@ from .optimize import Minimizer
 from .problems import Problems
 from .utils import get_logger
 
+# Set up matplotlib for plotting the profiles.
+std_cycle = cycler(color=["#1f77b4", "#ff7f0e", "#2ca02c", "#d62728", "#9467bd"])
+std_cycle += cycler(linestyle=[(0, ()), (0, (3, 2)), (0, (1, 1)), (0, (3, 2, 1, 2)), (0, (5, 2))])
+plt.rc("axes", prop_cycle=std_cycle)
+plt.rc("lines", linewidth=1)
+plt.rc("text", usetex=True)
+plt.rc("font", family="serif")
+
 
 class Profiles:
 
@@ -74,14 +82,6 @@ class Profiles:
         logger = get_logger(__name__)
         self.problems = Problems(self.n_min, self.n_max, self.m_min, self.m_max, self.constraints, self.callback)
         logger.info(f"Problem(s) successfully loaded: {len(self.problems)}")
-
-        # Set up matplotlib for plotting the profiles.
-        std_cycle = cycler(color=["#1f77b4", "#ff7f0e", "#2ca02c", "#d62728", "#9467bd", "#8c564b", "#e377c2", "#7f7f7f", "#bcbd22", "#17becf"])
-        std_cycle += cycler(linestyle=["-", "--", ":", "-."])
-        plt.rc("axes", prop_cycle=std_cycle)
-        plt.rc("lines", linewidth=1)
-        plt.rc("text", usetex=True)
-        plt.rc("font", family="serif")
 
     def __call__(self, solvers, names=None, options=None, load=True, **kwargs):
         if names is None:

@@ -1,9 +1,9 @@
 import os
 
-from create_profiles import create_all_figures
+from copy_profiles import copy_all_figures
 from profiles import Profiles
 
-CREATE_PAPER_FIGURES = False
+COPY_PAPER_FIGURES = False
 
 
 if __name__ == "__main__":
@@ -38,5 +38,5 @@ if __name__ == "__main__":
 
     # Generate the profiles for the paper.
     os.chdir(cwd)
-    if CREATE_PAPER_FIGURES:
-        create_all_figures()
+    if COPY_PAPER_FIGURES:
+        copy_all_figures()
