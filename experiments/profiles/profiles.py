@@ -177,9 +177,9 @@ class Profiles:
 
         # Start the performance and data profile computations.
         pdf_perf_path, csv_perf_path, txt_perf_path, pdf_data_path, csv_data_path, txt_data_path = self.get_profiles_path(solvers)
-        raw_col = (log_tau_max - log_tau_min + 1) * (len(solvers) + 1)
-        raw_perf = np.empty((2 * len(self.problems) + 2, raw_col))
-        raw_data = np.empty((2 * len(self.problems) + 2, raw_col))
+        raw_col = 2 * (log_tau_max - log_tau_min + 1) * len(solvers)
+        raw_perf = np.empty((2 * len(self.problems) * self.feature_options["rerun"] + 2, raw_col))
+        raw_data = np.empty((2 * len(self.problems) * self.feature_options["rerun"] + 2, raw_col))
         pdf_perf = backend_pdf.PdfPages(pdf_perf_path)
         pdf_data = backend_pdf.PdfPages(pdf_data_path)
         for log_tau in range(log_tau_min, log_tau_max + 1):
@@ -199,26 +199,57 @@ class Profiles:
                         if np.min(merits[i, j, k, :]) <= threshold:
                             index = np.argmax(merits[i, j, k, :] <= threshold)
                             work[i, j, k] = index + 1
-            work = np.mean(work, -1)
 
-            # Calculate the performance profiles.
-            perf = np.full((len(self.problems), len(solvers)), np.nan)
-            for i in range(len(self.problems)):
-                if not np.all(np.isnan(work[i, :])):
-                    perf[i, :] = work[i, :] / np.nanmin(work[i, :])
+            # Calculate the abscissas of the performance profiles.
+            perf = np.full((self.feature_options["rerun"], len(self.problems), len(solvers)), np.nan)
+            for k in range(self.feature_options["rerun"]):
+                for i in range(len(self.problems)):
+                    if not np.all(np.isnan(work[i, :, k])):
+                        perf[k, i, :] = work[i, :, k] / np.nanmin(work[i, :, k])
             perf = np.maximum(np.log2(perf), 0.0)
             perf_ratio_max = np.nanmax(perf, initial=ratio_max)
             perf[np.isnan(perf)] = penalty * perf_ratio_max
-            perf = np.sort(perf, 0)
+            perf = np.sort(perf, 1)
+            perf = np.reshape(perf, (len(self.problems) * self.feature_options["rerun"], len(solvers)))
+            i_sort_perf = np.argsort(perf, 0, "stable")
+            perf = np.take_along_axis(perf, i_sort_perf, 0)
 
-            # Calculate the data profiles.
-            data = np.full((len(self.problems), len(solvers)), np.nan)
+            # Calculate the ordinates of the performance profiles.
+            y_perf = np.zeros((len(self.problems) * self.feature_options["rerun"], len(solvers)))
+            for k in range(self.feature_options["rerun"]):
+                for j in range(len(solvers)):
+                    y_loc = np.full(len(self.problems) * self.feature_options["rerun"], np.nan)
+                    y_loc[k * len(self.problems):(k + 1) * len(self.problems)] = np.linspace(1 / len(self.problems), 1.0, len(self.problems))
+                    y_loc = y_loc[i_sort_perf[:, j]]
+                    for i in range(len(self.problems) * self.feature_options["rerun"]):
+                        if np.isnan(y_loc[i]):
+                            y_loc[i] = y_loc[i - 1] if i > 0 else 0.0
+                    y_perf[:, j] += y_loc
+            y_perf /= self.feature_options["rerun"]
+
+            # Calculate the abscissas of the data profiles.
+            data = np.full((self.feature_options["rerun"], len(self.problems), len(solvers)), np.nan)
             for i, p in enumerate(self.problems):
-                if not np.all(np.isnan(work[i, :])):
-                    data[i, :] = work[i, :] / (p.n + 1)
+                data[:, i, :] = np.transpose(work[i, :, :]) / (p.n + 1)
             data_ratio_max = np.nanmax(data, initial=ratio_max)
             data[np.isnan(data)] = penalty * data_ratio_max
-            data = np.sort(data, 0)
+            data = np.sort(data, 1)
+            data = np.reshape(data, (len(self.problems) * self.feature_options["rerun"], len(solvers)))
+            i_sort_data = np.argsort(data, 0, "stable")
+            data = np.take_along_axis(data, i_sort_data, 0)
+
+            # Calculate the ordinates of the data profiles.
+            y_data = np.zeros((len(self.problems) * self.feature_options["rerun"], len(solvers)))
+            for k in range(self.feature_options["rerun"]):
+                for j in range(len(solvers)):
+                    y_loc = np.full(len(self.problems) * self.feature_options["rerun"], np.nan)
+                    y_loc[k * len(self.problems):(k + 1) * len(self.problems)] = np.linspace(1 / len(self.problems), 1.0, len(self.problems))
+                    y_loc = y_loc[i_sort_data[:, j]]
+                    for i in range(len(self.problems) * self.feature_options["rerun"]):
+                        if np.isnan(y_loc[i]):
+                            y_loc[i] = y_loc[i - 1] if i > 0 else 0.0
+                    y_data[:, j] += y_loc
+            y_data /= self.feature_options["rerun"]
 
             # Plot the performance profiles.
             fig = plt.figure()
@@ -227,15 +258,14 @@ class Profiles:
             ax.yaxis.set_major_locator(MultipleLocator(0.2))
             ax.yaxis.set_minor_locator(MultipleLocator(0.1))
             ax.tick_params(direction="in", which="both")
-            y = np.linspace(1 / len(self.problems), 1.0, len(self.problems))
-            y = np.repeat(y, 2)[:-1]
-            y = np.r_[0, 0, y, y[-1]]
-            i_col = (log_tau - 1) * (len(solvers) + 1)
-            raw_perf[:, i_col] = y
-            for j, solver in enumerate(solvers):
+            i_col = 2 * (log_tau - log_tau_min) * len(solvers)
+            for j in range(len(solvers)):
                 x = np.repeat(perf[:, j], 2)[1:]
                 x = np.r_[0, x[0], x, penalty * perf_ratio_max]
-                raw_perf[:, i_col + j + 1] = x
+                y = np.repeat(y_perf[:, j], 2)[:-1]
+                y = np.r_[0, 0, y, y[-1]]
+                raw_perf[:, i_col + 2 * j] = x
+                raw_perf[:, i_col + 2 * j + 1] = y
                 plt.plot(x, y, label=names[j])
             plt.xlim(0, 1.1 * perf_ratio_max)
             plt.ylim(0, 1)
@@ -252,14 +282,13 @@ class Profiles:
             ax.yaxis.set_major_locator(MultipleLocator(0.2))
             ax.yaxis.set_minor_locator(MultipleLocator(0.1))
             ax.tick_params(direction="in", which="both")
-            y = np.linspace(1 / len(self.problems), 1.0, len(self.problems))
-            y = np.repeat(y, 2)[:-1]
-            y = np.r_[0, 0, y, y[-1]]
-            raw_data[:, i_col] = y
-            for j, solver in enumerate(solvers):
+            for j in range(len(solvers)):
                 x = np.repeat(data[:, j], 2)[1:]
                 x = np.r_[0, x[0], x, penalty * data_ratio_max]
-                raw_data[:, i_col + j + 1] = x
+                y = np.repeat(y_data[:, j], 2)[:-1]
+                y = np.r_[0, 0, y, y[-1]]
+                raw_data[:, i_col + 2 * j] = x
+                raw_data[:, i_col + 2 * j + 1] = y
                 plt.plot(x, y, label=names[j])
             plt.xlim(0, 1.1 * data_ratio_max)
             plt.ylim(0, 1)
@@ -273,7 +302,7 @@ class Profiles:
         pdf_perf.close()
         with open(csv_perf_path, "w") as fd:
             csv_perf = csv.writer(fd)
-            header_perf = np.array([[f"y{i}", *[f"x{i}_{s}" for s in solvers]] for i in range(log_tau_min, log_tau_max + 1)])
+            header_perf = np.array([[[f"x{i}_{s}", f"y{i}_{s}"] for s in solvers] for i in range(log_tau_min, log_tau_max + 1)])
             csv_perf.writerow(header_perf.flatten())
             csv_perf.writerows(raw_perf)
         with open(txt_perf_path, "w") as fd:
@@ -283,7 +312,7 @@ class Profiles:
         pdf_data.close()
         with open(csv_data_path, "w") as fd:
             csv_data = csv.writer(fd)
-            header_data = np.array([[f"y{i}", *[f"x{i}_{s}" for s in solvers]] for i in range(log_tau_min, log_tau_max + 1)])
+            header_data = np.array([[[f"x{i}_{s}", f"y{i}_{s}"] for s in solvers] for i in range(log_tau_min, log_tau_max + 1)])
             csv_data.writerow(header_data.flatten())
             csv_data.writerows(raw_data)
         with open(txt_data_path, "w") as fd:
