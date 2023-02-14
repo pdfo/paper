@@ -427,7 +427,7 @@ To decide a quadratic model~$\objm$ completely by the linear system~\eqref{eq:qi
 \gls{uobyqa} requires that~$\xpt$ contains~$(n+1)(n+2)/2$ points, and~$f$ should have been evaluated at all these points before this linear system can be formed.
 Even though most of these points will be reused at the subsequent iterations so that the number of
 function evaluations needed per iteration is tiny (see Section~\ref{ssec:iptset}), we must perform~$(n + 1)(n + 2) / 2$ function evaluations during the very first iteration.
-This is impractical unless~$n$ is small, which motivates the use of underdetermined quadratic interpolation.
+This is impracticable unless~$n$ is small, which motivates the use of underdetermined quadratic interpolation.
 
 \paragraph{\textnormal{\textbf{Underdetermined quadratic interpolation.}}}
 
