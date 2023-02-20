@@ -91,6 +91,8 @@
 \newcommandx{\conm}[2][1=k,2=i]{c_{#1, #2}}
 %
 \glsdisablehyper
+\renewcommand*{\glsfirstlongdefaultfont}[1]{#1\nolinebreak}
+
 \newabbreviation{auc}{AUC}{area under the curve}
 \newabbreviation{dfo}{DFO}{derivative-free optimization}
 \newabbreviation{psb}{PSB}{Powell's symmetric Broyden}
@@ -143,7 +145,7 @@
 \input{ushyphex}    % hyphenation exceptions for US English
 
 %
-%\usepackage[final]{microtype}
+\usepackage[final]{microtype}
 %\usepackage[nobottomtitles*]{titlesec}  % no section title at the bottom of pages
 % N.B. titlesec changes the behavior of ``\paragraph'', adding a line break.
 \interfootnotelinepenalty=10000  % prevent footnote from running to the next page
@@ -151,10 +153,13 @@
 \interdisplaylinepenalty=10000
 \relpenalty=10000
 \binoppenalty=10000
-% no widow or orphan lines
-\clubpenalty=10000
-\widowpenalty=10000
-\displaywidowpenalty=10000
+%% no widow or orphan lines
+%\clubpenalty=10000
+%\widowpenalty=10000
+%\displaywidowpenalty=10000
+% Checks page or column breaks for issues with widow or orphan lines
+\usepackage[prevent-all]{widows-and-orphans}
+
 \usepackage{xspace}
 
 % Cross-referencing and colorization
@@ -217,8 +222,7 @@
     % When a problem can be solved by multiple algorithms (for example, an unconstrained problem can be solved by all five algorithms), the selection is made based on experimental results on the CUTEst problems.
     We also provide an overview on Powell's methods and share some observations on these methods based on experiments conducted using~\gls{pdfo}.
 
-    \keywords{Derivative-free optimization \and model-based methods \and COBYLA \and UOBYQA \and NEWUOA \and
-    BOBYQA \and LINCOA}
+    \keywords{Derivative-free optimization \and COBYLA \and UOBYQA \and NEWUOA \and BOBYQA \and LINCOA}
     \subclass{65K05 \and 90C30 \and 90C56 \and 90-04}
     %\CRclass{CR code1 \and CR code2 \and more}
 \end{abstract}
@@ -326,8 +330,8 @@ The second strategy approximates the original problem~\eqref{eq:nlc} by relative
 Algorithms with this strategy are referred to as model-based methods. They often make use of the models within a trust-region framework~\cite{Conn_Gould_Toint_2000,Conn_Scheinberg_Vicente_2009a,Yuan_2015} or a line-search framework~\cite{Berahas_Byrd_Nocedal_2019,Shi_Etal_2022}.
 Interpolation and regression are two common ways of establishing the models~\cite{Powell_2001,Conn_Scheinberg_Vicente_2008a,Conn_Scheinberg_Vicente_2008b,Wild_Regis_Shoemaker_2008,Bandeira_Scheinberg_Vicente_2012,Billups_Larson_Graf_2013,Regis_Wild_2017}.
 Algorithms using finite-difference approximations of gradients can also be regarded as model-based
-methods, because such approximations essentially come from linear (for forward and backward finite
-differences) or quadratic (for central finite difference) interpolation of the function under
+methods, because such approximations essentially come from linear (for the forward and backward
+differences) or quadratic (for the central difference) interpolation of the function under
 consideration over rather special interpolation sets~(see~\cite[\S~1.4.3]{Ragonneau_2022} for more comments).
 Most model-based \gls{dfo} methods employ polynomial models that are linear or quadratic, examples including
 Powell's algorithms~\cite{Powell_1994,Powell_2002,Powell_2006,Powell_2009} in \gls{pdfo},
@@ -709,7 +713,7 @@ an infeasible method, which requires~$\obj$ to be defined even when the linear c
 This section details the main features of \gls{pdfo}, in particular the signature of the main
 function, problem preprocessing, solver selection, bug fixes, and handling failures of function
 evaluations. For more features of~\gls{pdfo}, we refer to its homepage
-at~\url{https://www-1.pdfo.net/}.
+at~\url{https://www.pdfo.net/}.
 
 Before starting, we
 emphasize that \gls{pdfo} does not re-implement Powell’s solvers but rather enables Python and MATLAB
@@ -877,50 +881,86 @@ which will be explored in the future.
 %Therefore, the conditions required by Powell are ensured in the Fortran code directly.
 
 
-\section{Numerical experiments}
+\section{Numerical results}
 \label{sec:numerical}
 
 This section presents some numerical experiments on \gls{pdfo}.
-Since Powell's solvers are widely used as benchmarks in the study of \gls{dfo}
-algorithms, we decide not to repeat their comparisons with standard \gls{dfo} solvers, which are
+Since Powell's solvers are widely used as benchmarks in \gls{dfo},
+extensive comparisons with standard \gls{dfo} solvers are
 already available in literature~\cite{More_Wild_2009,Rios_Sahinidis_2013}.
-Instead, we will compare them with two classes of solvers
-finite difference
+Repeating such experiments is unnecessary. Instead, we compare \gls{pdfo} with solvers that
+are popular but less mentioned in existing benchmarking.
+Subsection~\ref{ssec:fd} tests \gls{pdfo} against \gls{bfgs} and \gls{cg} that use finite-difference gradients,
+highlighting the stability of \gls{pdfo} under noise and its robustness with respect to failures of
+function evaluations.
+Subsection~\ref{ssec:hypertune} compares \gls{pdfo} with standard Bayesian optimization solvers
+on a hyperparameter tuning problem in machine learning, demonstrating the capability and potential
+of model-based \gls{dfo} methods for such problems.
+
+All the experiments were carried out in double precision based on the Python version of \gls{pdfo}~1.2.
+The finite-difference \gls{bfgs} and \gls{cg} were provided by SciPy~\cite{Virtanen_Etal_2020}~1.10.0,
+and the Bayesian optimization solvers were the \gls{tpe} and the \gls{rs} in the Python package
+\texttt{hyperopt}~\cite{Bergstra_Yamins_Cox_2013}~0.2.7.
+We conducted the test on a ThinkStation P620 with an AMD Ryzen Threadripper
+PRO 3975WX CPU and 64 GB of memory, the operating system being Ubuntu~22.04, and the Python version
+being~3.10.6.
 
 
-\subsection{Comparison with methods based on finite differences}
+\subsection{Comparisons with finite-difference \gls{bfgs} and \gls{cg}}
 \label{ssec:fd}
 
-We first compare the performance of \gls{newuoa} using \gls{pdfo} with \gls{bfgs} and \gls{cg}, two gradient-based solvers provided by SciPy~\cite{Virtanen_Etal_2020}.
-When no derivatives are provided, they use forward finite-difference to approximate gradients, with the difference parameter~$h = \sqrt{u}$, where~$u$ is the unit roundoff.
-We perform the comparison on the unconstrained problems of dimensions at most~$50$ from the CUTEst library~\cite{Gould_Orban_Toint_2015}.
-In this comparison, we invoke \gls{newuoa} via the \gls{pdfo} package under the default settings.
-In particular, the initial trust-region radius is~$1$, the final trust-region radius is~$10^{-6}$, and the number of interpolation points is~$2n + 1$, with~$n$ being the dimension of the problem being solved.
-\Gls{bfgs} and \gls{cg} are called with the default configurations in SciPy.
-For each testing problem, the starting point is set to the one provided by CUTEst, and the maximal number of function evaluations is set to~$500$ times the number of variables.
+We first compare \gls{pdfo} with finite-difference \gls{bfgs} and \gls{cg} on unconstrained
+problems. The competitors are available in SciPy under the \texttt{minimize} function.
+Invoke with the default configurations in SciPy without derivatives,
+\gls{bfgs} and \gls{cg} approximate gradients by forward differences with the default difference
+parameter~$h = \sqrt{u} \approx 1.5\times 10^{-8}$, where~$u$ is the unit roundoff.
+For \gls{pdfo}, we specify \gls{newuoa} as the solver, while setting all the other options to the default.
+In particular, the initial trust-region radius is~$1$, the final trust-region radius is~$10^{-6}$,
+and the number of interpolation points is~$2n + 1$, with~$n$ being the dimension of the problem
+being solved.
+We perform the comparison on~157 unconstrained problems with~$n \le 50$ from the CUTEst
+library~\cite{Gould_Orban_Toint_2015} using PyCUTEst~\cite{Fowkes_Roberts_Burmen_2022}~1.4.
+For each testing problem, the starting point is set to the one provided by CUTEst, and the maximal
+number of function evaluations is set to~$500n$.
 
-We conduct two experiments as follows.
-\begin{enumerate}
-    \item The first experiment is made without modifying the problems.
-    The optimal value~$\obj_{\ast}$ of a given problem is considered to be the least value reached by all solvers, and an execution is convergent up to a tolerance~$\tau \ge 0$ whenever
-    \begin{equation}
-        \label{eq:cvt}
-        \obj(\iter[0]) - \obj(\iter) \ge (1 - \tau) [\obj(\iter[0]) - \obj_{\ast}].
-    \end{equation}
-    \item The second experiment is a noisy variation of the previous one.
-    Let~$\sigma > 0$ be the noise level.
-    For each problem, the objective function is evaluated by
-    \begin{equation}
-        \label{eq:noisy-obj}
-        \tilde{\obj}(\iter[]) \eqdef [1 + \sigma R(\iter[])] \obj(\iter[]),
-    \end{equation}
-    where~$R(\iter[]) \sim \NN(0, 1)$.
-    Each problem is solved ten times with each solver.
-    In the convergence test~\eqref{eq:cvt},~$\obj_{\ast}$ is either the least value of~$\obj$ obtained by all solvers during these ten runs, or the value obtained in the previous noise-free experiment, whichever is smaller.
-    Note that the convergence test~\eqref{eq:cvt} uses the values of~$\obj$ and not those of~$\tilde{\obj}$.
-    This means that we assess the solvers according to the true objective function, even though the
-    solvers receive only the noisy values produced by~\eqref{eq:noisy-obj}.
-\end{enumerate}
+
+We conduct two experiments, testing the stability of these solvers under noise and their robustness
+with respect to failures of function evaluations. Noise and evaluation failures ubiquitous in
+applications of \gls{dfo}, and many problems suffer from both. We choose to test them separately in
+order to observe more clearly how the solvers react to these difficulties.
+
+\subsubsection{Stability under noise}
+
+%The first experiment is made without modifying the problems.
+%The optimal value~$\obj_{\ast}$ of a given problem is considered to be the least value reached by all solvers, and an execution is convergent up to a tolerance~$\tau \ge 0$ whenever
+%\begin{equation}
+%    \label{eq:cvt}
+%    \obj(\iter[0]) - \obj(\iter) \ge (1 - \tau) [\obj(\iter[0]) - \obj_{\ast}].
+%\end{equation}
+%\item The second experiment is a noisy variation of the previous one.
+%Let~$\sigma > 0$ be the noise level.
+%For each problem, the objective function is evaluated by
+
+The first experiment tests the stability of the solvers under multiplicative Gaussian noise.
+We choose to test the multiplicative noise because it makes more sense if the scale of the objective
+function changes widely, which is often the case in practice.
+
+Given a testing problem, we contaminate its objective function~$\obj$ by a multiplicative Gaussian noise, obtaining
+\begin{equation}
+    \label{eq:noisy-obj}
+    \tilde{\obj}(\iter[]) \eqdef [1 + \sigma R(\iter[])] \obj(\iter[]),
+\end{equation}
+with $R(\iter[])\sim \NN(0, 1)$ being independent and identically distributed when~$x$ varies.
+Here,~$\sigma \ge 0$ is the standard deviation of the noise, representing the noise level.
+If we set~$\sigma = 0$, then~$\tilde{f} = f$, corresponding to the noise-free case.
+
++++++++++++++++++
+
+Each problem is solved ten times with each solver.
+In the convergence test~\eqref{eq:cvt},~$\obj_{\ast}$ is either the least value of~$\obj$ obtained by all solvers during these ten runs, or the value obtained in the previous noise-free experiment, whichever is smaller.
+Note that the convergence test~\eqref{eq:cvt} uses the values of~$\obj$ and not those of~$\tilde{\obj}$.
+This means that we assess the solvers according to the true objective function, even though the
+solvers receive only the noisy values produced by~\eqref{eq:noisy-obj}.
 
 The performance profiles~\cite{Dolan_More_2002,More_Wild_2009} of these experiments are provided in
 Figures~\mbox{\ref{fig:ppu-fdiff-plain}--\ref{fig:ppu-fdiff-noisy-6}}.
@@ -929,38 +969,38 @@ Broadly speaking, a performance profile plots the proportion of problems solved 
 \begin{figure}[htbp]
     \begin{subfigure}{.32\textwidth}
         \centering
-        \includegraphics[width=\textwidth]{perf-plain-bfgs_cg_pdfo-50-1.pdf}
+        \includegraphics[width=\textwidth,page=1]{perf-nan-bfgs_cg_pdfo-50-10-0.01.pdf}
         \caption{$\sigma = 0$}
         \label{fig:ppu-fdiff-plain}
     \end{subfigure}
     \hfill
     \begin{subfigure}{.32\textwidth}
         \centering
-        \includegraphics[width=\textwidth]{perf-noisy-bfgs_cg_pdfo-50-10-1.pdf}
+        \includegraphics[width=\textwidth,page=1]{perf-nan-bfgs_cg_pdfo-50-10-0.01.pdf}
         \caption{$\sigma = 10^{-10}$}
     \end{subfigure}
     \hfill
     \begin{subfigure}{.32\textwidth}
         \centering
-        \includegraphics[width=\textwidth]{perf-noisy-bfgs_cg_pdfo-50-10-1.pdf}
+        \includegraphics[width=\textwidth,page=1]{perf-nan-bfgs_cg_pdfo-50-10-0.01.pdf}
         \caption{$\sigma = 10^{-10}$}
     \end{subfigure}
     \begin{subfigure}{.32\textwidth}
         \centering
-        \includegraphics[width=\textwidth]{perf-noisy-bfgs_cg_pdfo-50-8-1.pdf}
+        \includegraphics[width=\textwidth,page=1]{perf-nan-bfgs_cg_pdfo-50-10-0.01.pdf}
         \caption{$\sigma = 0$}
     \end{subfigure}
     \hfill
     \begin{subfigure}{.32\textwidth}
         \centering
-        \includegraphics[width=\textwidth]{perf-noisy-bfgs_cg_pdfo-50-6-1.pdf}
+        \includegraphics[width=\textwidth,page=1]{perf-nan-bfgs_cg_pdfo-50-10-0.01.pdf}
         \caption{$\sigma = 10^{-10}$}
         \label{fig:ppu-fdiff-noisy-6}
     \end{subfigure}
     \hfill
     \begin{subfigure}{.32\textwidth}
         \centering
-        \includegraphics[width=\textwidth]{perf-noisy-bfgs_cg_pdfo-50-6-1.pdf}
+        \includegraphics[width=\textwidth,page=1]{perf-nan-bfgs_cg_pdfo-50-10-0.01.pdf}
         \caption{$\sigma = 10^{-8}$}
         \label{fig:ppu-fdiff-noisy-6}
     \end{subfigure}
@@ -976,50 +1016,52 @@ We rather keep the default value provided for the solvers \gls{bfgs} and \gls{cg
 As commented in~\cite{Shi_Etal_2022}, the performance of methods based on finite differences is encouraging when there is no noise, yet much more care is needed when the problems are noisy.
 \Gls{newuoa} performs robustly with the noise according to this experiment, which agrees with the observations in~\cite{Shi_Etal_2022}.
 
+\subsubsection{Robustness with respect failures of function evaluations}
 
-\subsection{Comparison on the CUTEst library}
+%\subsection{Comparison on the CUTEst library}
 
-We now compare the performances of the Powell's \gls{dfo} methods for solving unconstrained problems.
-To that end, we first repeat the previously described noise-free experiment.
-Performance profiles on unconstrained problems of dimensions at most~$10$ and~$50$ are provided respectively in Figures~\ref{fig:ppu-10} and~\ref{fig:ppu-50}.
-According to Figure~\ref{fig:ppu-10}, \gls{uobyqa} performs better than all the other solvers on small problems.
-This can be explained by the fact that it uses quadratic models obtained by fully-determined interpolation.
-However, we excluded \gls{uobyqa} from the second experiment, because the execution time was excessively long on problems with moderately high dimensions, due to the fully-determined interpolation that it does.
-Moreover, \gls{cobyla} is always outperformed by all other solvers.
-This is because it uses only linear models to approximate the objective and constraint functions of the problems, which are not as precise as the quadratic models employed by other solvers.
+%We now compare the performances of the Powell's \gls{dfo} methods for solving unconstrained problems.
+%To that end, we first repeat the previously described noise-free experiment.
+%Performance profiles on unconstrained problems of dimensions at most~$10$ and~$50$ are provided respectively in Figures~\ref{fig:ppu-10} and~\ref{fig:ppu-50}.
+%According to Figure~\ref{fig:ppu-10}, \gls{uobyqa} performs better than all the other solvers on small problems.
+%This can be explained by the fact that it uses quadratic models obtained by fully-determined interpolation.
+%However, we excluded \gls{uobyqa} from the second experiment, because the execution time was excessively long on problems with moderately high dimensions, due to the fully-determined interpolation that it does.
+%Moreover, \gls{cobyla} is always outperformed by all other solvers.
+%This is because it uses only linear models to approximate the objective and constraint functions of the problems, which are not as precise as the quadratic models employed by other solvers.
 
-\begin{figure}[ht]
-    \begin{subfigure}{.48\textwidth}
-        \centering
-        \includegraphics[width=\textwidth]{perf-plain-pdfo-10-1.pdf}
-        \caption{Dimension at most~$10$.}
-        \label{fig:ppu-10}
-    \end{subfigure}
-    \hfill
-    \begin{subfigure}{.48\textwidth}
-        \centering
-        \includegraphics[width=\textwidth]{perf-plain-pdfo-50-1.pdf}
-        \caption{Dimension at most~$50$.}
-        \label{fig:ppu-50}
-    \end{subfigure}
-    \caption{Performance profile of Powell's \glsfmtshort{dfo} solvers}
-\end{figure}
+%\begin{figure}[ht]
+%    \begin{subfigure}{.48\textwidth}
+%        \centering
+%        \includegraphics[width=\textwidth,page=1]{perf-nan-bfgs_cg_pdfo-50-10-0.01.pdf}
+%        \caption{Dimension at most~$10$.}
+%        \label{fig:ppu-10}
+%    \end{subfigure}
+%    \hfill
+%    \begin{subfigure}{.48\textwidth}
+%        \centering
+%        \includegraphics[width=\textwidth,page=1]{perf-nan-bfgs_cg_pdfo-50-10-0.01.pdf}
+%        \caption{Dimension at most~$50$.}
+%        \label{fig:ppu-50}
+%    \end{subfigure}
+%    \caption{Performance profile of Powell's \glsfmtshort{dfo} solvers}
+%\end{figure}
 
-Consider however the previously detailed noisy experiment, applied to Powell's \gls{dfo} solvers.
-Figure~\ref{fig:ppun-50} presents the performance profiles on the same unconstrained problems of dimension at most~$50$ from the CUTEst library as the previous experiment by randomizing the objective functions with~$\sigma = 10^{-2}$.
+%Consider however the previously detailed noisy experiment, applied to Powell's \gls{dfo} solvers.
+%Figure~\ref{fig:ppun-50} presents the performance profiles on the same unconstrained problems of dimension at most~$50$ from the CUTEst library as the previous experiment by randomizing the objective functions with~$\sigma = 10^{-2}$.
 
-\begin{figure}[ht]
-    \centering
-    \includegraphics[width=.48\textwidth]{perf-noisy-pdfo-50-2-1.pdf}
-    \caption{Performance profile of Powell's \glsfmtshort{dfo} solvers on noisy problems of dimension at most~$50$}
-    \label{fig:ppun-50}
-\end{figure}
+%\begin{figure}[ht]
+%    \centering
+%        \includegraphics[width=\textwidth,page=1]{perf-nan-bfgs_cg_pdfo-50-10-0.01.pdf}
+%    \caption{Performance profile of Powell's \glsfmtshort{dfo} solvers on noisy problems of dimension at most~$50$}
+%    \label{fig:ppun-50}
+%\end{figure}
 
-It is interesting to observe the performance of \gls{cobyla} in this experiment.
-Even though it is not particularly designed for such kind of problems and uses the simplest models, we observe that \gls{cobyla} defeats all other solvers on unconstrained problems, for~$\tau = 10^{-1}$.
-It seems that the linear models of \gls{cobyla} are more robust to noise, but we have not yet derived a theory for this behavior.
+%It is interesting to observe the performance of \gls{cobyla} in this experiment.
+%Even though it is not particularly designed for such kind of problems and uses the simplest models, we observe that \gls{cobyla} defeats all other solvers on unconstrained problems, for~$\tau = 10^{-1}$.
+%It seems that the linear models of \gls{cobyla} are more robust to noise, but we have not yet derived a theory for this behavior.
 
 \subsection{An example of hyperparameter tuning problem}
+\label{ssec:hypertune}
 
 We now consider the more practical problem of the hyperparameter tuning of a \gls{svm}.
 The model we consider is a~$C$-SVC~\cite{Chang_Lin_2011} for binary classification problems with an \gls{rbf} kernel, admitting two hyperparameters: a regularization parameter~$C > 0$ and a kernel coefficient~$\gamma > 0$.
