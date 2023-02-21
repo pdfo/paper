@@ -3,12 +3,10 @@
 \RequirePackage{fix-cm}
 \documentclass[
     smallextended,  % one column (second format)
-    %draft,          % to make overfull boxes visible
-    final,        % the opposite of draft
+    %draft,         % to make overfull boxes visible
+    final,          % the opposite of draft
     % referee,      % required to produce a hardcopy for the referee with a special layout (bigger interline spacing)
 ]{svjour3}
-%
-%\usepackage{mathptmx}   % PostScript Times fonts (they may not look quite natural).
 %
 \usepackage{amsfonts}
 \usepackage{amsmath}
@@ -24,7 +22,9 @@
 \usepackage{subcaption}
 \usepackage{url}
 \usepackage{xargs}
+%
 % Get back the upright capital Greek letters
+%
 \DeclareMathSymbol{\Gamma}{\mathalpha}{operators}{"00}
 \DeclareMathSymbol{\Delta}{\mathalpha}{operators}{"01}
 \DeclareMathSymbol{\Theta}{\mathalpha}{operators}{"02}
@@ -101,15 +101,15 @@
 \newabbreviation{rs}{RS}{Random Search}
 \newabbreviation{svm}{SVM}{support vector machine}
 \newabbreviation{tpe}{TPE}{Tree-Structured Parzen Estimator}
-\newacronym{bobyqa}{BOBYQA}{Bound Optimization BY Quadratic Approximation}
-\newacronym{bfgs}{BFGS}{Broyden-Fletcher-Goldfarb-Shanno}
-\newacronym{cg}{CG}{Conjugate Gradient}
-\newacronym{cobyla}{COBYLA}{Constrained Optimization BY Linear Approximations}
-\newacronym{cobyqa}{COBYQA}{Constrained Optimization BY Quadratic Approximations}
-\newacronym{lincoa}{LINCOA}{LINearly Constrained Optimization Algorithm}
-\newacronym{newuoa}{NEWUOA}{NEW Unconstrained Optimization Algorithm}
-\newacronym{pdfo}{PDFO}{Powell's Derivative-Free Optimization solvers}
-\newacronym{uobyqa}{UOBYQA}{Unconstrained Optimization BY Quadratic Approximation}
+\newacronym{bobyqa}{\textsc{bobyqa}}{Bound Optimization BY Quadratic Approximation}
+\newacronym{bfgs}{\textsc{bfgs}}{Broyden-Fletcher-Goldfarb-Shanno}
+\newacronym{cg}{\textsc{cg}}{Conjugate Gradient}
+\newacronym{cobyla}{\textsc{cobyla}}{Constrained Optimization BY Linear Approximations}
+\newacronym{cobyqa}{\textsc{cobyqa}}{Constrained Optimization BY Quadratic Approximations}
+\newacronym{lincoa}{\textsc{lincoa}}{LINearly Constrained Optimization Algorithm}
+\newacronym{newuoa}{\textsc{newuoa}}{NEW Unconstrained Optimization Algorithm}
+\newacronym{pdfo}{\textsc{pdfo}}{Powell's Derivative-Free Optimization solvers}
+\newacronym{uobyqa}{\textsc{uobyqa}}{Unconstrained Optimization BY Quadratic Approximation}
 %
 \graphicspath{{figures/}}
 %
@@ -145,7 +145,7 @@
 \input{ushyphex}    % hyphenation exceptions for US English
 
 %
-\usepackage[final]{microtype}
+\usepackage{microtype}
 %\usepackage[nobottomtitles*]{titlesec}  % no section title at the bottom of pages
 % N.B. titlesec changes the behavior of ``\paragraph'', adding a line break.
 \interfootnotelinepenalty=10000  % prevent footnote from running to the next page
@@ -198,13 +198,13 @@
 \institute{%
     T. M. Ragonneau \at
         Department of Applied Mathematics, The Hong Kong Polytechnic University, Hong Kong\\
-        ORCID: 0000-0003-2717-2876\\
-        \email{tom.ragonneau@polyu.edu.hk}
+        \email{\href{mailto:tom.ragonneau@polyu.edu.hk}{tom.ragonneau@polyu.edu.hk}}\\
+        ORCID: \href{https://orcid.org/0000-0003-2717-2876}{0000-0003-2717-2876}
     \and
     Z. Zhang (corresponding author)\at
         Department of Applied Mathematics, The Hong Kong Polytechnic University, Hong Kong\\
-        ORCID: 0000-0001-8934-8190\\
-        \email{zaikun.zhang@polyu.edu.hk}
+        \email{\href{mailto:zaikun.zhang@polyu.edu.hk}{zaikun.zhang@polyu.edu.hk}}\\
+        ORCID: \href{https://orcid.org/0000-0001-8934-8190}{0000-0001-8934-8190}
 }
 \date{Received: date / Accepted: date}
 %
@@ -215,12 +215,12 @@
 \begin{abstract}
     Late Professor M. J. D. Powell designed five derivative-free optimization methods, namely \gls{cobyla}, \gls{uobyqa}, \gls{newuoa}, \gls{bobyqa}, and \gls{lincoa}.
     The algorithms were implemented in Fortran 77 and may not be easily accessible to some users.
-    This paper introduces the~\gls{pdfo}~(\glsxtrlong{pdfo}) package, which provides user-friendly Python and MATLAB interfaces to Powell's code.
+    This paper introduces the\gls{pdfo}~(\glsxtrlong{pdfo}) package, which provides user-friendly Python and MATLAB interfaces to Powell's code.
     %, and has been downloaded more than \num{50000} times as of February 2023 (mirror downloads excluded).
-    With~\gls{pdfo}, users can call each of Powell's algorithms directly based on their own choice.
+    With\gls{pdfo}, users can call each of Powell's algorithms directly based on their own choice.
     Alternatively, if the user does not specify any algorithm, the package can also select one automatically based on the problem characteristics.
     % When a problem can be solved by multiple algorithms (for example, an unconstrained problem can be solved by all five algorithms), the selection is made based on experimental results on the CUTEst problems.
-    We also provide an overview on Powell's methods and share some observations on these methods based on experiments conducted using~\gls{pdfo}.
+    We also provide an overview on Powell's methods and share some observations on these methods based on experiments conducted using\gls{pdfo}.
 
     \keywords{Derivative-free optimization \and COBYLA \and UOBYQA \and NEWUOA \and BOBYQA \and LINCOA}
     \subclass{65K05 \and 90C30 \and 90C56 \and 90-04}
@@ -294,7 +294,7 @@ However, \gls{pdfo} has several features that distinguishes itself from others.
 
     \item \emph{Additional options.}
     \Gls{pdfo} includes options for the user to control the solvers in some manners that are useful in practice.
-    For example, the user can request \gls{pdfo} to scale the problem according to bound constraints on the variables before solving~it.
+    For example, the user can request \gls{pdfo} to scale the problem according to bound constraints on the variables before solvingt.
 \end{enumerate}
 
 \red{
@@ -804,7 +804,7 @@ The current version of \gls{pdfo} patches several bugs in the Fortran source cod
 \begin{enumerate}
     \item The solvers may encounter infinite loops.
     This happens when the exit conditions of a loop can never be met because variables involved in
-    these conditions become~NaN due to floating point exceptions.
+    these conditions become NaN due to floating point exceptions.
     \item The Fortran code may encounter memory errors due to uninitialized indices.
     This is because some indices are initialized according to conditions that can never be met due to NaN, similar to the previous case.
     %\item \Gls{cobyla} may not return the best point that is evaluated; sometimes, it returns
@@ -911,7 +911,7 @@ being~3.10.6.
 
 We first compare \gls{pdfo} with finite-difference \gls{bfgs} and \gls{cg} on unconstrained
 problems. The competitors are available in SciPy under the \texttt{minimize} function.
-Invoke with the default configurations in SciPy without derivatives,
+Invoked with the default configurations in SciPy without derivatives,
 \gls{bfgs} and \gls{cg} approximate gradients by forward differences with the default difference
 parameter~$h = \sqrt{u} \approx 1.5\times 10^{-8}$, where~$u$ is the unit roundoff.
 For \gls{pdfo}, we specify \gls{newuoa} as the solver, while setting all the other options to the default.
@@ -925,7 +925,7 @@ number of function evaluations is set to~$500n$.
 
 
 We conduct two experiments, testing the stability of these solvers under noise and their robustness
-with respect to failures of function evaluations. Noise and evaluation failures ubiquitous in
+with respect to failures of function evaluations. Noise and evaluation failures are ubiquitous in
 applications of \gls{dfo}, and many problems suffer from both. We choose to test them separately in
 order to observe more clearly how the solvers react to these difficulties.
 
@@ -1169,7 +1169,7 @@ It is aimed to be added to \gls{pdfo}, and other \gls{dfo} solvers may be includ
 \subsection{Funding}
 
 This work was funded by the University Grants Committee of Hong Kong under the
-projects PF18-24698 (Hong Kong Ph.D.~Fellowship Scheme), PolyU 253012/17P, PolyU 153054/20P,
+projects PF18-24698 (Hong Kong Ph.D. Fellowship Scheme), PolyU 253012/17P, PolyU 153054/20P,
 and PolyU 153066/21P.
 It was also supported by The Hong Kong Polytechnic University under project P0009767.
 
