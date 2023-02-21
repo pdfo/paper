@@ -327,7 +327,7 @@ Beijing on November 4, 2011~\cite{Buhmann_Fletcher_Iserles_Toint_2018}.}, explor
 See~\cite{Kolda_Lewis_Torczon_2003},~\cite[Chapters~7 and~8]{Conn_Scheinberg_Vicente_2009b},~\cite[Part~3]{Audet_Hare_2017}, and~\cite[\S~2.1]{Larson_Menickelly_Wild_2019} for more discussions on this paradigm, and we refer to~\cite{Gratton_Etal_2015,Gratton_Etal_2019} for recent developments on randomized methods in this category.
 
 The second strategy approximates the original problem~\eqref{eq:nlc} by relatively simple models and locates the iterates according to these models.
-Algorithms with this strategy are referred to as model-based methods. They often make use of the models within a trust-region framework~\cite{Conn_Gould_Toint_2000,Conn_Scheinberg_Vicente_2009a,Yuan_2015} or a line-search framework~\cite{Berahas_Byrd_Nocedal_2019,Shi_Etal_2022}.
+Algorithms with this strategy are referred to as model-based methods. They often make use of the models within a trust-region framework~\cite{Conn_Scheinberg_Vicente_2009a} or a line-search framework~\cite{Berahas_Byrd_Nocedal_2019}.
 Interpolation and regression are two common ways of establishing the models~\cite{Powell_2001,Conn_Scheinberg_Vicente_2008a,Conn_Scheinberg_Vicente_2008b,Wild_Regis_Shoemaker_2008,Bandeira_Scheinberg_Vicente_2012,Billups_Larson_Graf_2013,Regis_Wild_2017}.
 Algorithms using finite-difference approximations of gradients can also be regarded as model-based
 methods, because such approximations essentially come from linear (for the forward and backward
@@ -943,7 +943,7 @@ order to observe more clearly how the solvers react to these difficulties.
 
 The first experiment tests the stability of the solvers under multiplicative Gaussian noise.
 We take the view that multiplicative noise makes more sense if the scale of the objective
-function changes widely, which is often the case in practice.
+function changes widely, as is often the case in practice.
 
 Let~$\sigma \ge 0$ be the noise level to test. For a testing problem with objective function~$\obj$,
 we define
@@ -955,7 +955,7 @@ with $R(\iter[])\sim \NN(0, 1)$ being independent and identically distributed wh
 If~$\sigma = 0$, then~$\tilde{f}_\sigma = f$, corresponding to the noise-free case.
 In general,~$\sigma$ equals the standard deviation of the noise.
 
-Given the noise level~$\sigma\ge 0$ and a convergence tolerance~$\tau\in(0,1)$, we will plot the
+Given the noise level~$\sigma\ge 0$ and a convergence tolerance~$\tau\in(0,1)$, we will show the
 performance profiles~\cite{Dolan_More_2002,More_Wild_2009} of the solvers on the testing problems.
 For each solver, the performance profile plots the proportion of problems solved with respect to the
 normalized cost required to solve the problem up to the convergence tolerance~$\tau$.
