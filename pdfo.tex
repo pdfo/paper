@@ -980,9 +980,9 @@ To make our results more reliable, when~$\sigma>0$, the final performance profil
 averaging the profiles obtained through the above procedure over ten independent runs. In addition, the
 value~$\obj_{\ast}$ in the convergence test~\eqref{eq:cvt} is set to the least value of~$\obj$ obtained
 by all solvers during these ten runs.
+%by all solvers during these ten runs plus a run with~$\sigma = 0$.
 Finally, for a better scaling of the profiles, we plot the binary logarithm of the normalized cost
 on the horizontal axis, instead of the normalized cost itself.
-
 
 Figure~\ref{fig:noise} shows the performance profiles of the solvers for the noise levels~$\sigma = 0$, $\sigma = 10^{-10}$,  and~$\sigma = 10^{-8}$.
 For each noise level, two profiles are included, with the convergence tolerance being~$\tau = 10^{-2}$ and~$\tau = 10^{-4}$ respectively.
@@ -1050,7 +1050,14 @@ We rather keep the default value provided for the solvers \gls{bfgs} and \gls{cg
 As commented in~\cite{Shi_Etal_2022}, the performance of methods based on finite differences is encouraging when there is no noise, yet much more care is needed when the problems are noisy.
 \Gls{newuoa} performs robustly with the noise according to this experiment, which agrees with the observations in~\cite{Shi_Etal_2022}.
 
+
 \subsubsection{Robustness with respect failures of function evaluations}
+
+We plot the performance profiles of the solvers in a way that is similar to the previous experiment.
+The profiles are also averaged over ten independent runs, and, for each problem, the
+value~$\obj_{\ast}$ in the convergence test~\eqref{eq:cvt} is set to the least value of~$\obj$ obtained
+by all solvers during these ten runs.
+%by all solvers during these ten runs plus a run with~$p = 0$.
 
 %\subsection{Comparison on the CUTEst library}
 
