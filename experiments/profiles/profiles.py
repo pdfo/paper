@@ -163,17 +163,17 @@ class Profiles:
 
         # Determine the least merit function values obtained on each problem.
         f_min = np.min(merits, (1, 2, 3))
-        if self.feature in ["noisy", "digits", "nan"]:
-            logger.info(f'Starting the computations with feature="plain"')
-            rerun_sav = self.feature_options["rerun"]
-            feature_sav = self.feature
-            self.feature_options["rerun"] = 1
-            self.feature = "plain"
-            merits_plain = self.run_all(solvers, options, load, **kwargs)
-            f_min_plain = np.min(merits_plain, (1, 2, 3))
-            f_min = np.minimum(f_min, f_min_plain)
-            self.feature_options["rerun"] = rerun_sav
-            self.feature = feature_sav
+        # if self.feature in ["noisy", "digits", "nan"]:
+        #     logger.info(f'Starting the computations with feature="plain"')
+        #     rerun_sav = self.feature_options["rerun"]
+        #     feature_sav = self.feature
+        #     self.feature_options["rerun"] = 1
+        #     self.feature = "plain"
+        #     merits_plain = self.run_all(solvers, options, load, **kwargs)
+        #     f_min_plain = np.min(merits_plain, (1, 2, 3))
+        #     f_min = np.minimum(f_min, f_min_plain)
+        #     self.feature_options["rerun"] = rerun_sav
+        #     self.feature = feature_sav
 
         # Start the performance and data profile computations.
         pdf_perf_path, csv_perf_path, txt_perf_path, pdf_data_path, csv_data_path, txt_data_path = self.get_profiles_path(solvers)
