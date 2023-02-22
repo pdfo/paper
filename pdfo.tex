@@ -98,9 +98,9 @@
 \newabbreviation{psb}{PSB}{Powell's symmetric Broyden}
 \newabbreviation{rbf}{RBF}{radial basis function}
 \newabbreviation{roc}{ROC}{receiver operating characteristic}
-\newabbreviation{rs}{RS}{Random Search}
 \newabbreviation{svm}{SVM}{support vector machine}
-\newabbreviation{tpe}{TPE}{Tree-Structured Parzen Estimator}
+\newabbreviation{rs}{\textsc{rs}}{Random Search}
+\newabbreviation{tpe}{\textsc{tpe}}{Tree-Structured Parzen Estimator}
 \newacronym{bobyqa}{\textsc{bobyqa}}{Bound Optimization BY Quadratic Approximation}
 \newacronym{bfgs}{\textsc{bfgs}}{Broyden-Fletcher-Goldfarb-Shanno}
 \newacronym{cg}{\textsc{cg}}{Conjugate Gradient}
@@ -820,6 +820,7 @@ option~\texttt{classical} to true. However, this is not recommended.
 
 
 \subsection{Handling failures of function evaluations}
+\label{ssec:barrier}
 
 \gls{pdfo} tolerates NaN values returned by function evaluations. Such a value can be used to
 indicate failures of function evaluations, which are common in applications of~\gls{dfo}.
@@ -841,7 +842,9 @@ The original extreme barrier approach sets~\hugefun to~$\infty$, which is inappr
 methods based on interpolation. In fact, we also moderate~$\obj(\tilde{x})$ to~$\hugefun$ if it is
 actually evaluated to~$\infty$.
 Our approach is clearly naive, but it is better than terminating the solver once function
-evaluations fail. There exist other more refined approaches~\cite{Audet_Caporossi_Jacquet_2020},
+evaluations fail. In our experiments, this simple approach significantly improves the robustness
+of~\gls{pdfo} with respect to failures of function evaluation, as will be demonstrated in Subsection~\ref{sssec:nan}.
+There do exist other more refined approaches~\cite{Audet_Caporossi_Jacquet_2020},
 which will be explored in the future.
 
 
@@ -893,13 +896,13 @@ are popular but less mentioned in existing benchmarking.
 Subsection~\ref{ssec:fd} tests \gls{pdfo} against \gls{bfgs} and \gls{cg} that use finite-difference gradients,
 highlighting the stability of \gls{pdfo} under noise and its robustness with respect to failures of
 function evaluations.
-Subsection~\ref{ssec:hypertune} compares \gls{pdfo} with standard Bayesian optimization solvers
+Subsection~\ref{ssec:hypertune} compares \gls{pdfo} with standard Bayesian optimizers~\cite{Shahriari_Etal_2016}
 on a hyperparameter tuning problem in machine learning, demonstrating the capability and potential
 of model-based \gls{dfo} methods for such problems.
 
 All the experiments were carried out in double precision based on the Python version of \gls{pdfo}~1.2.
 The finite-difference \gls{bfgs} and \gls{cg} were provided by SciPy~\cite{Virtanen_Etal_2020}~1.10.0,
-and the Bayesian optimization solvers were the \gls{tpe} and the \gls{rs} in the Python package
+and the Bayesian optimizers were the \gls{tpe} and the \gls{rs} in the Python package
 \texttt{hyperopt}~\cite{Bergstra_Yamins_Cox_2013}~0.2.7.
 We conducted the test on a ThinkStation P620 with an AMD Ryzen Threadripper
 PRO 3975WX CPU and 64 GB of memory, the operating system being Ubuntu~22.04, and the Python version
@@ -945,8 +948,8 @@ The first experiment tests the stability of the solvers under multiplicative Gau
 We take the view that multiplicative noise makes more sense if the scale of the objective
 function changes widely, as is often the case in practice.
 
-Let~$\sigma \ge 0$ be the noise level to test. For a testing problem with objective function~$\obj$,
-we define
+Let~$\sigma \ge 0$ be the noise level to test.
+For a testing problem with objective function~$\obj$, we define
 \begin{equation}
     \label{eq:noisy-obj}
     \tilde{\obj}_\sigma(\iter[]) \eqdef [1 + \sigma R(\iter[])] \obj(\iter[]),
@@ -978,133 +981,142 @@ solvers can only evaluate~$\tilde{\obj}_\sigma$, which is contaminated unless~$\
 To make our results more reliable, when~$\sigma>0$, the final performance profile is obtained by
 averaging the profiles obtained through the above procedure over ten independent runs. In addition, the
 value~$\obj_{\ast}$ in the convergence test~\eqref{eq:cvt} is set to the least value of~$\obj$ obtained
-by all solvers during all these ten runs.
-%by all solvers during all these ten runs plus a run with~$\sigma = 0$.
+by all solvers during all these ten runs plus a run with~$\sigma = 0$.
 Finally, for a better scaling of the profiles, we plot the binary logarithm of the normalized cost
 on the horizontal axis, instead of the normalized cost itself.
 
 Figure~\ref{fig:noise} shows the performance profiles of the solvers for the noise levels~$\sigma = 0$, $\sigma = 10^{-10}$,  and~$\sigma = 10^{-8}$.
-For each noise level, two profiles are included, with the convergence tolerance being~$\tau = 10^{-2}$ and~$\tau = 10^{-4}$ respectively.
-
-%+++++++++++++++++
-%Each problem is solved ten times with each solver.
-%In the convergence test~\eqref{eq:cvt},~$\obj_{\ast}$ is either the least value of~$\obj$ obtained by all solvers during these ten runs, or the value obtained in the previous noise-free experiment, whichever is smaller.
-%Note that the convergence test~\eqref{eq:cvt} uses the values of~$\obj$ and not those of~$\tilde{\obj}$.
-%This means that we assess the solvers according to the true objective function, even though the
-%solvers receive only the noisy values produced by~\eqref{eq:noisy-obj}.
-
-%The performance profiles~\cite{Dolan_More_2002,More_Wild_2009} of these experiments are provided in
-%Figures~\mbox{\ref{fig:ppu-fdiff-plain}--\ref{fig:ppu-fdiff-noisy-6}}.
-%Broadly speaking, a performance profile plots the proportion of problems solved with respect to the number of function evaluations required to achieve convergence, in a logarithmic scale.
+Two profiles are included for each noise level, with the convergence tolerance being~$\tau = 10^{-2}$ and~$\tau = 10^{-4}$ respectively.
 
 \begin{figure}[htbp]
-    \begin{subfigure}{.32\textwidth}
+    \begin{subfigure}{.45\textwidth}
         \centering
-        \includegraphics[width=\textwidth,page=1]{perf-nan-bfgs_cg_pdfo-50-10-0.01.pdf}
+        \includegraphics[width=\textwidth,page=2]{perf-plain-bfgs_cg_pdfo-50.pdf}
         \caption{$\sigma = 0$, $\tau = 10^{-2}$}
-        \label{fig:ppu-fdiff-plain}
     \end{subfigure}
     \hfill
-    \begin{subfigure}{.32\textwidth}
+    \begin{subfigure}{.45\textwidth}
         \centering
-        \includegraphics[width=\textwidth,page=1]{perf-nan-bfgs_cg_pdfo-50-10-0.01.pdf}
-        \caption{$\sigma = 10^{-10}$, $\tau = 10^{-2}$}
-    \end{subfigure}
-    \hfill
-    \begin{subfigure}{.32\textwidth}
-        \centering
-        \includegraphics[width=\textwidth,page=1]{perf-nan-bfgs_cg_pdfo-50-10-0.01.pdf}
-        \caption{$\sigma = 10^{-8}$, $\tau = 10^{-2}$}
-    \end{subfigure}
-    \begin{subfigure}{.32\textwidth}
-        \centering
-        \includegraphics[width=\textwidth,page=1]{perf-nan-bfgs_cg_pdfo-50-10-0.01.pdf}
+        \includegraphics[width=\textwidth,page=4]{perf-plain-bfgs_cg_pdfo-50.pdf}
         \caption{$\sigma = 0$, $\tau = 10^{-4}$}
     \end{subfigure}
     \hfill
-    \begin{subfigure}{.32\textwidth}
+    \begin{subfigure}{.45\textwidth}
         \centering
-        \includegraphics[width=\textwidth,page=1]{perf-nan-bfgs_cg_pdfo-50-10-0.01.pdf}
-        \caption{$\sigma = 10^{-10}$, $\tau = 10^{-4}$}
-        \label{fig:ppu-fdiff-noisy-6}
+        \includegraphics[width=\textwidth,page=2]{perf-noisy-bfgs_cg_pdfo-50-10.pdf}
+        \caption{$\sigma = 10^{-10}$, $\tau = 10^{-2}$}
     \end{subfigure}
     \hfill
-    \begin{subfigure}{.32\textwidth}
+    \begin{subfigure}{.45\textwidth}
         \centering
-        \includegraphics[width=\textwidth,page=1]{perf-nan-bfgs_cg_pdfo-50-10-0.01.pdf}
+        \includegraphics[width=\textwidth,page=4]{perf-noisy-bfgs_cg_pdfo-50-10.pdf}
+        \caption{$\sigma = 10^{-10}$, $\tau = 10^{-4}$}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}{.45\textwidth}
+        \centering
+        \includegraphics[width=\textwidth,page=2]{perf-noisy-bfgs_cg_pdfo-50-8.pdf}
+        \caption{$\sigma = 10^{-8}$, $\tau = 10^{-2}$}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}{.45\textwidth}
+        \centering
+        \includegraphics[width=\textwidth,page=4]{perf-noisy-bfgs_cg_pdfo-50-8.pdf}
         \caption{$\sigma = 10^{-8}$, $\tau = 10^{-4}$}
-        \label{fig:ppu-fdiff-noisy-6}
     \end{subfigure}
     \caption{Performance profiles of \gls{pdfo}, \gls{bfgs}, and \gls{cg} on unconstrained problems
     with the objective functions evaluated by~$\tilde{\obj}_\sigma$ in~\eqref{eq:noisy-obj}}
     \label{fig:noise}
 \end{figure}
 
-Overall, on the noise-free problems, \gls{newuoa} is slightly more reliable than \gls{bfgs} and \gls{cg}.
-Moreover, \gls{newuoa} evidently outperforms the two other solvers on noisy problems.
-The performances of \gls{bfgs} and \gls{cg} deteriorate significantly when Gaussian noise is imposed as in~\eqref{eq:noisy-obj}, even though the noise level is not high and the convergence tolerance is not demanding.
+In the noise-free case ($\sigma = 0$), \gls{pdfo} is more efficient than
+\gls{bfgs} and \gls{cg}, although the difference is less visible when~$\tau$ is
+smaller, and~\gls{bfgs} can solve slightly more problems than~\gls{pdfo}.
+When there is noise ($\sigma >0$), the advantage of \gls{pdfo} becomes significant.
+The performances of \gls{bfgs} and \gls{cg} deteriorate considerably in the noisy case, even if the
+noise level is not high and the convergence tolerance is not demanding.
 
-Note that our results do not contradict the observations in~\cite{Shi_Etal_2022}, where the difference parameter~$h$ is chosen more carefully, according to the noise levels and the smoothness of the problems.
-We rather keep the default value provided for the solvers \gls{bfgs} and \gls{cg} by SciPy~\cite{Virtanen_Etal_2020}.
-As commented in~\cite{Shi_Etal_2022}, the performance of methods based on finite differences is encouraging when there is no noise, yet much more care is needed when the problems are noisy.
-\Gls{newuoa} performs robustly with the noise according to this experiment, which agrees with the observations in~\cite{Shi_Etal_2022}.
+Note that our results do not contradict the observations in~\cite{Shi_Etal_2022}, where the difference parameter~$h$ is chosen more carefully, according to the noise level and the smoothness of the problems.
+Our experiment is based on the default settings of \gls{bfgs} and \gls{cg} in SciPy, as well as the default configurations of~\gls{pdfo}.
+As commented in~\cite[\S~2]{Shi_Etal_2022}, the performance of methods based on finite differences is encouraging when there is no noise, yet much more care is needed when the problems are noisy.
+In contrast, \gls{pdfo} adapts to noise automatically in this experiment, demonstrating good stability under noise
+without requiring knowledge about the noise level.
 
 
 \subsubsection{Robustness with respect failures of function evaluations}
+\label{sssec:nan}
 
+We now test the robustness of the solvers with respect to failures of function evaluations.
+We assume that the objective function returns NaN when the evaluation fails, which occurs randomly
+with a certain probability. As mentioned in Section~\ref{ssec:barrier}, \gls{pdfo} uses a moderated extreme
+barrier to handle such failures.
+In addition to~\gls{pdfo}, \gls{bfgs}, and~\gls{cg}, we also test a version of~\gls{pdfo} that
+does not employ the moderate extreme barrier, which will be shown as \mbox{``\gls{pdfo} (no barrier)''} in the
+results.
+
+Let~$p \in (0,1)$ be the failure probability of function evaluations.
+For a testing problem with objective function~$\obj$, we define
+\begin{equation}
+    \label{eq:nan-obj}
+    \hat{\obj}_p(x) = \begin{cases}
+        \obj(x) & \text{if~$U(x) \ge  p$}, \\
+        \text{NaN} & \text{otherwise},
+    \end{cases}
+\end{equation}
+where $U(\iter[])$ follows the uniform distribution on~$[0,1]$, being independent and identically distributed when~$x$ varies.
+Note that~$\hat{\obj}_0 = f$.
+In the experiment, the solvers can evaluate~$\obj$ only via~$\hat{\obj}_p$.
 We plot the performance profiles of the solvers in a way that is similar to the previous experiment.
-The profiles are also averaged over ten independent runs, and, for each problem, the
+The profiles are also averaged over ten independent runs. For each problem, the
 value~$\obj_{\ast}$ in the convergence test~\eqref{eq:cvt} is set to the least value of~$\obj$ obtained
-by all solvers during these ten runs.
-%by all solvers during these ten runs plus a run with~$p = 0$.
+by all solvers during these ten runs plus a run with~$p = 0$.
 
-%\subsection{Comparison on the CUTEst library}
+Figure~\ref{fig:nan} shows the performance profiles of the solvers for~$p = 0.01$ and~$p=0.05$.
+Two profiles are included for each~$p$, with the convergence tolerance being~$\tau = 10^{-2}$ and~$\tau = 10^{-4}$ respectively.
 
-%We now compare the performances of the Powell's \gls{dfo} methods for solving unconstrained problems.
-%To that end, we first repeat the previously described noise-free experiment.
-%Performance profiles on unconstrained problems of dimensions at most~$10$ and~$50$ are provided respectively in Figures~\ref{fig:ppu-10} and~\ref{fig:ppu-50}.
-%According to Figure~\ref{fig:ppu-10}, \gls{uobyqa} performs better than all the other solvers on small problems.
-%This can be explained by the fact that it uses quadratic models obtained by fully-determined interpolation.
-%However, we excluded \gls{uobyqa} from the second experiment, because the execution time was excessively long on problems with moderately high dimensions, due to the fully-determined interpolation that it does.
-%Moreover, \gls{cobyla} is always outperformed by all other solvers.
-%This is because it uses only linear models to approximate the objective and constraint functions of the problems, which are not as precise as the quadratic models employed by other solvers.
+\begin{figure}[htbp]
+    \begin{subfigure}{.45\textwidth}
+        \centering
+        \includegraphics[width=\textwidth,page=2]{perf-nan-bfgs_cg_pdfo-50-10-0.01.pdf}
+        \caption{$p = 0.01$, $\tau = 10^{-2}$}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}{.45\textwidth}
+        \centering
+        \includegraphics[width=\textwidth,page=4]{perf-nan-bfgs_cg_pdfo-50-10-0.01.pdf}
+        \caption{$p = 0.01$, $\tau = 10^{-4}$}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}{.45\textwidth}
+        \centering
+        \includegraphics[width=\textwidth,page=2]{perf-nan-bfgs_cg_pdfo-50-10-0.01.pdf}
+        \caption{$p = 0.05$, $\tau = 10^{-2}$}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}{.45\textwidth}
+        \centering
+        \includegraphics[width=\textwidth,page=4]{perf-nan-bfgs_cg_pdfo-50-10-0.01.pdf}
+        \caption{$p = 0.05$, $\tau = 10^{-4}$}
+    \end{subfigure}
+    \caption{Performance profiles of \gls{pdfo}, \gls{bfgs}, and \gls{cg} on unconstrained problems
+    with the objective functions evaluated by~$\hat{\obj}_p$ in~\eqref{eq:nan-obj}}
+    \label{fig:nan}
+\end{figure}
 
-%\begin{figure}[ht]
-%    \begin{subfigure}{.48\textwidth}
-%        \centering
-%        \includegraphics[width=\textwidth,page=1]{perf-nan-bfgs_cg_pdfo-50-10-0.01.pdf}
-%        \caption{Dimension at most~$10$.}
-%        \label{fig:ppu-10}
-%    \end{subfigure}
-%    \hfill
-%    \begin{subfigure}{.48\textwidth}
-%        \centering
-%        \includegraphics[width=\textwidth,page=1]{perf-nan-bfgs_cg_pdfo-50-10-0.01.pdf}
-%        \caption{Dimension at most~$50$.}
-%        \label{fig:ppu-50}
-%    \end{subfigure}
-%    \caption{Performance profile of Powell's \glsfmtshort{dfo} solvers}
-%\end{figure}
+The contrast is clear. Compared with finite-difference \gls{bfgs} and \gls{cg}, \gls{pdfo} is
+more efficient and solves significantly more problems given the same convergence tolerance.
+Moreover, comparing \gls{pdfo} and its no-barrier version, we see that the moderate extreme barrier
+improves evidently the robustness of~\gls{pdfo} with respect to failures of function evaluations,
+even though its a quite naive approach.
 
-%Consider however the previously detailed noisy experiment, applied to Powell's \gls{dfo} solvers.
-%Figure~\ref{fig:ppun-50} presents the performance profiles on the same unconstrained problems of dimension at most~$50$ from the CUTEst library as the previous experiment by randomizing the objective functions with~$\sigma = 10^{-2}$.
-
-%\begin{figure}[ht]
-%    \centering
-%        \includegraphics[width=\textwidth,page=1]{perf-nan-bfgs_cg_pdfo-50-10-0.01.pdf}
-%    \caption{Performance profile of Powell's \glsfmtshort{dfo} solvers on noisy problems of dimension at most~$50$}
-%    \label{fig:ppun-50}
-%\end{figure}
-
-%It is interesting to observe the performance of \gls{cobyla} in this experiment.
-%Even though it is not particularly designed for such kind of problems and uses the simplest models, we observe that \gls{cobyla} defeats all other solvers on unconstrained problems, for~$\tau = 10^{-1}$.
-%It seems that the linear models of \gls{cobyla} are more robust to noise, but we have not yet derived a theory for this behavior.
 
 \subsection{An example of hyperparameter tuning problem}
 \label{ssec:hypertune}
 
-We now consider the more practical problem of the hyperparameter tuning of a \gls{svm}.
-The model we consider is a~$C$-SVC~\cite{Chang_Lin_2011} for binary classification problems with an \gls{rbf} kernel, admitting two hyperparameters: a regularization parameter~$C > 0$ and a kernel coefficient~$\gamma > 0$.
+We now consider a hyperparameter tuning problem and compare \gls{pdfo}
+with \gls{tpe} and \gls{rs}, two standard solvers for such problems in the Python package~\texttt{hyperopt}~\cite{Bergstra_Yamins_Cox_2013}.
+
+The model to tune is a~$C$-SVC~\cite{Chang_Lin_2011} for binary classification problems with an \gls{rbf} kernel, admitting two hyperparameters: a regularization parameter~$C > 0$ and a kernel coefficient~$\gamma > 0$.
 We compare \gls{pdfo} with \gls{tpe} and \gls{rs}, two standard solvers
 in the Python package \texttt{hyperopt}~\cite{Bergstra_Yamins_Cox_2013} for hyperparameter tuning.
 Our experiments are based on binary classifications problems from the LIBSVM datasets\footnote{\url{https://www.csie.ntu.edu.tw/~cjlin/libsvmtools/datasets/}.}.
