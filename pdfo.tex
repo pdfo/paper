@@ -967,20 +967,19 @@ For each problem, the cost to solve the problem is the number of function evalua
     \obj(\iter[0]) - \obj(\iter) \ge (1 - \tau) [\obj(\iter[0]) - \obj_{\ast}],
 \end{equation}
 and the normalized cost is this number divided by the minimum cost of this problem among all solvers;
-the normalized cost is defined as infinity if the solver fails to achieve~\eqref{eq:cvt} before it
-terminates on this problem.
-Here, $\obj_{\ast}$ is set to the least value of~$\obj$ obtained by all solvers.
-For more details, see~\cite[\S~2.1]{More_Wild_2009}.
-It is worth mentioning that the convergence test~\eqref{eq:cvt} uses the values of~$\obj$ and not
+we define the normalized cost as infinity if the solver fails to achieve~\eqref{eq:cvt} on this problem.
+It is suggested by~\cite[\S~2.1]{More_Wild_2009} that the value~$\obj_{\ast}$ in~\eqref{eq:cvt} should be
+the least value of~$\obj$ obtained by all solvers.
+Note that the convergence test~\eqref{eq:cvt} uses the values of~$\obj$ and not
 those of~$\tilde{\obj}_\sigma$.
 This means that we assess the solvers according to the true objective function values, even though the
-solvers receive only the noisy values produced by~$\tilde{\obj}_\sigma$, which is contaminated unless~$\sigma = 0$.
+solvers can only evaluate~$\tilde{\obj}_\sigma$, which is contaminated unless~$\sigma = 0$.
 
 To make our results more reliable, when~$\sigma>0$, the final performance profile is obtained by
 averaging the profiles obtained through the above procedure over ten independent runs. In addition, the
 value~$\obj_{\ast}$ in the convergence test~\eqref{eq:cvt} is set to the least value of~$\obj$ obtained
-by all solvers during these ten runs.
-%by all solvers during these ten runs plus a run with~$\sigma = 0$.
+by all solvers during all these ten runs.
+%by all solvers during all these ten runs plus a run with~$\sigma = 0$.
 Finally, for a better scaling of the profiles, we plot the binary logarithm of the normalized cost
 on the horizontal axis, instead of the normalized cost itself.
 
