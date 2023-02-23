@@ -941,7 +941,7 @@ the purpose of our experiments is the following.
     \item Demonstrate the fact the \gls{pdfo} is capable of adapting to noise without fine-tuning
         according to the noise level, in contrast to methods based on~finite differences.
         This is done in Subsection~\ref{ssec:noise} by comparing \gls{pdfo} with finite-difference
-        \gls{bfgs} and \gls{cg} on unconstrained CUTEst problems.
+        \gls{cg} and \gls{bfgs} on unconstrained CUTEst problems.
     \item Verify the effectiveness of the moderated extreme barrier mentioned in
         Subsection~\ref{ssec:barrier} for handling failures of function
         evaluations. This is done in~Subsection~\ref{ssec:nan} by testing \gls{pdfo} with and
@@ -955,7 +955,7 @@ the purpose of our experiments is the following.
 \end{enumerate}
 
 Our experiments are carried out in double precision based on the Python version of \gls{pdfo}~1.2.
-The finite-difference \gls{bfgs} and \gls{cg} are provided by SciPy~1.10.0.
+The finite-difference \gls{cg} and \gls{bfgs} are provided by SciPy~1.10.0.
 The version of~\texttt{hyperopt} is~0.2.7. All these packages are tested with the latest stable version
 at the time of writing.
 We conduct the test on a ThinkStation P620 with an AMD Ryzen Threadripper
@@ -966,14 +966,14 @@ being~3.10.6.
 \subsection{Stability under noise}
 \label{ssec:noise}
 
-We first compare \gls{pdfo} with finite-difference \gls{bfgs} and \gls{cg} on unconstrained
+We first compare \gls{pdfo} with finite-difference \gls{cg} and \gls{bfgs} on unconstrained
 problems with multiplicative Gaussian noise.
 We take the view that multiplicative noise makes more sense if the scale of the objective
 function changes widely, as is often the case in practice.
 
-SciPy provides \gls{bfgs} and \gls{cg} under the \texttt{minimize} in the \texttt{scipy.optimize} module.
+SciPy provides \gls{cg} and \gls{bfgs} under the \texttt{minimize} in the \texttt{scipy.optimize} module.
 Invoked with the default configurations in SciPy without derivatives,
-\gls{bfgs} and \gls{cg} approximate gradients by forward differences with the default difference
+\gls{cg} and \gls{bfgs} approximate gradients by forward differences with the default difference
 parameter~$h = \sqrt{u} \approx 1.5\times 10^{-8}$, where~$u$ is the unit roundoff.
 For \gls{pdfo}, we specify \gls{newuoa} as the solver, while setting all the other options to the default.
 In particular, the initial trust-region radius is~$1$, the final trust-region radius is~$10^{-6}$,
@@ -1071,22 +1071,23 @@ Two profiles are included for each noise level, with the convergence tolerance b
         \includegraphics[width=\textwidth,page=4]{perf-noisy-bfgs_cg_pdfo-50-8.pdf}
         \caption{$\sigma = 10^{-8}$, $\tau = 10^{-4}$}
     \end{subfigure}
-    \caption{Performance profiles of \gls{pdfo}, \gls{bfgs}, and \gls{cg} on unconstrained problems
+    \caption{Performance profiles of \gls{cg}, \gls{bfgs}, and \gls{pdfo} on unconstrained problems
     with the objective functions evaluated by~$\tilde{\obj}_\sigma$ in~\eqref{eq:noisy-obj}}
     \label{fig:noise}
 \end{figure}
 
 In the noise-free case ($\sigma = 0$), \gls{pdfo} is more efficient than
-\gls{bfgs} and \gls{cg}, although the difference is less visible when~$\tau$ is
+\gls{cg} and \gls{bfgs}, although the difference is less visible when~$\tau$ is
 smaller, and~\gls{bfgs} can solve slightly more problems than~\gls{pdfo}.
 When there is noise ($\sigma >0$), the advantage of \gls{pdfo} becomes significant.
-The performances of \gls{bfgs} and \gls{cg} deteriorate considerably in the noisy case, even if the
+The performances of \gls{cg} and \gls{bfgs} deteriorate considerably in the noisy case, even if the
 noise level is not high and the convergence tolerance is not demanding.
 
 Note that our results do not contradict the observations in~\cite{Shi_Etal_2022a,Shi_Etal_2022}, where the
 difference parameter~$h$ is chosen more carefully according to the noise level and the smoothness of
 the problems.
-Our experiment does not include such fine-tuning, but adopts the default settings of \gls{bfgs} and \gls{cg} in SciPy, as well as the default configurations of~\gls{pdfo}.
+Our experiment does not include such fine-tuning, but adopts the default settings of \gls{cg} and
+\gls{bfgs} in SciPy, as well as the default configurations of~\gls{pdfo}.
 
 As shown in~\cite[\S~2]{Shi_Etal_2022}, the performance of finite-difference methods is encouraging when there is no noise, yet much more care is needed when the problems are noisy.
 In contrast, \gls{pdfo} adapts to noise automatically in our experiment, demonstrating good stability under noise
@@ -1108,7 +1109,7 @@ We assume that the objective function returns NaN when the evaluation fails, whi
 with a certain probability. As mentioned in Section~\ref{ssec:barrier}, \gls{pdfo} uses a moderated extreme
 barrier to handle such failures. To verify the effectiveness of this approach, we compare \gls{pdfo}
 with its variant that does not apply the barrier. To make the experiment more informative, we
-also include the finite-difference \gls{bfgs} and~\gls{cg} tested before, which do not
+also include the finite-difference \gls{cg} and~\gls{bfgs} tested before, which do not
 handle evaluation failures in any particular way. The solvers are set up in the same way as in the
 previous experiment, and we still employ the~$157$ unconstrained CUTEst problems used previously.
 
@@ -1156,18 +1157,22 @@ Two profiles are included for each~$p$, with the convergence tolerance being~$\t
         \includegraphics[width=\textwidth,page=4]{perf-nan-bfgs_cg_pdfo-50-10-0.05.pdf}
         \caption{$p = 0.05$, $\tau = 10^{-4}$}
     \end{subfigure}
-    \caption{Performance profiles of \gls{pdfo}, \gls{bfgs}, and \gls{cg} on unconstrained problems
+    \caption{Performance profiles of \gls{cg}, \gls{bfgs}, \gls{pdfo}, and~\gls{pdfo} without
+        barrier on unconstrained problems
     with the objective functions evaluated by~$\hat{\obj}_p$ in~\eqref{eq:nan-obj}}
     \label{fig:nan}
 \end{figure}
 
 The contrast is clear.
-Compared with finite-difference \gls{bfgs} and \gls{cg}, \gls{pdfo} is
+Compared with finite-difference \gls{cg} and \gls{bfgs}, \gls{pdfo} is
 more efficient and solves significantly more problems given the same convergence tolerance.
 Moreover, comparing \gls{pdfo} and its no-barrier counterpart, we see that the moderate extreme barrier
 improves evidently the robustness of~\gls{pdfo} with respect to failures of function evaluations,
 even though it is a quite naive approach.
-We speculate that the same approach will also benefit other model-based \gls{dfo} methods,
+When~$p = 0.05$, meaning that the function evaluation fails roughly once every $20$ times,
+\gls{pdfo} can still solve almost~$60\%$ of the problems up to the convergence
+tolerance~$\tau = 10^{-4}$, whereas all its competitors solve less than $25\%$.
+We speculate that the moderated extreme barrier will also benefit other model-based \gls{dfo} methods,
 including those based on finite differences, which deserves further investigation in the future.
 
 
