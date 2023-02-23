@@ -268,7 +268,7 @@
     With \gls{pdfo}, users can call each of Powell's algorithms directly based on their own choice.
     Alternatively, if the user does not specify any algorithm, the package can also select one automatically based on the problem characteristics.
     % When a problem can be solved by multiple algorithms (for example, an unconstrained problem can be solved by all five algorithms), the selection is made based on experimental results on the CUTEst problems.
-    We also provide an overview on Powell's methods and share some observations on these methods
+    We also provide an overview of Powell's methods and share some observations on these methods
     based on experiments conducted using~\gls{pdfo}.
 
     \keywords{Derivative-free optimization \and COBYLA \and UOBYQA \and NEWUOA \and BOBYQA \and LINCOA}
@@ -297,7 +297,7 @@ Our aim is to wrap Powell's Fortran code into a package named \gls{pdfo}, which 
 For each supported language, \gls{pdfo} provides a simple function that can invoke one of Powell's solvers according to the user's request (if any) or according to the type of the problem to solve.
 The current release (Version 1.2) of \gls{pdfo} supports Python and MATLAB, with more languages to be covered in the future.
 The signature of the Python subroutine is consistent with the \texttt{minimize} function of the SciPy optimization library; the signature of the MATLAB subroutine is consistent with the \texttt{fmincon} function of the MATLAB Optimization Toolbox.
-\gls{pdfo} is cross-platform, and available on Linux, macOS, and Windows at
+\gls{pdfo} is cross-platform, available on Linux, macOS, and Windows at
 \begin{center}
     \url{https://www.pdfo.net}\,.
 \end{center}
@@ -312,7 +312,7 @@ implementation of \gls{bobyqa};
 NLopt includes multi-language interfaces for \gls{cobyla}, \gls{newuoa}, and \gls{bobyqa};\footnote{\url{https://github.com/ stevengj/nlopt}\,.}
 minqa wraps \gls{uobyqa}, \gls{newuoa}, and \gls{bobyqa} in R;\footnote{\url{https://CRAN.R-project.org/package=minqa}\,.}
 SciPy makes \gls{cobyla} available in Python under its optimization library.\footnote{\url{https://docs.scipy.org/doc/scipy/reference/optimize.minimize-cobyla.html}\,.}
-However, \gls{pdfo} has several features that distinguishes itself from others.
+However, \gls{pdfo} has several features that distinguish it from others.
 
 \begin{enumerate}
     \item \emph{Comprehensiveness.}
@@ -400,7 +400,7 @@ DFO-TR~\cite{Bandeira_Scheinberg_Vicente_2012}, and DFO-LS~\cite{Cartis_Etal_201
 
 Hybrids between direct-search and model-based approaches exist, for
 instance, Implicit Filtering~\cite[Algorithm~4.7]{Kelley_2011} and MADS with quadratic models~\cite{Conn_Digabel_2013}.
-Theory of global convergence and convergence rate has been established for both direct-search and
+Theories of global convergence and convergence rate have been established for both direct-search and
 model-based methods~\cite{Torczon_1997,Conn_Scheinberg_Toint_1997a,Kolda_Lewis_Torczon_2003,Conn_Scheinberg_Vicente_2009a,Powell_2012,Vicente_2013,Dodangeh_Vicente_2016,Garmanjani_Judice_Vicente_2016}.
 It is worth noting that the performance of \gls{dfo} algorithms is measured in general by the number of function evaluations needed for solving a given problem, as the objective and constraint functions in \gls{dfo} problems are commonly
 expensive to evaluate.
@@ -431,7 +431,7 @@ bound-constrained problems), and \gls{lincoa} (for linearly constrained problems
 Moreover, Powell implemented these algorithms into Fortran solvers and made the code publicly available.
 They are the cornerstones of \gls{pdfo}.
 This section provides an overview of these five algorithms, starting with a sketch in
-Section~\ref{ssec:sketch} and then presenting more details afterwards.
+Section~\ref{ssec:sketch} and then presenting more details afterward.
 
 \subsection{A sketch of the algorithms}
 \label{ssec:sketch}
@@ -497,7 +497,7 @@ This is impracticable unless~$n$ is small, which motivates the use of underdeter
 
 In this case, models are established according to the interpolation condition~\eqref{eq:itpls}
 with~$\abs{\xpt}$ being less than~$(n + 1)(n + 2) / 2$, the remaining degrees of freedom being taken up by minimizing a certain functional to promote the regularity of the quadratic model.
-More specifically, this means to establish~$\objm$ by solving
+More specifically, this means building~$\objm$ by solving
 \begin{equation}
     \label{eq:undqitp}
         \min_{Q \in \qspace}  ~ \func_k(Q) \quad \st \quad Q(y) = \obj(y), ~ y \in \xpt,
@@ -512,7 +512,7 @@ which is inspired by the least-change property of quasi-Newton updates~\cite{Den
 The first model~$\objm[1]$ is obtained by setting~$\objm[0] = 0$.
 Powell~\cite{Powell_2013} referred to his approach as the \emph{symmetric Broyden update} of
 quadratic models (see also~\cite[\S~3.6]{Zhang_2012} and~\cite[\S~2.4.2]{Ragonneau_2022}).
-It can be regarded as a derivative-free version of the \gls{psb} quasi-Newton update~\cite{Powell_1970b}, which minimizes the functional~$\func_k$ among all quadratic polynomials that fulfill~$Q(\iter) = \obj(\iter)$, $\nabla Q(\iter) = \nabla \obj(\iter)$, and~$\nabla Q(\iter[k - 1]) = \nabla \obj(\iter[k - 1])$ (see~\cite[Theorem~4.2]{Dennis_Schnabel_1979}), with~$\iter$ and~$\iter[k - 1]$ being the current and the previous iterates, respectively.
+It can be regarded as a derivative-free version of \gls{psb} quasi-Newton update~\cite{Powell_1970b}, which minimizes the functional~$\func_k$ among all quadratic polynomials that fulfill~$Q(\iter) = \obj(\iter)$, $\nabla Q(\iter) = \nabla \obj(\iter)$, and~$\nabla Q(\iter[k - 1]) = \nabla \obj(\iter[k - 1])$ (see~\cite[Theorem~4.2]{Dennis_Schnabel_1979}), with~$\iter$ and~$\iter[k - 1]$ being the current and the previous iterates, respectively.
 The interpolation problem~\mbox{\eqref{eq:undqitp}--\eqref{eq:leastchange}} is a convex quadratic
 programming problem with respect to the coefficients of the quadratic model.
 
@@ -569,10 +569,10 @@ where~$y_k^{\drop} \in \xpt$ is chosen to maintain the well-poisedness of~$\xpt[
 Note that~$y_k^{\drop}$ is selected after evaluating~$\iter^{\trust}$.
 Recall that Powell's methods update the inverse of either the coefficient matrix of the
 interpolation system or the corresponding \kkt system using the Sherman-Morrison-Woodbury formula.
-In order to keep the interpolation problem well-conditioned, $y_k^{\drop}$ is chosen
+To keep the interpolation problem well-conditioned, $y_k^{\drop}$ is chosen
 to enlarge the denominator in this formula, which is also the ratio between
 the determinants of the old and new coefficient matrices.\footnote{
-    Let~$W$ be a square matrix, and consider~$W_+ = W + UV^\T$, where $U$ and~$V$ are two
+    Let~$W$ be a square matrix and consider~$W_+ = W + UV^\T$, where $U$ and~$V$ are two
     matrices of the same size and $UV^\T$ has the same size as $W$.
     Then $\det(W_+) = \det(W)\det(I+V^\T W^{-1}U)$, and the
     Sherman-Morrison-Woodbury formula
@@ -619,7 +619,7 @@ Indeed, \gls{newuoa} also tries maximizing the denominator directly when~\eqref{
 fails to render a large enough denominator, which does not happen often~(see~\cite[\S~6]{Powell_2006}).
 
 Given the two possible updates~\eqref{eq:xpt-update-tr} and~\eqref{eq:xpt-update-geo} of the
-interpolation set, it is clear that the number of interpolation points remains a constant.
+interpolation set, it is clear that the number of interpolation points remains constant.
 As mentioned earlier, the number is~$n+1$ in \gls{cobyla} and~$(n+1)(n+2)/2$ in \gls{uobyqa}.
 \gls{newuoa}, \gls{bobyqa}, and \gls{lincoa} set this number to an integer in~$[n+2, (n+1)(n+2)/2]$.
 
@@ -705,7 +705,8 @@ and~\cite{Powell_2015} discusses only how to solve its trust-region subproblem.
 
 As their names suggest, \gls{newuoa}, \gls{bobyqa}, and \gls{lincoa} aim at solving unconstrained,
 bound-constrained, and linearly constrained problems respectively.
-They all set~$\fsetm$ in the trust-region subproblem~\eqref{eq:trsp} to be~$\fset$, corresponding the whole space for \gls{newuoa}, a box for \gls{bobyqa} and a polyhedron for \gls{lincoa}.
+They all set~$\fsetm$ in the trust-region subproblem~\eqref{eq:trsp} to be~$\fset$, corresponding
+to the whole space for \gls{newuoa}, a box for \gls{bobyqa} and a polyhedron for \gls{lincoa}.
 
 To solve the trust-region subproblem~\eqref{eq:trsp}, \gls{newuoa} employs the
 Steihaug-Toint truncated conjugate gradient (TCG) algorithm~\cite{Steihaug_1983,Toint_1981};
@@ -903,7 +904,7 @@ sets~\hugefun to~$\infty$, which is inappropriate for
 methods based on interpolation. In fact, we also moderate~$\obj(\tilde{x})$ to~$\hugefun$ if it is
 actually evaluated to~$\infty$.
 Our approach is clearly naive, but it is better than terminating the solver once the function
-evaluation fail. In our experiments, this simple approach significantly improves the robustness
+evaluation fails. In our experiments, this simple approach significantly improves the robustness
 of~\gls{pdfo} with respect to failures of function evaluation, as will be demonstrated in Subsection~\ref{ssec:nan}.
 There do exist other more sophisticated approaches~\cite{Audet_Caporossi_Jacquet_2020},
 which will be explored in the future.
@@ -1011,7 +1012,7 @@ number of function evaluations is set to~$500n$.
 %function changes widely, as is often the case in practice.
 
 Let~$\sigma \ge 0$ be the noise level to test.
-For a testing problem with objective function~$\obj$, we define
+For a testing problem with the objective function~$\obj$, we define
 \begin{equation}
     \label{eq:noisy-obj}
     \tilde{\obj}_\sigma(\iter[]) = [1 + \sigma R(\iter[])] \obj(\iter[]),
@@ -1101,7 +1102,7 @@ noise level is not high and the convergence tolerance is not demanding.
 Note that our results do not contradict the observations in~\cite{Shi_Etal_2022a,Shi_Etal_2022}, where the
 difference parameter~$h$ is chosen more carefully according to the noise level and the smoothness of
 the problems.
-Our experiment does not include such fine-tuning, but adopts the default settings of \gls{cg} and
+Our experiment does not include such fine-tuning but adopts the default settings of \gls{cg} and
 \gls{bfgs} in SciPy, as well as the default configurations of~\gls{pdfo}.
 
 As shown in~\cite[\S~2]{Shi_Etal_2022}, the performance of finite-difference methods is encouraging when there is no noise, yet much more care is needed when the problems are noisy.
@@ -1110,7 +1111,7 @@ without requiring knowledge about the noise level. This is because Powell's meth
 the geometry of the interpolation set during the iterations, which
 enables the methods to make progress until the interpolation points are too close to distinguish
 noise from true objective function values.
-This is not specific to Powell's methods,
+This is not specific to Powell's methods
 but also applies to other methods that sample the objective function on a set of points with
 adaptively controlled geometry, including finite-difference methods with well-chosen difference
 parameters~\cite{Shi_Etal_2022a}.
@@ -1129,7 +1130,7 @@ handle evaluation failures particularly. The solvers are set up in the same way 
 previous experiment, and we still employ the~$157$ unconstrained CUTEst problems used previously.
 
 Let~$p \in (0,1)$ be the failure probability of function evaluations.
-For a testing problem with objective function~$\obj$, we define
+For a testing problem with the objective function~$\obj$, we define
 \begin{equation}
     \label{eq:nan-obj}
     \hat{\obj}_p(x) = \begin{cases}
@@ -1188,7 +1189,7 @@ When~$p = 0.05$, the function evaluation fails roughly once every $20$ times,
 but \gls{pdfo} can still solve almost~$60\%$ of the problems up to the convergence
 tolerance~$\tau = 10^{-4}$ in the sense of~\eqref{eq:cvt}, whereas all its competitors solve less than $25\%$.
 We speculate that the moderated extreme barrier will also benefit other model-based \gls{dfo} methods,
-including those based on finite differences, which deserves further investigation in the future.
+including those based on finite differences. It deserves further investigation in the future.
 
 
 \subsection{An illustration of hyperparameter tuning with~\gls{pdfo}}
@@ -1237,7 +1238,7 @@ on the fold not involved in the training, leading to five scores, the average of
 %We maximize~$P(C, \gamma)$ by \gls{pdfo}.
 
 
-Our experiment is based on binary classifications problems from \mbox{LIBSVM},\footnote{\url{https://www.csie.ntu.edu.tw/~cjlin/libsvmtools/datasets}\,.}
+Our experiment is based on binary classification problems from \mbox{LIBSVM},\footnote{\url{https://www.csie.ntu.edu.tw/~cjlin/libsvmtools/datasets}\,.}
 where we adopt three datasets detailed in Table~\ref{tab:htdata}.
 LIBSVM divides each dataset~$\mathcal{D}$ into two disjoint subsets, namely a training dataset~$\mathcal{S}$ and
 a testing dataset~$\mathcal{T}$.
@@ -1247,7 +1248,7 @@ described above, with~\eqref{eq:svc} being handled by the SVC class of the Pytho
 Then we solve~\eqref{eq:hypertune} by~\gls{pdfo}, \gls{rs}, or~\gls{tpe} to obtain the tuned
 parameters~$(\bar{C}, \bar{\gamma})$.
 As in~\cite[\S~5.3]{Ghanbari_Scheinberg_2017}, we modify the constraints of~\eqref{eq:hypertune}
-to~$C\in[10^{-6}, 1]$ and~$\gamma\in [1, 10^{3}]$. For a better scaling of the problem,
+to~$C\in[10^{-6}, 1]$ and~$\gamma\in [1, 10^{3}]$. For better scaling of the problem,
 we perform the maximization with respect to~$(\log_{10}C,\, \log_{10}\gamma)$ instead of~$(C,
 \gamma)$, the initial guess being chosen randomly from~$[-6, 0]\times[0, 3]$. The solver
 of~\gls{pdfo} is \gls{bobyqa}, for which we set the maximal number of function evaluations to~$100$.
@@ -1275,7 +1276,7 @@ To assess the quality of the tuned parameters~$(\bar{C}, \bar{\gamma})$, we solv
 on~$\mathcal{S}$ with~$(C, \gamma)=(\bar{C}, \bar{\gamma})$, and calculate both the AUC score and the accuracy of the resulting
 classifier on~$\mathcal{T}$, the latter being the fraction of correctly classified data points.
 Tables~\ref{tab:splice}--\ref{tab:ijcnn1} present the results for this experiment,
-where \#$f$ denotes the number of function evaluations, and ``Time'' represents the computing
+where \#$f$ denotes the number of function evaluations and ``Time'' represents the computing
 time for obtaining~$(\bar{C}, \bar{\gamma})$.
 
 \begin{table}[!ht]
@@ -1343,7 +1344,7 @@ applicable unless the hyperparameters are continuous variables.
 Our objective is rather to provide an
 example that shows the possibility of applying Powell's methods to such problems, which is not well studied up to now.
 In doing so, we also hope to call for more investigation on \gls{dfo} methods for
-machine learning problems in general, as is suggested in~\cite{Ghanbari_Scheinberg_2017}.
+machine learning problems in general as suggested in~\cite{Ghanbari_Scheinberg_2017}.
 
 
 
@@ -1352,16 +1353,16 @@ machine learning problems in general, as is suggested in~\cite{Ghanbari_Scheinbe
 \label{sec:conclude}
 
 We have presented the \gls{pdfo} package, which aims at simplifying the use of
-the Powell's \gls{dfo} solvers by providing user-friendly interfaces.
+Powell's \gls{dfo} solvers by providing user-friendly interfaces.
 More information about the package can be found on the homepage of the package at
 \mbox{\url{https: //www.pdfo.net}}\,, including the detailed syntax of the interfaces,
 an extensive documentation of the options, and several examples to illustrate the~usage.
-%The scope of \gls{pdfo} in the future is not limited only to the Powell's \gls{dfo} solvers.
+%The scope of \gls{pdfo} in the future is not limited only to Powell's \gls{dfo} solvers.
 %For instance, the authors are currently working on a new solver for nonlinearly constrained optimization, named \gls{cobyqa}~\cite{Ragonneau_2022}.
 %It is aimed to be added to \gls{pdfo}, and other \gls{dfo} solvers may be included in the future.
 
-In addition, we have also provided an overview of the Powell's methods behind \gls{pdfo}.
-The overview does not intend to repeat Powell's description about the methods, but rather to provide a
+In addition, we have also provided an overview of Powell's methods behind \gls{pdfo}.
+The overview does not intend to repeat Powell's description of the methods, but rather to provide a
 summary on the main features and structures of the methods, highlighting the intrinsic connections and
 similarities among them. We hope that the overview will ease the understanding of Powell's methods,
 in the same way as the \gls{pdfo} package eases the use of these methods.
