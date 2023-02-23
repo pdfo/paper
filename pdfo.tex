@@ -262,7 +262,8 @@
     With \gls{pdfo}, users can call each of Powell's algorithms directly based on their own choice.
     Alternatively, if the user does not specify any algorithm, the package can also select one automatically based on the problem characteristics.
     % When a problem can be solved by multiple algorithms (for example, an unconstrained problem can be solved by all five algorithms), the selection is made based on experimental results on the CUTEst problems.
-    We also provide an overview on Powell's methods and share some observations on these methods based on experiments conducted using\gls{pdfo}.
+    We also provide an overview on Powell's methods and share some observations on these methods
+    based on experiments conducted using~\gls{pdfo}.
 
     \keywords{Derivative-free optimization \and COBYLA \and UOBYQA \and NEWUOA \and BOBYQA \and LINCOA}
     \subclass{65K05 \and 90C30 \and 90C56 \and 90-04}
@@ -292,19 +293,19 @@ The current release (Version 1.2) of \gls{pdfo} supports Python and MATLAB, with
 The signature of the Python subroutine is consistent with the \texttt{minimize} function of the SciPy optimization library; the signature of the MATLAB subroutine is consistent with the \texttt{fmincon} function of the MATLAB Optimization Toolbox.
 \gls{pdfo} is cross-platform, and available on Linux, macOS, and Windows at
 \begin{center}
-    \url{https://www.pdfo.net}.
+    \url{https://www.pdfo.net}~.
 \end{center}
 It has been downloaded more than \num{50000} times as of February 2023, mirror downloads excluded.
-Moreover, it is one of the optimization engines in GEMSEO~\cite{Gallard_Etal_2018},
+Moreover, it is one of the optimization engines in GEMSEO~\cite{Gallard_Etal_2018},\footnote{\url{https://gemseo.readthedocs.io}~.}
 an industrial software package for Multidisciplinary Design Optimization (MDO).
 
 \gls{pdfo} is not the first attempt to facilitate the usage of Powell's solvers in languages other than Fortran.
 Various efforts have been made in this direction.
 Py-BOBYQA~\cite{Cartis_Etal_2019,Cartis_Roberts_Sheridan-Methven_2022} provides a Python
 implementation of \gls{bobyqa};
-NLopt includes multi-language interfaces for \gls{cobyla}, \gls{newuoa}, and \gls{bobyqa};\footnote{\url{https://github.com/ stevengj/nlopt}.}
-minqa wraps \gls{uobyqa}, \gls{newuoa}, and \gls{bobyqa} in R;\footnote{\url{https://CRAN.R-project.org/package=minqa}.}
-SciPy makes \gls{cobyla} available in Python under its optimization library.\footnote{\url{https://docs.scipy.org/doc/scipy/reference/optimize.minimize-cobyla.html}.}
+NLopt includes multi-language interfaces for \gls{cobyla}, \gls{newuoa}, and \gls{bobyqa};\footnote{\url{https://github.com/ stevengj/nlopt}~.}
+minqa wraps \gls{uobyqa}, \gls{newuoa}, and \gls{bobyqa} in R;\footnote{\url{https://CRAN.R-project.org/package=minqa}~.}
+SciPy makes \gls{cobyla} available in Python under its optimization library.\footnote{\url{https://docs.scipy.org/doc/scipy/reference/optimize.minimize-cobyla.html}~.}
 However, \gls{pdfo} has several features that distinguishes itself from others.
 
 \begin{enumerate}
@@ -413,7 +414,7 @@ quasi-Newton method. The least-change property~\cite{Dennis_Schnabel_1979} of qu
 is a major motivation for Powell to investigate the least Frobenius norm updating~\cite{Powell_2004b}
 of quadratic models in DFO, which is the backbone of \gls{newuoa}, \gls{bobyqa}, and \gls{lincoa}.}
 His code for this algorithm is contained in the
-HSL Mathematical Software Library as subroutine \texttt{VA24}.\footnote{\url{https://www.hsl.rl.ac.uk.}}
+HSL Mathematical Software Library as subroutine \texttt{VA24}.\footnote{\url{https://www.hsl.rl.ac.uk}~.}
 It is not included in \gls{pdfo} because the code is not in the public domain, although open-source implementations are available~(see~\cite[footnote~4]{Conn_Scheinberg_Toint_1997b}).
 
 From the 1990s to the final days of his career, Powell developed five model-based \gls{dfo}
@@ -466,7 +467,7 @@ form of~$\objm(x) = \obj(y^{\base}) + (x - y^{\base})^{\T} \nabla \objm(y^{\base
 hence~\eqref{eq:itpls} is equivalent to
 \begin{equation}
     \label{eq:litpls}
-    \objm(y^{\base}) + (y -y^{\base})^{\T} \nabla \objm(y^{\base})  = \obj(y),  \quad y \in \xpt,
+    \objm(y^{\base}) + (y -y^{\base})^{\T} \nabla \objm(y^{\base})  = \obj(y),  ~ y \in \xpt,
 \end{equation}
 which is a linear system with respect to~$\obj(y^\base) \in \R$ and~$\nabla \obj(y^\base) \in \R^n$, the degrees of freedom being~$n+1$.
 \Gls{cobyla} builds linear models by the system~\eqref{eq:litpls}, with~$\xpt$ being an interpolation
@@ -475,7 +476,7 @@ Similarly, if~$\objm$ is a quadratic model, then~\eqref{eq:itpls} is equivalent 
 \begin{equation}
     \label{eq:qitpls}
     \objm(y^{\base}) + (y -y^{\base})^{\T} \nabla \objm(y^{\base})
-    + \frac{1}{2}(y-y^{\base})^{\T}  \nabla^2 \objm(y^{\base}) (y-y^{\base}) = \obj(y),  \quad y \in \xpt,
+    + \frac{1}{2}(y-y^{\base})^{\T}  \nabla^2 \objm(y^{\base}) (y-y^{\base}) = \obj(y),  ~ y \in \xpt,
 \end{equation}
 a linear system with unknowns~$\objm(y^\base) \in \R$, $\nabla \objm(y^\base) \!\in\! \R^n$,
 and~$\nabla^2 \objm(y^{\base})\!\in\!\R^{n \times n}$, the degrees of freedom being~$(n + 1)(n + 2) / 2$ due to the symmetry of~$\nabla^2 \objm(y^\base)$.
@@ -639,10 +640,10 @@ Once the linear models~$\conm$ of the constraint functions~$\con$ are built for~
 Note that the trust-region subproblem~\eqref{eq:trsp} may not be feasible,
 as the trust region and the region~\eqref{eq:cobylarg} may not intersect.
 \gls{cobyla} handles the subproblem in two stages. In the first stage, the problem
-\begin{equation}
-    \label{eq:cobyla_sp1}
+\begin{equation*}
+%    \label{eq:cobyla_sp1}
     \min_{x \in \R^n}  \max_{1 \le i \le m} ~ [\conm(x)]_{-} \quad \st \quad \norm{x - \iter} \le \rad
-\end{equation}
+\end{equation*}
 is solved, where~$[t]_{-} = \max \set{0, -t}$ for any~$t\in \R$.
 In doing so, the method attempts to reduce the~$\ell_{\infty}$-violation of the linearized constraints within the trust region.
 If the first stage finds a point in the interior of the trust region,
@@ -710,7 +711,7 @@ it may also improve the TCG step by two-dimensional searches if it reaches the
 trust-region boundary~\mbox{\cite[\S~3]{Powell_2009}}.
 \gls{lincoa} uses another active-set variant of TCG to solve the trust-region
 subproblem~\eqref{eq:trsp} with linear constraints~\cite[\S~3 and \S~5]{Powell_2015}.
-An easily accessible description of the TCG algorithms employed by \gls{bobyqa} and \gls{lincoa}
+An accessible description of the TCG algorithms employed by \gls{bobyqa} and \gls{lincoa}
 can be found in~\cite[\S~6.2.1 and \S~6.2.2]{Ragonneau_2022}.
 \gls{newuoa}, \gls{bobyqa}, and \gls{lincoa} manage the trust-region radius in a way similar to
 \gls{uobyqa}, imposing a lower bound~$\radlb$ on~$\rad$ when updating~$\rad$.
@@ -718,8 +719,7 @@ can be found in~\cite[\S~6.2.1 and \S~6.2.2]{Ragonneau_2022}.
 When solving the geometry-improving subproblem~\eqref{eq:biglag},
 \gls{newuoa} first takes $\iter \pm \radalt (y_k^\drop - \iter)/\|y_k^\drop -\iter\|$,
 with the sign that provides the larger value of~$\ell_k^\drop$, and then revises it by
-a procedure similar to the two-dimensional searches that improve the TCG step for~\eqref{eq:trsp}.
-(see~\cite[\S~6]{Powell_2006})
+a procedure similar to the two-dimensional searches that improve the TCG step for~\eqref{eq:trsp}~(see~\cite[\S~6]{Powell_2006}).
 \gls{bobyqa} computes two approximate solutions to~\eqref{eq:biglag} and chooses the better one:
 the first one solves~\eqref{eq:biglag} with an additional constraint that~$x$ is located on the
 straight lines through~$\iter$ and another point in~$\xpt$, and the second is obtained by a Cauchy
@@ -755,12 +755,12 @@ an infeasible method, which requires~$\obj$ to be defined even when the linear c
 This section details the main features of \gls{pdfo}, in particular the signature of the main
 function, problem preprocessing, solver selection, bug fixes, and handling failures of function
 evaluations. For more features of~\gls{pdfo}, we refer to its homepage
-at~\url{https://www.pdfo.net}.
+at~\url{https://www.pdfo.net}\;.
 
 Before starting, we
 emphasize that \gls{pdfo} does not re-implement Powell’s solvers but rather enables Python and MATLAB
 to call Powell's Fortran implementation.
-At a low level, it uses F2PY\footnote{\url{https://numpy.org/doc/stable/f2py}.} to interface Python with Fortran, and MEX to
+At a low level, it uses F2PY\,\footnote{\url{https://numpy.org/doc/stable/f2py}~.} to interface Python with Fortran, and MEX to
 interface it with MATLAB, although users never need such knowledge to employ~\gls{pdfo}.
 
 \subsection{Signature of the main function}
@@ -892,12 +892,12 @@ A caveat is that setting~$\obj(\tilde{x})$ to \hugefun may lead to
 extreme values or even NaN in the coefficients of the interpolation models, but Powell's solvers
 turn out to be quite tolerant of such values.
 
-The original extreme barrier approach~\cite[eq~(13.2)]{Conn_Scheinberg_Vicente_2009b}
+The original extreme barrier approach~\cite[eq.~(13.2)]{Conn_Scheinberg_Vicente_2009b}
 sets~\hugefun to~$\infty$, which is inappropriate for
 methods based on interpolation. In fact, we also moderate~$\obj(\tilde{x})$ to~$\hugefun$ if it is
 actually evaluated to~$\infty$.
-Our approach is clearly naive, but it is better than terminating the solver once function
-evaluations fail. In our experiments, this simple approach significantly improves the robustness
+Our approach is clearly naive, but it is better than terminating the solver once the function
+evaluation fail. In our experiments, this simple approach significantly improves the robustness
 of~\gls{pdfo} with respect to failures of function evaluation, as will be demonstrated in Subsection~\ref{ssec:nan}.
 There do exist other more sophisticated approaches~\cite{Audet_Caporossi_Jacquet_2020},
 which will be explored in the future.
@@ -961,8 +961,7 @@ the purpose of our experiments is the following.
         machine learning, echoing the observations made in~\cite{Ghanbari_Scheinberg_2017} about
         trust-region \gls{dfo} methods for such problems.
         This is done in Subsection~\ref{ssec:hypertune} by comparing~\gls{pdfo} with two solvers
-        from the Python package~\texttt{hyperopt}.\footnote{
-        \url{https://hyperopt.github.io/hyperopt}.}
+        from the Python package~\texttt{hyperopt}.\footnote{\url{https://hyperopt.github.io/hyperopt}~.}
 \end{enumerate}
 
 Our experiments are carried out in double precision based on the Python version of \gls{pdfo}~1.2.
@@ -1038,7 +1037,7 @@ solvers can only evaluate~$\tilde{\obj}_\sigma$, which is contaminated unless~$\
 To make our results more reliable, when~$\sigma>0$, the final performance profile is obtained by
 averaging the profiles obtained through the above procedure over ten independent runs. In addition, the
 value~$\obj_{\ast}$ in the convergence test~\eqref{eq:cvt} is set to the least value of~$\obj$ obtained
-by all solvers during all these ten runs plus a run with~$\sigma = 0$.
+by all solvers during all these ten runs \red{{plus a run with~$\sigma = 0$}}.
 Finally, for a better scaling of the profiles, we plot the binary logarithm of the normalized cost
 on the horizontal axis, instead of the normalized cost itself.
 
@@ -1128,8 +1127,8 @@ For a testing problem with objective function~$\obj$, we define
 \begin{equation}
     \label{eq:nan-obj}
     \hat{\obj}_p(x) = \begin{cases}
-        \obj(x) & \text{if~$U(x) \ge  p$}, \\[0.5ex]
-        \text{NaN} & \text{otherwise},
+        \,\obj(x) & \text{if~$U(x) \ge  p$}, \\[0.5ex]
+        \,\text{NaN} & \text{otherwise},
     \end{cases}
 \end{equation}
 where $U(\iter[])$ follows the uniform distribution on~$[0,1]$, being independent and identically distributed when~$x$ varies.
@@ -1181,7 +1180,7 @@ improves evidently the robustness of~\gls{pdfo} with respect to failures of func
 even though it is a quite naive approach.
 When~$p = 0.05$, the function evaluation fails roughly once every $20$ times,
 but \gls{pdfo} can still solve almost~$60\%$ of the problems up to the convergence
-tolerance~$\tau = 10^{-4}$, whereas all its competitors solve less than $25\%$.
+tolerance~$\tau = 10^{-4}$ in the sense of~\eqref{eq:cvt}, whereas all its competitors solve less than $25\%$.
 We speculate that the moderated extreme barrier will also benefit other model-based \gls{dfo} methods,
 including those based on finite differences, which deserves further investigation in the future.
 
@@ -1191,8 +1190,8 @@ including those based on finite differences, which deserves further investigatio
 
 We now consider a hyperparameter tuning problem from machine learning and illustrate the potential
 of \gls{pdfo} for such problems.
-We compare \gls{pdfo} with \gls{rs} and \gls{tpe}, two optimizers for hyperparameter tuning
-provided by the Python package~\texttt{hyperopt}.
+We compare \gls{pdfo} with \gls{rs} and \gls{tpe}, two optimizers
+from the Python package~\texttt{hyperopt} for hyperparameter tuning.
 
 Our experiment is inspired by~\cite[\S~5.3]{Ghanbari_Scheinberg_2017}, which investigates the
 application of trust-region \gls{dfo} methods to hyperparameter tuning.
@@ -1207,15 +1206,15 @@ the $C$-SVC constructs a classifier by solving
         \quad \st \quad 0 \leq \alpha \leq C, ~ \alpha^\trs z = 0, ~\alpha \in\R^{N},
 \end{equation}
 where~$C\in(0,\infty)$ is a hyperparameter, $z\in\R^{N}$ is the vector whose~$i$th entry is~$z_i$,~$\ones\in\R^N$
-is the vector of all ones, and~$Q\in\R^{N\times N}$ is the matrix whose~$(i,j)$ entry is~$K(u_i,u_j)$ for
-a kernel function~$K\mathrel{:} \R^{d}\times\R^{d} \to \R$.
+is the vector of all ones, and~$Q\in\R^{N\times N}$ is the matrix whose~$(i,j)$ entry is~$K(u_i,u_j)$
+with a kernel function~$K\mathrel{:} \R^{d}\times\R^{d} \to \R$.
 We take the Gaussian kernel~$K(u,v) = \exp(-\gamma\|u-v\|^2)$, where~$\gamma \in (0,\infty)$ is
 another hyperparameter.
 See~\cite[\S~2.1]{Chang_Lin_2011} for more details.
 
-As suggested by~\cite[\S~9]{Chang_Lin_2011}, we will tune~$C$ and~$\gamma$ for the performance of
+As suggested by~\cite[\S~9]{Chang_Lin_2011}, we tune~$C$ and~$\gamma$ for the performance of
 the~$C$-SVC.
-We model this process as
+We model this process as solving the problem
 \begin{equation}
     \label{eq:hypertune}
     \max ~ P(C, \gamma) \quad \st \quad C > 0,~ \gamma > 0,
@@ -1232,16 +1231,16 @@ on the fold not involved in the training, leading to five scores, the average of
 %We maximize~$P(C, \gamma)$ by \gls{pdfo}.
 
 
-Our experiment is based on binary classifications problems from LIBSVM.\footnote{\url{https://www.csie.ntu.edu.tw/~cjlin/libsvmtools/datasets}.}
-We adopt three datasets detailed in Table~\ref{tab:htdata}.
+Our experiment is based on binary classifications problems from \mbox{LIBSVM},\footnote{\url{https://www.csie.ntu.edu.tw/~cjlin/libsvmtools/datasets}~.}
+where we adopt three datasets detailed in Table~\ref{tab:htdata}.
 LIBSVM divides each dataset~$\mathcal{D}$ into two disjoint subsets, namely a training dataset~$\mathcal{S}$ and
 a testing dataset~$\mathcal{T}$.
 Given~$\mathcal{D}$, we evaluate~$P$ based on~$\mathcal{S}$ by the procedure
 described above, with~\eqref{eq:svc} being handled by the SVC class of the Python package
-scikit-learn.\footnote{\url{https://scikit-learn.org/stable/modules/generated/sklearn.svm.SVC.html}.}
+\mbox{scikit-learn}.\footnote{\url{https://scikit-learn.org/stable/modules/generated/sklearn.svm.SVC.html}~.}
 Then we solve~\eqref{eq:hypertune} by~\gls{pdfo}, \gls{rs}, or~\gls{tpe} to obtain the tuned
 parameters~$(\bar{C}, \bar{\gamma})$.
-As in~\cite[\S~5.3]{Ghanbari_Scheinberg_2017}, we modify the feasible set of~\eqref{eq:hypertune}
+As in~\cite[\S~5.3]{Ghanbari_Scheinberg_2017}, we modify the constraints of~\eqref{eq:hypertune}
 to~$C\in[10^{-6}, 1]$ and~$\gamma\in [1, 10^{3}]$. For a better scaling of the problem,
 we perform the maximization with respect to~$(\log_{10}C,\, \log_{10}\gamma)$ instead of~$(C,
 \gamma)$, the initial guess being chosen randomly from~$[-6, 0]\times[0, 3]$. The solver
@@ -1266,9 +1265,8 @@ evaluations, and they do not terminate until this number is reached.
 \end{table}
 
 
-To assess the quality
-of the tuned parameters, we solve~\eqref{eq:svc} on~$\mathcal{S}$ with~$(C, \gamma)$ set
-to~$(\bar{C}, \bar{\gamma})$, and calculate both the AUC score and the accuracy of the resulting
+To assess the quality of the tuned parameters~$(\bar{C}, \bar{\gamma})$, we solve~\eqref{eq:svc}
+on~$\mathcal{S}$ with~$(C, \gamma)=(\bar{C}, \bar{\gamma})$, and calculate both the AUC score and the accuracy of the resulting
 classifier on~$\mathcal{T}$, the latter being the fraction of correctly classified data points.
 Tables~\ref{tab:splice}--\ref{tab:ijcnn1} present the results for this experiment,
 where \#$f$ denotes the number of function evaluations, and ``Time'' represents the computing
@@ -1315,7 +1313,8 @@ time for obtaining~$(\bar{C}, \bar{\gamma})$.
 %    \begin{tabular}{cS[table-format=3]SSS}
     \begin{tabular}{ccccS}
         \toprule
-        Solver      & {AUC Score ($10^{-1}$)}   & {Accuracy ($10^{-1}$)}    &{\#$f$}  & {Time (\SI{}[10^3]{\second})}\\
+        Solver      & {AUC Score ($10^{-1}$)}   & {Accuracy ($10^{-1}$)}    &{\#$f$}  & {Time (\SI{}
+        [\bf 10^3]{\bf\second})}\\
         \midrule
         \gls{rs}    & 9.97                      & 9.82                      & 100           & 3.99\\
         \gls{rs}    & 9.97                      & 9.77                      & 300           & 11.52\\
@@ -1333,12 +1332,14 @@ The difference in the computing time is particularly visible on the dataset ``ij
 Table~\ref{tab:ijcnn1}, as each evaluation of~$P$ takes much time due to the large data size.
 
 Note that our intention is not to manifest that \gls{pdfo} outperforms standard solvers for
-general hyperparameter tuning problems, which is unlikely the case. Indeed, \gls{pdfo} cannot be
-applied unless the hyperparameters are continuous.
-Our objective is to provide an
+general hyperparameter tuning problems, which is unlikely the case. Indeed, \gls{pdfo} is not
+applicable unless the hyperparameters are continuous variables.
+Our objective is rather to provide an
 example that shows the possibility of applying Powell's methods to such problems, which is not well studied up to now.
 In doing so, we also hope to call for more investigation on \gls{dfo} methods for
 machine learning problems in general, as is suggested in~\cite{Ghanbari_Scheinberg_2017}.
+
+
 
 
 \section{Concluding remarks}
@@ -1347,7 +1348,8 @@ machine learning problems in general, as is suggested in~\cite{Ghanbari_Scheinbe
 We have presented the \gls{pdfo} package, which aims at simplifying the use of
 the Powell's \gls{dfo} solvers by providing user-friendly interfaces.
 More information about the package can be found on the homepage of the package at
-\mbox{\url{https: //www.pdfo.net}}, together with several examples of use.
+\mbox{\url{https: //www.pdfo.net}}\,, including the detailed syntax of the interfaces,
+an extensive documentation of the options, and several examples to illustrate the~usage.
 %The scope of \gls{pdfo} in the future is not limited only to the Powell's \gls{dfo} solvers.
 %For instance, the authors are currently working on a new solver for nonlinearly constrained optimization, named \gls{cobyqa}~\cite{Ragonneau_2022}.
 %It is aimed to be added to \gls{pdfo}, and other \gls{dfo} solvers may be included in the future.
@@ -1357,6 +1359,7 @@ The overview does not intend to repeat Powell's description about the methods, b
 summary on the main features and structures of the methods, highlighting the intrinsic connections and
 similarities among them. We hope that the overview will ease the understanding of Powell's methods,
 in the same way as the \gls{pdfo} package eases the use of these methods.
+
 
 
 
@@ -1375,9 +1378,9 @@ The authors have no relevant financial or non-financial interests to disclose.
 
 \paragraph{\textnormal{\textbf{Data availability.}}}
 
-The source code of the \gls{pdfo} package is available at \mbox{\url{https://www.pdfo.net}}.
+The source code of the \gls{pdfo} package is available at \mbox{\url{https://www.pdfo.net}}\,.
 The source code of the numerical experiments is available at
-\mbox{\url{https://www.github.com/pdfo/paper/blob/main/experiments}}.
+\mbox{\url{https://www.github.com/pdfo/paper/blob/main/experiments}}\,.
 
 \bibliographystyle{spmpsci}
 \bibliography{pdfo}
