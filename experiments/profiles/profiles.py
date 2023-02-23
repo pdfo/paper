@@ -1,20 +1,23 @@
 import csv
+import logging
 import re
+import subprocess
 import sys
 import warnings
-from itertools import product
 from pathlib import Path
 
 import numpy as np
+import pycutest
 from cycler import cycler
-from joblib import delayed, Parallel
 from matplotlib import pyplot as plt
 from matplotlib.backends import backend_pdf
-from matplotlib.ticker import MultipleLocator
+from matplotlib.ticker import MaxNLocator
+from numpy import ma
 
 from .optimize import Minimizer
-from .problems import Problems
-from .utils import get_logger
+from .problem import Problem
+
+_log = logging.getLogger(__name__)
 
 # Set up matplotlib for plotting the profiles.
 std_cycle = cycler(color=["#1f77b4", "#ff7f0e", "#2ca02c", "#d62728", "#9467bd"])
@@ -22,13 +25,40 @@ std_cycle += cycler(linestyle=[(0, ()), (0, (3, 2)), (0, (1, 1)), (0, (3, 2, 1, 
 plt.rc("axes", prop_cycle=std_cycle)
 plt.rc("lines", linewidth=1)
 plt.rc("text", usetex=True)
-plt.rc("font", family="serif")
+plt.rc("font", family="serif", size=17)
 
 
 class Profiles:
-
-    BASE_DIR = Path(__file__).resolve(True).parent.parent
+    BASE_DIR = Path(__file__).resolve().parent.parent
     ARCH_DIR = Path(BASE_DIR, "archives")
+    EXCLUDED = {
+        # The compilation of the sources is prohibitively time-consuming.
+        "BA-L73", "BA-L73LS", "BDRY2", "CHANDHEU", "CHARDIS0", "CHARDIS1", "DMN15102", "DMN15102LS", "DMN15103", "DMN15103LS", "DMN15332", "DMN15332LS", "DMN15333", "DMN15333LS", "DMN37142", "DMN37142LS", "DMN37143", "DMN37143LS", "GPP", "LEUVEN3", "LEUVEN4", "LEUVEN5", "LEUVEN6", "LIPPERT2", "LOBSTERZ", "PDE1", "PDE2", "PENALTY3", "RDW2D51F", "RDW2D51U", "RDW2D52B", "RDW2D52F", "RDW2D52U", "ROSEPETAL", "WALL100", "YATP1SQ", "YATP2SQ", "BA-L16LS", "BA-L21", "BA-L21LS", "BA-L49", "BA-L49LS", "BA-L52LS", "BA-L52",
+
+        # The starting points contain NaN values.
+        "LHAIFAM",
+
+        # The problems contain a lot of NaN.
+        "HS62", "HS112", "LIN",
+
+        # The problems seem not lower-bounded.
+        "INDEF",
+
+        # The problems are known infeasible.
+        "ARGLALE", "ARGLBLE", "ARGLCLE", "MODEL", "NASH",
+
+        # The problems seem infeasible.
+        "ANTWERP", "CRESC4", "CRESC50", "DEGENLPA", "DEGENLPB", "DIXCHLNG", "DUALC1", "DUALC2", "DUALC5", "DUALC8", "ELATTAR", "GOULDQP1", "HIMMELBJ", "HONG", "HS8", "HS13", "HS19", "HS55", "HS63", "HS64", "HS72", "HS73", "HS84", "HS86", "HS88", "HS89", "HS92", "HS101", "HS102", "HS103", "HS106", "HS107", "HS109", "HS119", "LOADBAL", "LOTSCHD", "LSNNODOC", "PORTFL1", "PORTFL2", "PORTFL3", "PORTFL4", "PORTFL6", "SNAKE", "SUPERSIM", "TAME", "WACHBIEG",
+
+        # The projection of the initial guess fails.
+        "LINCONT",
+
+        # Classical UOBYQA and COBYLA suffer from infinite cycling.
+        "GAUSS1LS", "GAUSS2LS", "GAUSS3LS", "MGH17LS", "MISRA1ALS", "MISRA1CLS", "NELSONLS", "OSBORNEA", "RAT43LS",
+
+        # Classical COBYLA suffers from infinite cycling.
+        "DANWOODLS", "KOEBHELB",
+    }
 
     def __init__(self, n_min, n_max, constraints, m_min=0, m_max=sys.maxsize, feature="plain", callback=None, **kwargs):
         # All features:
@@ -62,12 +92,9 @@ class Profiles:
         # Determinate the paths of storage.
         n_range = f"{self.n_min}-{self.n_max}"
         self.perf_dir = Path(self.ARCH_DIR, "perf", self.feature, n_range)
-        self.data_dir = Path(self.ARCH_DIR, "data", self.feature, n_range)
         self.storage_dir = Path(self.ARCH_DIR, "storage", self.feature)
         if self.feature != "plain":
-            # Suffix the feature's directory name with the corresponding
-            # feature's options. We exclude the options that are redundant with
-            # the feature (e.g., if feature="Lq", then p=0.25).
+            # Suffix the feature's directory name with the corresponding feature's options.
             options_suffix = dict(self.feature_options)
             if self.feature not in ["noisy", "digits", "nan"]:
                 del options_suffix["rerun"]
@@ -75,24 +102,20 @@ class Profiles:
                 del options_suffix["p"]
             options_details = "_".join(f"{k}-{v}" for k, v in options_suffix.items())
             self.perf_dir = Path(self.perf_dir, options_details)
-            self.data_dir = Path(self.data_dir, options_details)
             self.storage_dir = Path(self.storage_dir, options_details)
 
-        # Load the CUTEst problems.
-        logger = get_logger(__name__)
-        self.problems = Problems(self.n_min, self.n_max, self.m_min, self.m_max, self.constraints, self.callback)
-        logger.info(f"Problem(s) successfully loaded: {len(self.problems)}")
+        # Get the CUTEst problems.
+        self.problem_names = sorted(pycutest.find_problems("constant linear quadratic sum of squares other", constraints, True, origin="academic modelling real-world", n=[self.n_min, self.n_max], m=[self.m_min, self.m_max], userM=False))
 
-    def __call__(self, solvers, names=None, options=None, load=True, **kwargs):
-        if names is None:
-            names = list(solvers)
+    def __call__(self, solvers, solver_names=None, options=None, load=True, **kwargs):
+        if solver_names is None:
+            solver_names = list(solvers)
         if options is None:
             options = [{} for _ in range(len(solvers))]
 
         self.perf_dir.mkdir(parents=True, exist_ok=True)
-        self.data_dir.mkdir(parents=True, exist_ok=True)
         self.storage_dir.mkdir(parents=True, exist_ok=True)
-        self.generate_profiles(solvers, names, options, load, **kwargs)
+        self.generate_profiles(solvers, solver_names, options, load, **kwargs)
 
     def get_feature_options(self, **kwargs):
         signif = re.match(r"digits(\d+)", self.feature)
@@ -121,75 +144,60 @@ class Profiles:
         pdf_perf_path = Path(self.perf_dir, f"perf-{solvers}-{self.constraints.replace(' ', '_')}.pdf")
         csv_perf_path = Path(self.perf_dir, f"perf-{solvers}-{self.constraints.replace(' ', '_')}.csv")
         txt_perf_path = Path(self.perf_dir, f"perf-{solvers}-{self.constraints.replace(' ', '_')}.txt")
-        pdf_data_path = Path(self.data_dir, f"data-{solvers}-{self.constraints.replace(' ', '_')}.pdf")
-        csv_data_path = Path(self.data_dir, f"data-{solvers}-{self.constraints.replace(' ', '_')}.csv")
-        txt_data_path = Path(self.data_dir, f"data-{solvers}-{self.constraints.replace(' ', '_')}.txt")
-        return pdf_perf_path, csv_perf_path, txt_perf_path, pdf_data_path, csv_data_path, txt_data_path
+        return pdf_perf_path, csv_perf_path, txt_perf_path
 
-    def get_storage_path(self, problem, solver, k):
-        if problem.sifParams is None:
-            cache = Path(self.storage_dir, problem.name)
-        else:
-            sif = "_".join(f"{k}{v}" for k, v in problem.sifParams.items())
-            cache = Path(self.storage_dir, f"{problem.name}_{sif}")
+    def get_storage_path(self, problem_name, solver, k):
+        cache = Path(self.storage_dir, problem_name)
         cache.mkdir(exist_ok=True)
         if self.feature_options["rerun"] == 1:
             fun_path = Path(cache, f"fun-hist-{solver.lower()}.npy")
             maxcv_path = Path(cache, f"maxcv-hist-{solver.lower()}.npy")
-            var_path = Path(cache, f"var-hist-{solver.lower()}.npy")
         else:
             fun_path = Path(cache, f"fun-hist-{solver.lower()}-{k}.npy")
             maxcv_path = Path(cache, f"maxcv-hist-{solver.lower()}-{k}.npy")
-            var_path = Path(cache, f"var-hist-{solver.lower()}-{k}.npy")
-        return fun_path, maxcv_path, var_path
+        return fun_path, maxcv_path
 
-    def generate_profiles(self, solvers, names, options, load, **kwargs):
-        # Run the computations.
-        logger = get_logger(__name__)
-        logger.info(f'Starting the computations with feature="{self.feature}"')
-        merits = self.run_all(solvers, options, load, **kwargs)
+    def generate_profiles(self, solvers, solver_names, options, load, **kwargs):
+        _log.info(f'Starting the computations with feature="{self.feature}"')
+        merits, problem_names = self.run_all(solvers, options, load, **kwargs)
+        n_problems = merits.shape[0]
 
-        # Constants for the performance and data profiles.
+        # Constants for the performance profiles.
         log_tau_min = 1
         log_tau_max = 9
         penalty = 2
         ratio_max = 1e-6
 
         # Evaluate the merit function value at x0.
-        f0 = np.empty((len(self.problems), self.feature_options["rerun"]))
-        for i, p in enumerate(self.problems):
-            for k in range(self.feature_options["rerun"]):
-                f0[i, k] = self.merit(p.fun(p.x0, self.noise, k)[0], p.maxcv(p.x0), barrier=False, **kwargs)
+        f0 = merits[:, 0, :, 0]
 
         # Determine the least merit function values obtained on each problem.
         f_min = np.min(merits, (1, 3))
-        # if self.feature in ["noisy", "digits", "nan"]:
-        #     logger.info(f'Starting the computations with feature="plain"')
-        #     rerun_sav = self.feature_options["rerun"]
-        #     feature_sav = self.feature
-        #     self.feature_options["rerun"] = 1
-        #     self.feature = "plain"
-        #     merits_plain = self.run_all(solvers, options, load, **kwargs)
-        #     f_min_plain = np.min(merits_plain, (1, 2, 3))
-        #     f_min = np.minimum(f_min, f_min_plain)
-        #     self.feature_options["rerun"] = rerun_sav
-        #     self.feature = feature_sav
+        if self.feature in ["noisy", "digits", "nan"]:
+            _log.info(f'Starting the computations with feature="plain"')
+            rerun_sav = self.feature_options["rerun"]
+            feature_sav = self.feature
+            self.feature_options["rerun"] = 1
+            self.feature = "plain"
+            merits_plain, _ = self.run_all(solvers, options, load, **kwargs)
+            f_min_plain = np.min(merits_plain, (1, 2, 3))
+            f_min = np.minimum(f_min, f_min_plain)
+            self.feature_options["rerun"] = rerun_sav
+            self.feature = feature_sav
 
-        # Start the performance and data profile computations.
-        pdf_perf_path, csv_perf_path, txt_perf_path, pdf_data_path, csv_data_path, txt_data_path = self.get_profiles_path(solvers)
+        # Start the performance profile computations.
+        pdf_perf_path, csv_perf_path, txt_perf_path = self.get_profiles_path(solvers)
         raw_col = 2 * (log_tau_max - log_tau_min + 1) * len(solvers)
-        raw_perf = np.empty((2 * len(self.problems) * self.feature_options["rerun"] + 2, raw_col))
-        raw_data = np.empty((2 * len(self.problems) * self.feature_options["rerun"] + 2, raw_col))
+        raw_perf = np.empty((2 * n_problems * self.feature_options["rerun"] + 2, raw_col))
         pdf_perf = backend_pdf.PdfPages(pdf_perf_path)
-        pdf_data = backend_pdf.PdfPages(pdf_data_path)
         for log_tau in range(log_tau_min, log_tau_max + 1):
-            logger.info(f"Creating performance and data profiles with tau = 1e-{log_tau}")
+            _log.info(f"Creating performance profiles with tau = 1e-{log_tau}")
             tau = 10 ** (-log_tau)
 
             # Determine the number of function evaluations that each solver
             # necessitates on each problem to converge.
-            work = np.full((len(self.problems), len(solvers), self.feature_options["rerun"]), np.nan)
-            for i in range(len(self.problems)):
+            work = np.full((n_problems, len(solvers), self.feature_options["rerun"]), np.nan)
+            for i in range(n_problems):
                 for j in range(len(solvers)):
                     for k in range(self.feature_options["rerun"]):
                         if np.isfinite(f_min[i, k]):
@@ -201,62 +209,38 @@ class Profiles:
                             work[i, j, k] = index + 1
 
             # Calculate the abscissas of the performance profiles.
-            perf = np.full((self.feature_options["rerun"], len(self.problems), len(solvers)), np.nan)
+            perf = np.full((self.feature_options["rerun"], n_problems, len(solvers)), np.nan)
             for k in range(self.feature_options["rerun"]):
-                for i in range(len(self.problems)):
+                for i in range(n_problems):
                     if not np.all(np.isnan(work[i, :, k])):
                         perf[k, i, :] = work[i, :, k] / np.nanmin(work[i, :, k])
             perf = np.maximum(np.log2(perf), 0.0)
             perf_ratio_max = np.nanmax(perf, initial=ratio_max)
             perf[np.isnan(perf)] = penalty * perf_ratio_max
             perf = np.sort(perf, 1)
-            perf = np.reshape(perf, (len(self.problems) * self.feature_options["rerun"], len(solvers)))
+            perf = np.reshape(perf, (n_problems * self.feature_options["rerun"], len(solvers)))
             i_sort_perf = np.argsort(perf, 0, "stable")
             perf = np.take_along_axis(perf, i_sort_perf, 0)
 
             # Calculate the ordinates of the performance profiles.
-            y_perf = np.zeros((len(self.problems) * self.feature_options["rerun"], len(solvers)))
+            y_perf = np.zeros((n_problems * self.feature_options["rerun"], len(solvers)))
             for k in range(self.feature_options["rerun"]):
                 for j in range(len(solvers)):
-                    y_loc = np.full(len(self.problems) * self.feature_options["rerun"], np.nan)
-                    y_loc[k * len(self.problems):(k + 1) * len(self.problems)] = np.linspace(1 / len(self.problems), 1.0, len(self.problems))
+                    y_loc = np.full(n_problems * self.feature_options["rerun"], np.nan)
+                    y_loc[k * n_problems:(k + 1) * n_problems] = np.linspace(1 / n_problems, 1.0, n_problems)
                     y_loc = y_loc[i_sort_perf[:, j]]
-                    for i in range(len(self.problems) * self.feature_options["rerun"]):
+                    for i in range(n_problems * self.feature_options["rerun"]):
                         if np.isnan(y_loc[i]):
                             y_loc[i] = y_loc[i - 1] if i > 0 else 0.0
                     y_perf[:, j] += y_loc
             y_perf /= self.feature_options["rerun"]
 
-            # Calculate the abscissas of the data profiles.
-            data = np.full((self.feature_options["rerun"], len(self.problems), len(solvers)), np.nan)
-            for i, p in enumerate(self.problems):
-                data[:, i, :] = np.transpose(work[i, :, :]) / (p.n + 1)
-            data_ratio_max = np.nanmax(data, initial=ratio_max)
-            data[np.isnan(data)] = penalty * data_ratio_max
-            data = np.sort(data, 1)
-            data = np.reshape(data, (len(self.problems) * self.feature_options["rerun"], len(solvers)))
-            i_sort_data = np.argsort(data, 0, "stable")
-            data = np.take_along_axis(data, i_sort_data, 0)
-
-            # Calculate the ordinates of the data profiles.
-            y_data = np.zeros((len(self.problems) * self.feature_options["rerun"], len(solvers)))
-            for k in range(self.feature_options["rerun"]):
-                for j in range(len(solvers)):
-                    y_loc = np.full(len(self.problems) * self.feature_options["rerun"], np.nan)
-                    y_loc[k * len(self.problems):(k + 1) * len(self.problems)] = np.linspace(1 / len(self.problems), 1.0, len(self.problems))
-                    y_loc = y_loc[i_sort_data[:, j]]
-                    for i in range(len(self.problems) * self.feature_options["rerun"]):
-                        if np.isnan(y_loc[i]):
-                            y_loc[i] = y_loc[i - 1] if i > 0 else 0.0
-                    y_data[:, j] += y_loc
-            y_data /= self.feature_options["rerun"]
-
             # Plot the performance profiles.
             fig = plt.figure()
             ax = fig.add_subplot(111)
             ax.yaxis.set_ticks_position("both")
-            ax.yaxis.set_major_locator(MultipleLocator(0.2))
-            ax.yaxis.set_minor_locator(MultipleLocator(0.1))
+            ax.yaxis.set_major_locator(MaxNLocator(5, prune="lower"))
+            ax.yaxis.set_minor_locator(MaxNLocator(10))
             ax.tick_params(direction="in", which="both")
             i_col = 2 * (log_tau - log_tau_min) * len(solvers)
             for j in range(len(solvers)):
@@ -266,111 +250,118 @@ class Profiles:
                 y = np.r_[0, 0, y, y[-1]]
                 raw_perf[:, i_col + 2 * j] = x
                 raw_perf[:, i_col + 2 * j + 1] = y
-                plt.plot(x, y, label=names[j].replace("-", " "))
+                plt.plot(x, y, label=solver_names[j].replace("-", " "))
             plt.xlim(0, 1.1 * perf_ratio_max)
             plt.ylim(0, 1)
             plt.xlabel(r"$\log_2(\mathrm{NF}/\mathrm{NF}_{\min})$")
-            plt.ylabel(fr"Performance profile ($\tau=10^{{-{log_tau}}}$)")
+            plt.ylabel(fr"Performance profiles ($\tau=10^{{-{log_tau}}}$)")
             plt.legend(loc="lower right")
             pdf_perf.savefig(fig, bbox_inches="tight")
             plt.close()
 
-            # Plot the data profiles.
-            fig = plt.figure()
-            ax = fig.add_subplot(111)
-            ax.yaxis.set_ticks_position("both")
-            ax.yaxis.set_major_locator(MultipleLocator(0.2))
-            ax.yaxis.set_minor_locator(MultipleLocator(0.1))
-            ax.tick_params(direction="in", which="both")
-            for j in range(len(solvers)):
-                x = np.repeat(data[:, j], 2)[1:]
-                x = np.r_[0, x[0], x, penalty * data_ratio_max]
-                y = np.repeat(y_data[:, j], 2)[:-1]
-                y = np.r_[0, 0, y, y[-1]]
-                raw_data[:, i_col + 2 * j] = x
-                raw_data[:, i_col + 2 * j + 1] = y
-                plt.plot(x, y, label=names[j].replace("-", " "))
-            plt.xlim(0, 1.1 * data_ratio_max)
-            plt.ylim(0, 1)
-            plt.xlabel(r"Number of simplex gradients")
-            plt.ylabel(fr"Data profile ($\tau=10^{{-{log_tau}}}$)")
-            plt.legend(loc="lower right")
-            pdf_data.savefig(fig, bbox_inches="tight")
-            plt.close()
-
-        logger.info("Saving performance profiles.")
+        _log.info("Saving performance profiles.")
         pdf_perf.close()
         with open(csv_perf_path, "w") as fd:
             csv_perf = csv.writer(fd)
-            header_perf = np.array([[[f"x{i}_{s}", f"y{i}_{s}"] for s in solvers] for i in range(log_tau_min, log_tau_max + 1)])
+            header_perf = np.array(
+                [[[f"x{i}_{s}", f"y{i}_{s}"] for s in solvers] for i in range(log_tau_min, log_tau_max + 1)])
             csv_perf.writerow(header_perf.flatten())
             csv_perf.writerows(raw_perf)
         with open(txt_perf_path, "w") as fd:
-            fd.write("\n".join(p.name for p in self.problems))
-
-        logger.info("Saving data profiles.")
-        pdf_data.close()
-        with open(csv_data_path, "w") as fd:
-            csv_data = csv.writer(fd)
-            header_data = np.array([[[f"x{i}_{s}", f"y{i}_{s}"] for s in solvers] for i in range(log_tau_min, log_tau_max + 1)])
-            csv_data.writerow(header_data.flatten())
-            csv_data.writerows(raw_data)
-        with open(txt_data_path, "w") as fd:
-            fd.write("\n".join(p.name for p in self.problems))
+            fd.write("\n".join(problem_names))
 
     def run_all(self, solvers, options, load, **kwargs):
-        merits = np.empty((len(self.problems), len(solvers), self.feature_options["rerun"], self.max_eval))
-        result = Parallel(n_jobs=1)(self.run_one(problem, solver, k, options[j], load, **kwargs) for problem, (j, solver), k in product(self.problems, enumerate(solvers), range(self.feature_options["rerun"])))
-        for i in range(len(self.problems)):
-            for j in range(len(solvers)):
+        merits = np.full((len(self.problem_names), len(solvers), self.feature_options["rerun"], self.max_eval), np.nan)
+        n_success = 0
+        problem_names = []
+        for problem_name in self.problem_names:
+            for j, solver in enumerate(solvers):
                 for k in range(self.feature_options["rerun"]):
-                    index = (i * len(solvers) + j) * self.feature_options["rerun"] + k
-                    merits_run, n_eval = result[index]
-                    merits[i, j, k, :n_eval] = merits_run[:n_eval]
-                    merits[i, j, k, n_eval:] = merits[i, j, k, n_eval - 1]
-        return merits
+                    result = self.run_one(problem_name, solver, k, options[j], load, **kwargs)
+                    if result is None:
+                        break
+                    if j == 0 and k == 0:
+                        n_success += 1
+                        problem_names.append(problem_name)
+                    merits[n_success - 1, j, k, :] = np.r_[result, np.full(self.max_eval - result.size, result[-1])]
+                else:
+                    continue
+                break
+        return merits[:n_success, ...], problem_names
 
-    @delayed
-    def run_one(self, problem, solver, k, options, load, **kwargs):
-        fun_path, maxcv_path, var_path = self.get_storage_path(problem, solver, k)
-        max_eval = 500 * problem.n
-        merits, n_eval = None, 0
-        if load and fun_path.is_file() and maxcv_path.is_file() and var_path.is_file():
+    def run_one(self, problem_name, solver, k, options, load, **kwargs):
+        storage_name = problem_name
+        if pycutest.problem_properties(problem_name)["n"] == "variable":
+            storage_name = f"{problem_name}_N{self.get_sif_n_max(problem_name)}"
+        fun_path, maxcv_path = self.get_storage_path(storage_name, solver, k)
+        if load and fun_path.is_file() and maxcv_path.is_file():
             fun_history = np.load(fun_path)
             maxcv_history = np.load(maxcv_path)
             merits = self.merit(fun_history, maxcv_history, **kwargs)
-            n_eval = merits.size
-            if max_eval > n_eval:
-                var = np.load(var_path)
-                if var[0]:
-                    merits = np.r_[merits, np.full(max_eval - n_eval, np.inf)]
-                else:
-                    merits, n_eval = None, 0
-            elif max_eval < n_eval:
-                n_eval = max_eval
-                merits = merits[:n_eval]
-        if merits is None:
+            if self.max_eval < merits.size:
+                merits = merits[:self.max_eval]
+        else:
+            problem = self.load(problem_name)
+            if problem is None:
+                _log.warning(f"Problem {problem_name} is not available")
+                return None
             with warnings.catch_warnings():
                 warnings.simplefilter("ignore")
-                optimizer = Minimizer(problem, solver, max_eval, options, self.noise, k)
-                success, fun_history, maxcv_history = optimizer()
-            n_eval = min(fun_history.size, max_eval)
-            merits = np.full(max_eval, np.inf)
-            merits[:n_eval] = self.merit(fun_history[:n_eval], maxcv_history[:n_eval], **kwargs)
-            np.save(fun_path, fun_history[:n_eval])
-            np.save(maxcv_path, maxcv_history[:n_eval])
-            np.save(var_path, np.array([success]))
-        logger = get_logger(__name__)
+                optimizer = Minimizer(problem, solver, self.max_eval, options, self.noise, k)
+                fun_history, maxcv_history = optimizer()
+                n_eval = min(fun_history.size, self.max_eval)
+                merits = self.merit(fun_history[:n_eval], maxcv_history[:n_eval], **kwargs)
+                np.save(fun_path, fun_history[:n_eval])
+                np.save(maxcv_path, maxcv_history[:n_eval])
         if not np.all(np.isnan(merits)):
             if self.feature_options["rerun"] > 1:
-                run_description = f"{solver}({problem.name},{k})"
+                run_description = f"{solver}({problem_name},{k})"
             else:
-                run_description = f"{solver}({problem.name})"
-            i = np.argmin(merits[:n_eval])
-            logger.info(f"{run_description}: fun = {fun_history[i]}, maxcv = {maxcv_history[i]}, n_eval = {n_eval}")
+                run_description = f"{solver}({problem_name})"
+            i = np.argmin(merits)
+            _log.info(f"{run_description}: fun = {fun_history[i]}, maxcv = {maxcv_history[i]}, n_eval = {merits.size}")
         else:
-            logger.warning(f"{solver}({problem.name}): no value received")
-        return merits, n_eval
+            _log.warning(f"{solver}({problem_name}): no value received")
+        return merits
+
+    def load(self, problem_name):
+        try:
+            if problem_name not in self.EXCLUDED:
+                _log.info(f"Loading {problem_name}")
+
+                # If the problem's dimension is not fixed, we select the largest possible dimension.
+                if pycutest.problem_properties(problem_name)["n"] == "variable":
+                    sif_n_max = self.get_sif_n_max(problem_name)
+                    if sif_n_max is not None:
+                        return Problem(problem_name, sifParams={"N": sif_n_max})
+                else:
+                    return Problem(problem_name)
+        except (AttributeError, FileNotFoundError, ModuleNotFoundError, RuntimeError) as err:
+            _log.warning(f"{problem_name}: {err}")
+
+    def get_sif_n_max(self, name):
+        # Get all the available SIF parameters for all variables.
+        cmd = [pycutest.get_sifdecoder_path(), "-show", name]
+        sp = subprocess.Popen(cmd, universal_newlines=True, stdout=subprocess.PIPE, stderr=subprocess.DEVNULL)
+        sif_stdout = sp.stdout.read()
+        sp.wait()
+
+        # Extract all the available SIF parameters for the problem's dimension.
+        regex = re.compile(r"^N=(?P<param>\d+)")
+        sif_n = []
+        for stdout in sif_stdout.split("\n"):
+            sif_match = regex.match(stdout)
+            if sif_match:
+                sif_n.append(int(sif_match.group("param")))
+        sif_n = np.sort(sif_n)
+
+        # Check the requirements.
+        sif_n_masked = ma.masked_array(sif_n, mask=(sif_n < self.n_min) | (sif_n > self.n_max))
+        if sif_n_masked.size > 0:
+            sif_n_max = sif_n_masked.max()
+            if sif_n_max is not ma.masked:
+                return sif_n_max
+        return None
 
     @staticmethod
     def merit(fun_history, maxcv_history, **kwargs):
@@ -401,7 +392,8 @@ class Profiles:
                 fx_rounded = 0.0
             else:
                 fx_rounded = round(f, self.feature_options["digits"] - int(np.floor(np.log10(np.abs(f)))) - 1)
-            f = fx_rounded + (f - fx_rounded) * np.abs(np.sin(np.sin(np.sin(self.feature_options["digits"])) + np.sin(1e8 * f) + np.sum(np.sin(np.abs(1e8 * x))) + np.sin(x.size)))
+            f = fx_rounded + (f - fx_rounded) * np.abs(np.sin(
+                np.sin(np.sin(self.feature_options["digits"])) + np.sin(1e8 * f) + np.sum(np.sin(np.abs(1e8 * x))) + np.sin(x.size)))
         elif self.feature == "nan":
             rng = np.random.default_rng(int(1e8 * abs(np.sin(k) + np.sin(self.feature_options["rate"]) + np.sum(np.sin(np.abs(np.sin(1e8 * x)))))))
             if rng.uniform() <= self.feature_options["rate"]:
