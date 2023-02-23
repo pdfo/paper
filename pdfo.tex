@@ -536,8 +536,8 @@ The strategy to update~$\xpt$ is crucial.
 It should recycle points from previous iterations, at which the objective and constraint functions
 have already been evaluated.
 Meanwhile, it needs to maintain the geometry of the interpolation set so that it is well poised,
-or equivalently,
-the interpolation problem is well conditioned~\cite{Sauer_Xu_1995,Conn_Scheinberg_Vicente_2009b}.
+or equivalently, the interpolation problem is well conditioned~\cite{Conn_Scheinberg_Vicente_2009b}.
+%the interpolation problem is well conditioned~\cite{Sauer_Xu_1995,Conn_Scheinberg_Vicente_2009b}.
 
 At a normal iteration, a point~$\iter^{\trust} \in \R^n$ is computed by solving the trust-region
 subproblem~\eqref{eq:trsp}, and Powell's \gls{dfo} methods update the interpolation set as
@@ -1005,7 +1005,8 @@ If~$\sigma = 0$, then~$\tilde{f}_\sigma = f$, corresponding to the noise-free ca
 In general,~$\sigma$ equals the standard deviation of the noise.
 
 Given the noise level~$\sigma\ge 0$ and a convergence tolerance~$\tau\in(0,1)$, we will plot the
-performance profiles~\cite{Dolan_More_2002,More_Wild_2009} of the solvers on the testing problems.
+performance profiles~\cite{More_Wild_2009} of the solvers on the testing problems.
+%performance profiles~\cite{Dolan_More_2002,More_Wild_2009} of the solvers on the testing problems.
 We run all the solvers on all the problems, every objective function being evaluated by its
 contaminated version~\eqref{eq:noisy-obj}.
 For each solver, the performance profile displays the proportion of problems solved with respect to the
@@ -1146,13 +1147,13 @@ Two profiles are included for each~$p$, with the convergence tolerance being~$\t
     \hfill
     \begin{subfigure}{.45\textwidth}
         \centering
-        \includegraphics[width=\textwidth,page=2]{perf-nan-bfgs_cg_pdfo-50-10-0.01.pdf}
+        \includegraphics[width=\textwidth,page=2]{perf-nan-bfgs_cg_pdfo-50-10-0.05.pdf}
         \caption{$p = 0.05$, $\tau = 10^{-2}$}
     \end{subfigure}
     \hfill
     \begin{subfigure}{.45\textwidth}
         \centering
-        \includegraphics[width=\textwidth,page=4]{perf-nan-bfgs_cg_pdfo-50-10-0.01.pdf}
+        \includegraphics[width=\textwidth,page=4]{perf-nan-bfgs_cg_pdfo-50-10-0.05.pdf}
         \caption{$p = 0.05$, $\tau = 10^{-4}$}
     \end{subfigure}
     \caption{Performance profiles of \gls{pdfo}, \gls{bfgs}, and \gls{cg} on unconstrained problems
@@ -1221,7 +1222,7 @@ LIBSVM divides each dataset~$\mathcal{D}$ into two disjoint subsets, namely a tr
 a testing dataset~$\mathcal{T}$.
 For each dataset~$\mathcal{D}$, we evaluate the function~$P$ based on~$\mathcal{S}$ by the procedure
 described above, with
-problem~\eqref{eq:svc} being tackled by the SVC class of the Python machine learning package scikit-learn.\footnote{\url{https://scikit-learn.org/stable/modules/generated/sklearn.svm.SVC.html}.}
+problem~\eqref{eq:svc} being handled by the SVC class of the Python machine learning package scikit-learn.\footnote{\url{https://scikit-learn.org/stable/modules/generated/sklearn.svm.SVC.html}.}
 We solve~\eqref{eq:hypertune} by~\gls{pdfo}, \gls{tpe}, or~\gls{rs} to obtain the tuned
 parameters~$(\bar{C}, \bar{\gamma})$.
 As in~\cite[\S~5.3]{Ghanbari_Scheinberg_2017}, we modify the feasible set of~\eqref{eq:hypertune}
@@ -1315,8 +1316,10 @@ The difference in the computing time is particularly visible on the dataset ``ij
 Table~\ref{tab:ijcnn1}, as each evaluation of~$P$ takes much time due to the large data size.
 
 Note that our intention is not to manifest that \gls{pdfo} outperforms standard solvers for
-general hyperparameter tuning problems, which is unlikely true. Instead, we provide an
-example to show the possibility of applying Powell's methods to such problems, which is not well studied up to now.
+general hyperparameter tuning problems, which is unlikely the case. Indeed, \gls{pdfo} cannot be
+applied unless the hyperparameters are continuous.
+Our aim is to provide an
+example that shows the possibility of applying Powell's methods to such problems, which is not well studied up to now.
 In doing so, we also hope to call for more investigation on \gls{dfo} methods for
 machine learning problems in general, echoing the suggestion of~\cite{Ghanbari_Scheinberg_2017}.
 
