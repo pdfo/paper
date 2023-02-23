@@ -293,19 +293,19 @@ The current release (Version 1.2) of \gls{pdfo} supports Python and MATLAB, with
 The signature of the Python subroutine is consistent with the \texttt{minimize} function of the SciPy optimization library; the signature of the MATLAB subroutine is consistent with the \texttt{fmincon} function of the MATLAB Optimization Toolbox.
 \gls{pdfo} is cross-platform, and available on Linux, macOS, and Windows at
 \begin{center}
-    \url{https://www.pdfo.net}~.
+    \url{https://www.pdfo.net}\,.
 \end{center}
 It has been downloaded more than \num{50000} times as of February 2023, mirror downloads excluded.
-Moreover, it is one of the optimization engines in GEMSEO~\cite{Gallard_Etal_2018},\footnote{\url{https://gemseo.readthedocs.io}~.}
+Moreover, it is one of the optimization engines in GEMSEO~\cite{Gallard_Etal_2018},\footnote{\url{https://gemseo.readthedocs.io}\,.}
 an industrial software package for Multidisciplinary Design Optimization (MDO).
 
 \gls{pdfo} is not the first attempt to facilitate the usage of Powell's solvers in languages other than Fortran.
 Various efforts have been made in this direction.
 Py-BOBYQA~\cite{Cartis_Etal_2019,Cartis_Roberts_Sheridan-Methven_2022} provides a Python
 implementation of \gls{bobyqa};
-NLopt includes multi-language interfaces for \gls{cobyla}, \gls{newuoa}, and \gls{bobyqa};\footnote{\url{https://github.com/ stevengj/nlopt}~.}
-minqa wraps \gls{uobyqa}, \gls{newuoa}, and \gls{bobyqa} in R;\footnote{\url{https://CRAN.R-project.org/package=minqa}~.}
-SciPy makes \gls{cobyla} available in Python under its optimization library.\footnote{\url{https://docs.scipy.org/doc/scipy/reference/optimize.minimize-cobyla.html}~.}
+NLopt includes multi-language interfaces for \gls{cobyla}, \gls{newuoa}, and \gls{bobyqa};\footnote{\url{https://github.com/ stevengj/nlopt}\,.}
+minqa wraps \gls{uobyqa}, \gls{newuoa}, and \gls{bobyqa} in R;\footnote{\url{https://CRAN.R-project.org/package=minqa}\,.}
+SciPy makes \gls{cobyla} available in Python under its optimization library.\footnote{\url{https://docs.scipy.org/doc/scipy/reference/optimize.minimize-cobyla.html}\,.}
 However, \gls{pdfo} has several features that distinguishes itself from others.
 
 \begin{enumerate}
@@ -414,7 +414,7 @@ quasi-Newton method. The least-change property~\cite{Dennis_Schnabel_1979} of qu
 is a major motivation for Powell to investigate the least Frobenius norm updating~\cite{Powell_2004b}
 of quadratic models in DFO, which is the backbone of \gls{newuoa}, \gls{bobyqa}, and \gls{lincoa}.}
 His code for this algorithm is contained in the
-HSL Mathematical Software Library as subroutine \texttt{VA24}.\footnote{\url{https://www.hsl.rl.ac.uk}~.}
+HSL Mathematical Software Library as subroutine \texttt{VA24}.\footnote{\url{https://www.hsl.rl.ac.uk}\,.}
 It is not included in \gls{pdfo} because the code is not in the public domain, although open-source implementations are available~(see~\cite[footnote~4]{Conn_Scheinberg_Toint_1997b}).
 
 From the 1990s to the final days of his career, Powell developed five model-based \gls{dfo}
@@ -755,12 +755,12 @@ an infeasible method, which requires~$\obj$ to be defined even when the linear c
 This section details the main features of \gls{pdfo}, in particular the signature of the main
 function, problem preprocessing, solver selection, bug fixes, and handling failures of function
 evaluations. For more features of~\gls{pdfo}, we refer to its homepage
-at~\url{https://www.pdfo.net}\;.
+at~\url{https://www.pdfo.net}\,.
 
 Before starting, we
 emphasize that \gls{pdfo} does not re-implement Powell’s solvers but rather enables Python and MATLAB
 to call Powell's Fortran implementation.
-At a low level, it uses F2PY\,\footnote{\url{https://numpy.org/doc/stable/f2py}~.} to interface Python with Fortran, and MEX to
+At a low level, it uses F2PY\,\footnote{\url{https://numpy.org/doc/stable/f2py}\,.} to interface Python with Fortran, and MEX to
 interface it with MATLAB, although users never need such knowledge to employ~\gls{pdfo}.
 
 \subsection{Signature of the main function}
@@ -961,7 +961,7 @@ the purpose of our experiments is the following.
         machine learning, echoing the observations made in~\cite{Ghanbari_Scheinberg_2017} about
         trust-region \gls{dfo} methods for such problems.
         This is done in Subsection~\ref{ssec:hypertune} by comparing~\gls{pdfo} with two solvers
-        from the Python package~\texttt{hyperopt}.\footnote{\url{https://hyperopt.github.io/hyperopt}~.}
+        from the Python package~\texttt{hyperopt}.\footnote{\url{https://hyperopt.github.io/hyperopt}\,.}
 \end{enumerate}
 
 Our experiments are carried out in double precision based on the Python version of \gls{pdfo}~1.2.
@@ -1231,13 +1231,13 @@ on the fold not involved in the training, leading to five scores, the average of
 %We maximize~$P(C, \gamma)$ by \gls{pdfo}.
 
 
-Our experiment is based on binary classifications problems from \mbox{LIBSVM},\footnote{\url{https://www.csie.ntu.edu.tw/~cjlin/libsvmtools/datasets}~.}
+Our experiment is based on binary classifications problems from \mbox{LIBSVM},\footnote{\url{https://www.csie.ntu.edu.tw/~cjlin/libsvmtools/datasets}\,.}
 where we adopt three datasets detailed in Table~\ref{tab:htdata}.
 LIBSVM divides each dataset~$\mathcal{D}$ into two disjoint subsets, namely a training dataset~$\mathcal{S}$ and
 a testing dataset~$\mathcal{T}$.
 Given~$\mathcal{D}$, we evaluate~$P$ based on~$\mathcal{S}$ by the procedure
 described above, with~\eqref{eq:svc} being handled by the SVC class of the Python package
-\mbox{scikit-learn}.\footnote{\url{https://scikit-learn.org/stable/modules/generated/sklearn.svm.SVC.html}~.}
+\mbox{scikit-learn}.\footnote{\url{https://scikit-learn.org/stable/modules/generated/sklearn.svm.SVC.html}\,.}
 Then we solve~\eqref{eq:hypertune} by~\gls{pdfo}, \gls{rs}, or~\gls{tpe} to obtain the tuned
 parameters~$(\bar{C}, \bar{\gamma})$.
 As in~\cite[\S~5.3]{Ghanbari_Scheinberg_2017}, we modify the constraints of~\eqref{eq:hypertune}
