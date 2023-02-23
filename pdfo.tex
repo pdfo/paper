@@ -22,6 +22,7 @@
 \usepackage{subcaption}
 \usepackage{url}
 \usepackage{xargs}
+\usepackage{bbm}
 %
 % Get back the upright capital Greek letters
 %
@@ -37,6 +38,8 @@
 \DeclareMathSymbol{\Psi}{\mathalpha}{operators}{"09}
 \DeclareMathSymbol{\Omega}{\mathalpha}{operators}{"0A}
 %
+\newcommand{\trs}{{\scriptstyle{\mathsf{T}}}}
+\newcommand{\ones}{\mathbbm{1}}
 \DeclareMathOperator*\argmin{arg\,min}
 \DeclareMathOperator\range{\mathcal{R}}
 \DeclareMathOperator\rank{rank}
@@ -93,7 +96,7 @@
 \glsdisablehyper
 \renewcommand*{\glsfirstlongdefaultfont}[1]{#1\nolinebreak}
 
-\newabbreviation{auc}{AUC}{area under the curve}
+%\newabbreviation{auc}{AUC}{area under the curve}
 \newabbreviation{dfo}{DFO}{derivative-free optimization}
 \newabbreviation{psb}{PSB}{Powell's symmetric Broyden}
 \newabbreviation{rbf}{RBF}{radial basis function}
@@ -431,10 +434,7 @@ After choosing the trust-region center~$\iter$, with the trust-region model~$\ob
 according to~\eqref{eq:itpls}, a trial point~$\iter^{\trust}$ is then obtained by solving approximately the trust-region subproblem
 \begin{equation}
     \label{eq:trsp}
-    \begin{split}
-        \min_{x \in \fsetm} & \quad \objm(x)\\
-        \st                 & \quad \norm{x - \iter} \le \rad,
-    \end{split}
+        \min_{x \in \fsetm}  ~\objm(x) \quad \st \quad ~\norm{x - \iter} \le \rad,
 \end{equation}
 where~$\rad$ is the trust-region radius, and~$\norm{\cdot}$ is the~$\ell_2$-norm in~$\R^n$.
 In this subproblem, the set~$\fsetm \subseteq \R^n$ is a local approximation of the feasible region~$\fset$.
@@ -480,10 +480,7 @@ with~$\abs{\xpt}$ being less than~$(n + 1)(n + 2) / 2$, the remaining degrees of
 More specifically, this means to establish~$\objm$ by solving
 \begin{equation}
     \label{eq:undqitp}
-    \begin{split}
-        \min_{Q \in \qspace}    & \quad \func_k(Q) \\
-        \st                     & \quad Q(y) = \obj(y), \quad y \in \xpt,
-    \end{split}
+        \min_{Q \in \qspace}  ~ \func_k(Q) \quad \st \quad Q(y) = \obj(y), ~ y \in \xpt,
 \end{equation}
 where~$\qspace$ is the space of polynomials on~$\R^n$ of degree at most~$2$, and~$\func_k$ is the aforementioned functional.
 \gls{newuoa}, \gls{bobyqa}, and \gls{lincoa} construct quadratic models in this way, with
@@ -591,10 +588,7 @@ The other four methods select~$y_k^{\drop}$ from~$\xpt$ by maximizing its distan
 the current trust-region center~$\iter$, and then obtain~$\iter^{\geo}$ by solving the problem
 \begin{equation}
     \label{eq:biglag}
-    \begin{split}
-        \max_{x \in \fset}  & \quad \abs{\ell_k^{\drop}(x)}\\
-        \st                 & \quad \norm{x - \iter} \le \radalt
-    \end{split}
+        \max_{x \in \fset}   ~\abs{\ell_k^{\drop}(x)} \quad \st \quad  \norm{x - \iter} \le \radalt
 \end{equation}
 for some~$\radalt \in (0, \rad]$.
 The motivation for this problem is again to enlarge the magnitude of the
@@ -634,10 +628,7 @@ as the trust region and the region~\eqref{eq:cobylarg} may not intersect.
 \gls{cobyla} handles the subproblem in two stages. In the first stage, the problem
 \begin{equation}
     \label{eq:cobyla_sp1}
-    \begin{split}
-    \min_{x \in \R^n}   & \quad \max_{1 \le i \le m} [\conm(x)]_{-}\\
-    \st                 & \quad \norm{x - \iter} \le \rad
-    \end{split}
+    \min_{x \in \R^n}  \max_{1 \le i \le m} ~ [\conm(x)]_{-} \quad \st \quad \norm{x - \iter} \le \rad
 \end{equation}
 is solved, where~$[t]_{-} = \max \set{0, -t}$ for any~$t\in \R$.
 In doing so, the method attempts to reduce the~$\ell_{\infty}$-violation of the linearized constraints within the trust region.
@@ -769,10 +760,10 @@ It takes for input an optimization problem of the form
 \begin{subequations}
     \label{eq:pdfo}
     \begin{align}
-        \min_{x \in \R^n}   & \quad \obj(x)\\
-        \st                 & \quad \xl \le x \le \xu, \label{eq:pdfo-b}\\
-                            & \quad \aub x \le \bub, \quad \aeq x = \beq, \label{eq:pdfo-l}\\
-                            & \quad \cub(x) \le 0, \quad \ceq(x) = 0, \label{eq:pdfo-nl}
+        \min_{x \in \R^n}   & ~ \obj(x)\\
+        \st                 & ~ \xl \le x \le \xu, \label{eq:pdfo-b}\\
+                            & ~ \aub x \le \bub, ~ \aeq x = \beq, \label{eq:pdfo-l}\\
+                            & ~ \cub(x) \le 0, ~ \ceq(x) = 0, \label{eq:pdfo-nl}
     \end{align}
 \end{subequations}
 where~$\obj$, $\ceq$, and~$\cub$ are real-valued functions. The bound constraints are given
@@ -862,8 +853,7 @@ They are activated only when the problem is rather ill-conditioned or the inputs
 extreme.
 %, leading to huge values in the intermediate variables, especially in the coefficients of the interpolation models.
 This has been observed, for instance, on the CUTEst problems DANWOODLS, GAUSS1LS, LAKES, and
-VANDERM4 with some perturbation and randomization. We speculate that other model-based \gls{dfo}
-solvers may encounter similar difficulties if they are tested extensively.
+VANDERM4 with some perturbation and randomization.
 
 Even though these bugs are rarely observed in our tests, it is vital to patch them for two reasons.
 First, their consequences are severe once they occur. Second, application problems are often more irregular and savage than
@@ -897,7 +887,7 @@ methods based on interpolation. In fact, we also moderate~$\obj(\tilde{x})$ to~$
 actually evaluated to~$\infty$.
 Our approach is clearly naive, but it is better than terminating the solver once function
 evaluations fail. In our experiments, this simple approach significantly improves the robustness
-of~\gls{pdfo} with respect to failures of function evaluation, as will be demonstrated in Subsection~\ref{sssec:nan}.
+of~\gls{pdfo} with respect to failures of function evaluation, as will be demonstrated in Subsection~\ref{ssec:nan}.
 There do exist other more sophisticated approaches~\cite{Audet_Caporossi_Jacquet_2020},
 which will be explored in the future.
 
@@ -945,21 +935,30 @@ This section presents numerical experiments on \gls{pdfo}.
 Since Powell's solvers are widely used as benchmarks in \gls{dfo},
 extensive comparisons with standard \gls{dfo} solvers are
 already available in literature~\cite{More_Wild_2009,Rios_Sahinidis_2013}.
-Repeating such experiments is unnecessary.
-Instead, we compare \gls{pdfo} with solvers that
-are popular but less mentioned in existing benchmarking.
-Subsection~\ref{ssec:fd} tests \gls{pdfo} against \gls{bfgs} and \gls{cg} that use finite-difference gradients,
-highlighting the stability of \gls{pdfo} under noise and its robustness with respect to failures of
-function evaluations.
-%Subsection~\ref{ssec:hypertune} compares \gls{pdfo} with standard Bayesian optimizers~\cite{Shahriari_Etal_2016}
-%on a hyperparameter tuning problem in machine learning, demonstrating the capability and potential
-%of model-based \gls{dfo} methods for such problems.
+Instead of repeating such comparisons, which is unnecessary,
+the purpose of our experiments is the following.
+\begin{enumerate}
+    \item Demonstrate the fact the \gls{pdfo} is capable of adapting to noise without fine-tuning
+        according to the noise level, in contrast to methods based on~finite differences.
+        This is done in Subsection~\ref{ssec:noise} by comparing \gls{pdfo} with finite-difference
+        \gls{bfgs} and \gls{cg} on unconstrained CUTEst problems.
+    \item Verify the effectiveness of the moderated extreme barrier mentioned in
+        Subsection~\ref{ssec:barrier} for handling failures of function
+        evaluations. This is done in~Subsection~\ref{ssec:nan} by testing \gls{pdfo} with and
+        without the barrier on unconstrained CUTEst problems.
+    \item Illustrate the potential of \gls{pdfo} in solving hyperparameter tuning problems from
+        machine learning, echoing the observations made in~\cite{Ghanbari_Scheinberg_2017} about
+        trust-region \gls{dfo} methods for such problems.
+        This is done in Subsection~\ref{ssec:hypertune} by comparing~\gls{pdfo} with two solvers
+        from the Python package~\texttt{hyperopt}.\footnote{
+        \url{http://hyperopt.github.io/hyperopt/}.}
+\end{enumerate}
 
-All the experiments were carried out in double precision based on the Python version of \gls{pdfo}~1.2.
-The finite-difference \gls{bfgs} and \gls{cg} were provided by SciPy~1.10.0,
-and the Bayesian optimizers were the \gls{tpe} and the \gls{rs} in the Python package
-\texttt{hyperopt}~\cite{Bergstra_Yamins_Cox_2013}~0.2.7.
-We conducted the test on a ThinkStation P620 with an AMD Ryzen Threadripper
+Our experiments are carried out in double precision based on the Python version of \gls{pdfo}~1.2.
+The finite-difference \gls{bfgs} and \gls{cg} are provided by SciPy~1.10.0.
+The version of~\texttt{hyperopt} is~0.2.7. All these packages are tested with the latest stable version
+at the time of writing.
+We conduct the test on a ThinkStation P620 with an AMD Ryzen Threadripper
 PRO 3975WX CPU and 64 GB of memory, the operating system being Ubuntu~22.04, and the Python version
 being~3.10.6.
 
@@ -968,7 +967,11 @@ being~3.10.6.
 \label{ssec:noise}
 
 We first compare \gls{pdfo} with finite-difference \gls{bfgs} and \gls{cg} on unconstrained
-problems. The competitors are available in SciPy under the \texttt{minimize} function.
+problems with multiplicative Gaussian noise.
+We take the view that multiplicative noise makes more sense if the scale of the objective
+function changes widely, as is often the case in practice.
+
+SciPy provides \gls{bfgs} and \gls{cg} under the \texttt{minimize} in the \texttt{scipy.optimize} module.
 Invoked with the default configurations in SciPy without derivatives,
 \gls{bfgs} and \gls{cg} approximate gradients by forward differences with the default difference
 parameter~$h = \sqrt{u} \approx 1.5\times 10^{-8}$, where~$u$ is the unit roundoff.
@@ -982,25 +985,14 @@ For each testing problem, the starting point is set to the one provided by CUTEs
 number of function evaluations is set to~$500n$.
 
 
-We conduct two experiments, testing the stability of these solvers under noise and their robustness
-with respect to failures of function evaluations. Noise and evaluation failures are ubiquitous in
-applications of \gls{dfo}, and many problems suffer from both. We choose to test them separately in
-order to observe more clearly how the solvers react to these difficulties.
+%We conduct two experiments, testing the stability of these solvers under noise and their robustness
+%with respect to failures of function evaluations. Noise and evaluation failures are ubiquitous in
+%applications of \gls{dfo}, and many problems suffer from both. We choose to test them separately in
+%order to observe more clearly how the solvers react to these difficulties.
 
-
-%The first experiment is made without modifying the problems.
-%The optimal value~$\obj_{\ast}$ of a given problem is considered to be the least value reached by all solvers, and an execution is convergent up to a tolerance~$\tau \ge 0$ whenever
-%\begin{equation}
-%    \label{eq:cvt}
-%    \obj(\iter[0]) - \obj(\iter) \ge (1 - \tau) [\obj(\iter[0]) - \obj_{\ast}].
-%\end{equation}
-%\item The second experiment is a noisy variation of the previous one.
-%Let~$\sigma > 0$ be the noise level.
-%For each problem, the objective function is evaluated by
-
-The first experiment tests the stability of the solvers under multiplicative Gaussian noise.
-We take the view that multiplicative noise makes more sense if the scale of the objective
-function changes widely, as is often the case in practice.
+%The first experiment tests the stability of the solvers under multiplicative Gaussian noise.
+%We take the view that multiplicative noise makes more sense if the scale of the objective
+%function changes widely, as is often the case in practice.
 
 Let~$\sigma \ge 0$ be the noise level to test.
 For a testing problem with objective function~$\obj$, we define
@@ -1090,30 +1082,41 @@ When there is noise ($\sigma >0$), the advantage of \gls{pdfo} becomes significa
 The performances of \gls{bfgs} and \gls{cg} deteriorate considerably in the noisy case, even if the
 noise level is not high and the convergence tolerance is not demanding.
 
-Note that our results do not contradict the observations in~\cite{Shi_Etal_2022}, where the difference parameter~$h$ is chosen more carefully, according to the noise level and the smoothness of the problems.
-Our experiment is based on the default settings of \gls{bfgs} and \gls{cg} in SciPy, as well as the default configurations of~\gls{pdfo}.
-As commented in~\cite[\S~2]{Shi_Etal_2022}, the performance of methods based on finite differences is encouraging when there is no noise, yet much more care is needed when the problems are noisy.
-In contrast, \gls{pdfo} adapts to noise automatically in this experiment, demonstrating good stability under noise
-without requiring knowledge about the noise level.
+Note that our results do not contradict the observations in~\cite{Shi_Etal_2022a,Shi_Etal_2022}, where the
+difference parameter~$h$ is chosen more carefully according to the noise level and the smoothness of
+the problems.
+Our experiment does not include such fine-tuning, but adopts the default settings of \gls{bfgs} and \gls{cg} in SciPy, as well as the default configurations of~\gls{pdfo}.
+
+As shown in~\cite[\S~2]{Shi_Etal_2022}, the performance of finite-difference methods is encouraging when there is no noise, yet much more care is needed when the problems are noisy.
+In contrast, \gls{pdfo} adapts to noise automatically in our experiment, demonstrating good stability under noise
+without requiring knowledge about the noise level. This is because Powell's methods gradually adjust
+the geometry of the interpolation set during the iterations, which
+enables the methods to make progress until the interpolation points are too close to distinguish
+noise from true objective function values.
+This is not specific to Powell's methods,
+but also applies to other methods that sample the objective function on a set of points with
+adaptively controlled geometry, including finite-difference methods with well-chosen difference
+parameters~\cite{Shi_Etal_2022a}.
 
 
 \subsection{Robustness with respect failures of function evaluations}
-\label{sssec:nan}
+\label{ssec:nan}
 
 We now test the robustness of the solvers with respect to failures of function evaluations.
 We assume that the objective function returns NaN when the evaluation fails, which occurs randomly
 with a certain probability. As mentioned in Section~\ref{ssec:barrier}, \gls{pdfo} uses a moderated extreme
-barrier to handle such failures.
-In addition to~\gls{pdfo}, \gls{bfgs}, and~\gls{cg}, we also test a version of~\gls{pdfo} that
-does not employ the moderate extreme barrier.
-%, which will be shown as \mbox{``\gls{pdfo} (no barrier)''} in the results.
+barrier to handle such failures. To verify the effectiveness of this approach, we compare \gls{pdfo}
+with its variant that does not apply the barrier. To make the experiment more informative, we
+also include the finite-difference \gls{bfgs} and~\gls{cg} tested before, which do not
+handle evaluation failures in any particular way. The solvers are set up in the same way as in the
+previous experiment, and we still employ the~$157$ unconstrained CUTEst problems used previously.
 
 Let~$p \in (0,1)$ be the failure probability of function evaluations.
 For a testing problem with objective function~$\obj$, we define
 \begin{equation}
     \label{eq:nan-obj}
     \hat{\obj}_p(x) = \begin{cases}
-        \obj(x) & \text{if~$U(x) \ge  p$}, \\
+        \obj(x) & \text{if~$U(x) \ge  p$}, \\[0.5ex]
         \text{NaN} & \text{otherwise},
     \end{cases}
 \end{equation}
@@ -1157,62 +1160,102 @@ Two profiles are included for each~$p$, with the convergence tolerance being~$\t
     \label{fig:nan}
 \end{figure}
 
-The contrast is clear. Compared with finite-difference \gls{bfgs} and \gls{cg}, \gls{pdfo} is
+The contrast is clear.
+Compared with finite-difference \gls{bfgs} and \gls{cg}, \gls{pdfo} is
 more efficient and solves significantly more problems given the same convergence tolerance.
-Moreover, comparing \gls{pdfo} and its no-barrier version, we see that the moderate extreme barrier
+Moreover, comparing \gls{pdfo} and its no-barrier counterpart, we see that the moderate extreme barrier
 improves evidently the robustness of~\gls{pdfo} with respect to failures of function evaluations,
-even though its a quite naive approach.
+even though it is a quite naive approach.
+We speculate that the same approach will also benefit other model-based \gls{dfo} methods,
+including those based on finite differences, which deserves further investigation in the future.
 
 
 \subsection{An illustration of hyperparameter tuning with~\gls{pdfo}}
 \label{ssec:hypertune}
 
-We now consider a hyperparameter tuning problem from machine learning and compare \gls{pdfo}
-with \gls{tpe} and \gls{rs}, two standard solvers for such problems in the Python package~\texttt{hyperopt}~\cite{Bergstra_Yamins_Cox_2013}.
+We now consider a hyperparameter tuning problem from machine learning and illustrate the potential
+of \gls{pdfo} for such problems.
+We compare \gls{pdfo} with \gls{tpe} and \gls{rs}, two optimizers for hyperparameter tuning
+provided by the Python package~\texttt{hyperopt}.
 
-Similar to~\cite[\S~5.3]{Ghanbari_Scheinberg_2017},
-we consider a~$C$-SVC~\cite{Chang_Lin_2011} for binary classification problems with an \gls{rbf}
-kernel. We will tune two hyperparameters, namely a regularization parameter~$C > 0$ and a kernel
-coefficient~$\gamma > 0$. The objective is to maximize the AUC (area under the ROC curve) of the
-classifier.
+Our experiment is inspired by~\cite[\S~5.3]{Ghanbari_Scheinberg_2017}, which investigates the
+application of trust-region \gls{dfo} methods to hyperparameter tuning.
+Similar to~\mbox{\cite[\S~5.3]{Ghanbari_Scheinberg_2017}},
+we tune the $C$-SVC model detailed in~\cite[\S~2.1]{Chang_Lin_2011} for binary classifications.
+Given a dataset~$\{(u_i,z_i)\}_{i=1}^N$, with~$u_i \in \R^d$ being a vector of features
+and~$z_i \in \{-1,1\}$ being the corresponding label,
+the $C$-SVC constructs a classifier by solving
+\begin{equation}
+    \label{eq:svc}
+        \min_{\alpha}  ~\frac{1}{2} \alpha^\trs Q \alpha - \alpha^\trs \ones
+        \quad \st \quad 0 \leq \alpha \leq C, ~ \alpha^\trs z = 0, ~\alpha \in\R^{N},
+\end{equation}
+where~$C\in(0,\infty)$ is a parameter, $z\in\R^{N}$ is the vector whose~$i$th entry is~$z_i$,~$\ones\in\R^N$
+is the vector of all ones, and~$Q\in\R^{N\times N}$ is the matrix whose~$(i,j)$ entry is~$K(u_i,u_j)$ for
+a kernel function~$K\mathrel{:} \R^{d}\times\R^{d} \to \R$.
+We take the Gaussian kernel~$K(u,v) = \exp(-\gamma\|u-v\|^2)$, where~$\gamma \in (0,\infty)$ is another parameter.
+See~\cite[\S~2.1]{Chang_Lin_2011} for more details.
 
-Our experiments are based on binary classifications problems from the LIBSVM dataset.\footnote{\url{https://www.csie.ntu.edu.tw/~cjlin/libsvmtools/datasets/}.}
-A description of the datasets is provided in Table~\ref{tab:htdata}.
-A dataset~$\mathcal{P}$ is divided into two disjoint parts: a training dataset~$\mathcal{L}$ and a testing dataset~$\mathcal{T}$, with~$\mathcal{P} = \mathcal{L} \cup \mathcal{T}$.
+As suggested by~\cite[\S~9]{Chang_Lin_2011}, we will tune~$C$ and~$\gamma$ for the performance of
+the~$C$-SVC.
+We model this process as
+\begin{equation}
+    \label{eq:hypertune}
+    \max ~ P(C, \gamma) \quad \st \quad C > 0,~ \gamma > 0,
+\end{equation}
+where~$P(C, \gamma)$ measures the performance corresponding to parameters~$(C, \gamma)$. In our experiment,
+we define~$P$ based on the AUC score~\cite{Yang_Ying_2022}, which is a number in~$[0,1]$
+that measures the quality of a classifier on a dataset, the higher the better.
+More precisely, $P(C, \gamma)$ is set to a five-fold cross-validation AUC score as follows.
+Split the training dataset~$\mathcal{S}$ into five folds, and train the $C$-SVC five times, each time
+solving~\eqref{eq:svc} on a union
+of four distinct folds. After each training, calculate the AUC score of the resulting classifier
+on the fold not involved in the training, leading to five scores, the average of which is~$P(C, \gamma)$.
+
+%We maximize~$P(C, \gamma)$ by \gls{pdfo}.
+
+
+Our experiment is based on binary classifications problems from LIBSVM.\footnote{\url{https://www.csie.ntu.edu.tw/~cjlin/libsvmtools/datasets/}.}
+We adopt three datasets detailed in Table~\ref{tab:htdata}.
+LIBSVM divides each dataset~$\mathcal{D}$ into two disjoint subsets, namely a training dataset~$\mathcal{S}$ and
+a testing dataset~$\mathcal{T}$.
+For each dataset~$\mathcal{D}$, we evaluate the function~$P$ based on~$\mathcal{S}$ by the procedure
+described above, with
+problem~\eqref{eq:svc} being tackled by the SVC class of the Python machine learning package scikit-learn.\footnote{\url{https://scikit-learn.org/stable/modules/generated/sklearn.svm.SVC.html}.}
+We solve~\eqref{eq:hypertune} by~\gls{pdfo}, \gls{tpe}, or~\gls{rs} to obtain the tuned
+parameters~$(\bar{C}, \bar{\gamma})$.
+As in~\cite[\S~5.3]{Ghanbari_Scheinberg_2017}, we modify the feasible set of~\eqref{eq:hypertune}
+to~$C\in[10^{-6}, 1]$ and~$\gamma\in [1, 10^{3}]$. For a better scaling of the problem,
+we perform the maximization with respect to~$(\log_{10}C,\, \log_{10}\gamma)$ instead of~$(C,
+\gamma)$, the initial guess being chosen randomly from~$[-6, 0]\times[0, 3]$. The solver
+of~\gls{pdfo} is \gls{bobyqa}, for which we set the maximal number of function evaluations to~$100$.
+For~\gls{tpe} and~\gls{rs}, we try both~$100$ and~$300$ as the maximal number of function
+evaluations, and they do not terminate until this number is reached.
 
 \begin{table}[ht]
-    \caption{Considered LIBSVM dataset descriptions}
+    \caption{Datasets from LIBSVM}
     \label{tab:htdata}
     \centering
     %\begin{tabular}{cS[table-format=2]S[table-format=5]}
-    \begin{tabular}{ccS[table-format=5]}
+    \begin{tabular}{ccS[table-format=5]S[table-format=5]}
         \toprule
-        Dataset~$\mathcal{P}$   & {Dimension}   & {Dataset size}\\
+        Dataset~$\mathcal{D}$   & {Number of features}   & {Size of~$\mathcal{S}$} & {Size of~$\mathcal{T}$}\\
         \midrule
-        splice                  & 60            & 1000\\
-        svmguide1               & 4             & 3088\\
-        ijcnn1                  & 22            & 49990\\
+        splice                  & 60            & 1000 &  2175\\
+        svmguide1               & ~4             & 3088 & 4000\\
+        ijcnn1                  & 22            & 49990 & 91701\\
         \bottomrule
     \end{tabular}
 \end{table}
 
 
-The problem we consider is as follows.
-We want to maximize the~$5$-fold \gls{auc} validation score of the \gls{svm} trained on~$\mathcal{L}$ with respect to the hyperparameters~$C$ and~$\gamma$.
-The \gls{auc} score, a real number in~$[0, 1]$, measures the area underneath the \gls{roc} curve, a graph representing the performance of a binary classification model.
-This curve plots the true positive classification rate with respect to the false positive classification rate at different classification thresholds.
-The~$5$-fold \gls{auc} validation score corresponds to the following.
-The set~$\mathcal{L}$ is split into~$5$ folds, and the model is trained~$5$ times, on each union of~$4$ distinct folds.
-After each training, the \gls{auc} score is calculated on the remaining fold, which was not involved in the training process, giving rise to~$5$ \gls{auc} scores, the average of which corresponds to the~$5$-fold \gls{auc} validation score.
-
-The numerical results for this experiment are provided in Tables~\ref{tab:splice}--\ref{tab:ijcnn1}.
-The \gls{auc} scores and accuracies presented in the tables correspond to the ones computed on~$\mathcal{T}$ using an \gls{svm} trained on~$\mathcal{L}$, with the tuned parameters~$C$ and~$\gamma$.
-We use \#$f$ to denote the number of function evaluations, and ``Time'' to represent the computation time.
-
-In terms of \gls{auc} score and accuracy, we observe that \gls{pdfo} achieves a clearly better result than \gls{tpe} and \gls{rs} on the ``splice'' dataset, and they all attain comparable results on all the other datasets.
-However, \gls{pdfo} always uses much less function evaluations, and hence, much less computation time.
-The difference in the computation time is particularly visible on the dataset ``ijcnn1'' in Table~\ref{tab:ijcnn1}, as the size of this dataset is large, so that each function evaluation takes much time.
-In summary, we can conclude that \gls{pdfo} performs better than \gls{tpe} and \gls{rs} on these problems.
+To assess the quality
+of the tuned parameters, we solve~\eqref{eq:svc} on~$\mathcal{S}$ with~$(C, \gamma)$ set
+to~$(\bar{C}, \bar{\gamma})$, and calculate both the AUC score and the accuracy of the resulting
+classifier on~$\mathcal{T}$, with accuracy being the fraction of correctly classified data points.
+Tables~\ref{tab:splice}--\ref{tab:ijcnn1} present the results for this experiment,
+where \#$f$ denotes the number of function evaluations, and ``Time'' represents the computing
+time for obtaining~$(\bar{C}, \bar{\gamma})$.
 
 \begin{table}[!ht]
     \caption{Hyperparameter tuning on the dataset ``splice''}
@@ -1223,7 +1266,7 @@ In summary, we can conclude that \gls{pdfo} performs better than \gls{tpe} and \
         \toprule
         Solver      & {AUC Score ($10^{-1}$)}   & {Accuracy ($10^{-1}$)}    & {\#$f$}   & {Time (\si{\second})}\\
         \midrule
-        \gls{pdfo}  & 9.27                      & 7.37                      & 33            & 5.11\\
+        \gls{pdfo}  & 9.27                      & 7.37                      & ~33            & 5.11\\
         \gls{rs}    & 5.00                      & 5.20                      & 100           & 8.23\\
         \gls{rs}    & 5.00                      & 5.20                      & 300           & 24.73\\
         \gls{tpe}   & 5.00                      & 5.20                      & 100           & 8.22\\
@@ -1239,7 +1282,7 @@ In summary, we can conclude that \gls{pdfo} performs better than \gls{tpe} and \
         \toprule
         Solver      & {AUC Score ($10^{-1}$)}   & {Accuracy ($10^{-1}$)}    & {\#$f$}   & {Time (\si{\second})}\\
         \midrule
-        \gls{pdfo}  & 9.95                      & 9.66                      & 51            & 2.83\\
+        \gls{pdfo}  & 9.95                      & 9.66                      & ~\,51            & 2.83\\
         \gls{rs}    & 9.94                      & 9.61                      & 100           & 10.22\\
         \gls{rs}    & 9.95                      & 9.68                      & 300           & 30.75\\
         \gls{tpe}   & 9.95                      & 9.65                      & 100           & 8.65\\
@@ -1257,7 +1300,7 @@ In summary, we can conclude that \gls{pdfo} performs better than \gls{tpe} and \
         \toprule
         Solver      & {AUC Score ($10^{-1}$)}   & {Accuracy ($10^{-1}$)}    &{\#$f$}  & {Time (\SI{}[10^3]{\second})}\\
         \midrule
-        \gls{pdfo}  & 9.97                      & 9.80                      & 44            & 2.48\\
+        \gls{pdfo}  & 9.97                      & 9.80                      & ~44            & 2.48\\
         \gls{rs}    & 9.97                      & 9.82                      & 100           & 3.99\\
         \gls{rs}    & 9.97                      & 9.77                      & 300           & 11.52\\
         \gls{tpe}   & 9.98                      & 9.79                      & 100           & 3.42\\
@@ -1265,6 +1308,17 @@ In summary, we can conclude that \gls{pdfo} performs better than \gls{tpe} and \
         \bottomrule
     \end{tabular}
 \end{table}
+
+In terms of the AUC score and the accuracy, \gls{pdfo} achieves a clearly better result than \gls{tpe} and \gls{rs} on the ``splice'' dataset, and they all attain comparable results on the other datasets.
+However, \gls{pdfo} always uses much less function evaluations, and hence, much less computing time.
+The difference in the computing time is particularly visible on the dataset ``ijcnn1'' in
+Table~\ref{tab:ijcnn1}, as each evaluation of~$P$ takes much time due to the large data size.
+
+Note that our intention is not to manifest that \gls{pdfo} outperforms standard solvers for
+general hyperparameter tuning problems, which is unlikely true. Instead, we provide an
+example to show the possibility of applying Powell's methods to such problems, which is not well studied up to now.
+In doing so, we also hope to call for more investigation on \gls{dfo} methods for
+machine learning problems in general, echoing the suggestion of~\cite{Ghanbari_Scheinberg_2017}.
 
 
 \section{Conclusions}
