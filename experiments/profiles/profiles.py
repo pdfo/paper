@@ -367,8 +367,9 @@ class Profiles:
     def merit(fun_history, maxcv_history, **kwargs):
         fun_history = np.atleast_1d(fun_history)
         maxcv_history = np.atleast_1d(maxcv_history)
-        merits = np.empty_like(fun_history)
-        for i in range(merits.size):
+        n_eval = min(fun_history.size, maxcv_history.size)
+        merits = np.empty(n_eval)
+        for i in range(n_eval):
             if maxcv_history[i] <= kwargs.get("low_cv", 1e-12):
                 merits[i] = fun_history[i]
             elif kwargs.get("barrier", False) and maxcv_history[i] >= kwargs.get("high_cv", 1e-6):

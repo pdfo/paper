@@ -12,7 +12,7 @@ if __name__ == "__main__":
 
     # Generate the performance and data profiles on the plain problems with n <= 50.
     profiles = Profiles(1, 50, "unconstrained")
-    profiles(["NEWUOA", "BFGS", "CG"])
+    profiles(["NEWUOA", "BFGS", "CG"], ["PDFO", "BFGS", "CG"])
     profiles(["NEWUOA", "BOBYQA", "LINCOA", "COBYLA"])
     del profiles
 
@@ -34,7 +34,7 @@ if __name__ == "__main__":
     # Generate the performance and data profiles on the noisy problems with n <= 50 and different noise levels.
     for noise_level in [1e-10, 1e-8, 1e-6]:
         profiles = Profiles(1, 50, "unconstrained", feature="noisy", noise_level=noise_level)
-        profiles(["NEWUOA", "BFGS", "CG"])
+        profiles(["NEWUOA", "BFGS", "CG"], ["PDFO", "BFGS", "CG"])
         del profiles
     for noise_level in [1e-6, 1e-5, 1e-4, 1e-3, 1e-2]:
         profiles = Profiles(1, 50, "unconstrained", feature="noisy", noise_level=noise_level)
