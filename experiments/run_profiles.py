@@ -1,13 +1,14 @@
 import os
 
 from copy_profiles import copy_all_figures
-from profiles import Profiles
+from profiles import Profiles, set_loglevel
 
 COPY_PAPER_FIGURES = False
 
 
 if __name__ == "__main__":
     cwd = os.getcwd()
+    set_loglevel("INFO")
 
     # Generate the performance and data profiles on the plain problems with n <= 50.
     profiles = Profiles(1, 50, "unconstrained")
