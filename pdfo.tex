@@ -174,9 +174,9 @@
 \relpenalty=10000
 \binoppenalty=10000
 %% no widow or orphan lines
-%\clubpenalty=10000
-%\widowpenalty=10000
-%\displaywidowpenalty=10000
+\clubpenalty=10000
+\widowpenalty=10000
+\displaywidowpenalty=10000
 % Checks page or column breaks for issues with widow or orphan lines
 %\usepackage[prevent-all]{widows-and-orphans}
 
@@ -282,7 +282,7 @@ Such problems motivate the development of optimization algorithms that use only 
 
 Powell devised five algorithms to tackle unconstrained and constrained problems without using derivatives, namely~\gls{cobyla}~\cite{Powell_1994}, \gls{uobyqa}~\cite{Powell_2002}, \gls{newuoa}~\cite{Powell_2006}, \gls{bobyqa}~\cite{Powell_2009}, and \gls{lincoa}.
 He did not only propose these algorithms but also implemented them into publicly available solvers, paying great attention to the stability and complexity of their numerical linear algebra computations.
-Renowned for their robustness and efficiency, these solvers are used in a wide spectrum of applications, for instance, aeronautical engineering~\cite{Gallard_Etal_2018}, astronomy~\cite{Mamon_Biviano_Boue_2013}, computer vision~\cite{Izadinia_Shan_Seitz_2017}, robotics~\cite{Mombaur_Truong_Laumond_2010}, and statistics~\cite{Bates_Etal_2014}.
+Renowned for their robustness and efficiency, these solvers are used in a wide spectrum of applications, for instance, aeronautical engineering~\cite{Gallard_Etal_2018}, astronomy~\cite{Mamon_Biviano_Boue_2013}, computer vision~\cite{Izadinia_Shan_Seitz_2017}, robotics~\cite{Mombaur_Truong_Laumond_2010}, and statistics~\cite{Bates_Etal_2015}.
 
 However, Powell coded the solvers in Fortran 77, an old-fashion language that damps the enthusiasm of many users to exploit these solvers in their projects.
 There has been considerable demand from both researchers and practitioners for the availability of Powell's solvers in more user-friendly languages such as Python and MATLAB.
@@ -292,7 +292,7 @@ The current release (Version 1.2) of \gls{pdfo} supports Python and MATLAB, with
 The signature of the Python subroutine is consistent with the \texttt{minimize} function of the SciPy optimization library; the signature of the MATLAB subroutine is consistent with the \texttt{fmincon} function of the MATLAB Optimization Toolbox.
 \gls{pdfo} is cross-platform, and available on Linux, macOS, and Windows at
 \begin{center}
-    \url{https://www.pdfo.net/}.
+    \url{https://www.pdfo.net}.
 \end{center}
 It has been downloaded more than \num{50000} times as of February 2023, mirror downloads excluded.
 Moreover, it is one of the optimization engines in GEMSEO~\cite{Gallard_Etal_2018},
@@ -300,7 +300,11 @@ an industrial software package for Multidisciplinary Design Optimization (MDO).
 
 \gls{pdfo} is not the first attempt to facilitate the usage of Powell's solvers in languages other than Fortran.
 Various efforts have been made in this direction.
-Py-BOBYQA~\cite{Cartis_Etal_2019,Cartis_Roberts_Sheridan-Methven_2022} provides a Python implementation of \gls{bobyqa}; NLopt~\cite{Johnson_2019} includes multi-language interfaces for \gls{cobyla}, \gls{newuoa}, and \gls{bobyqa}; minqa~\cite{Bates_Etal_2014} wraps \gls{uobyqa}, \gls{newuoa}, and \gls{bobyqa} in R; SciPy makes \gls{cobyla} available in Python under its optimization library.
+Py-BOBYQA~\cite{Cartis_Etal_2019,Cartis_Roberts_Sheridan-Methven_2022} provides a Python
+implementation of \gls{bobyqa};
+NLopt includes multi-language interfaces for \gls{cobyla}, \gls{newuoa}, and \gls{bobyqa};\footnote{\url{https://github.com/ stevengj/nlopt}.}
+minqa wraps \gls{uobyqa}, \gls{newuoa}, and \gls{bobyqa} in R;\footnote{\url{https://CRAN.R-project.org/package=minqa}.}
+SciPy makes \gls{cobyla} available in Python under its optimization library.\footnote{\url{https://docs.scipy.org/doc/scipy/reference/optimize.minimize-cobyla.html}.}
 However, \gls{pdfo} has several features that distinguishes itself from others.
 
 \begin{enumerate}
@@ -409,7 +413,7 @@ quasi-Newton method. The least-change property~\cite{Dennis_Schnabel_1979} of qu
 is a major motivation for Powell to investigate the least Frobenius norm updating~\cite{Powell_2004b}
 of quadratic models in DFO, which is the backbone of \gls{newuoa}, \gls{bobyqa}, and \gls{lincoa}.}
 His code for this algorithm is contained in the
-HSL Mathematical Software Library as subroutine \texttt{VA24}.\footnote{\url{http://www.hsl.rl.ac.uk/.}}
+HSL Mathematical Software Library as subroutine \texttt{VA24}.\footnote{\url{https://www.hsl.rl.ac.uk.}}
 It is not included in \gls{pdfo} because the code is not in the public domain, although open-source implementations are available~(see~\cite[footnote~4]{Conn_Scheinberg_Toint_1997b}).
 
 From the 1990s to the final days of his career, Powell developed five model-based \gls{dfo}
@@ -751,12 +755,12 @@ an infeasible method, which requires~$\obj$ to be defined even when the linear c
 This section details the main features of \gls{pdfo}, in particular the signature of the main
 function, problem preprocessing, solver selection, bug fixes, and handling failures of function
 evaluations. For more features of~\gls{pdfo}, we refer to its homepage
-at~\url{https://www.pdfo.net/}.
+at~\url{https://www.pdfo.net}.
 
 Before starting, we
 emphasize that \gls{pdfo} does not re-implement Powell’s solvers but rather enables Python and MATLAB
 to call Powell's Fortran implementation.
-At a low level, it uses F2PY\footnote{\url{https://numpy.org/doc/stable/f2py/}.} to interface Python with Fortran, and MEX to
+At a low level, it uses F2PY\footnote{\url{https://numpy.org/doc/stable/f2py}.} to interface Python with Fortran, and MEX to
 interface it with MATLAB, although users never need such knowledge to employ~\gls{pdfo}.
 
 \subsection{Signature of the main function}
@@ -958,7 +962,7 @@ the purpose of our experiments is the following.
         trust-region \gls{dfo} methods for such problems.
         This is done in Subsection~\ref{ssec:hypertune} by comparing~\gls{pdfo} with two solvers
         from the Python package~\texttt{hyperopt}.\footnote{
-        \url{http://hyperopt.github.io/hyperopt/}.}
+        \url{https://hyperopt.github.io/hyperopt}.}
 \end{enumerate}
 
 Our experiments are carried out in double precision based on the Python version of \gls{pdfo}~1.2.
@@ -1228,7 +1232,7 @@ on the fold not involved in the training, leading to five scores, the average of
 %We maximize~$P(C, \gamma)$ by \gls{pdfo}.
 
 
-Our experiment is based on binary classifications problems from LIBSVM.\footnote{\url{https://www.csie.ntu.edu.tw/~cjlin/libsvmtools/datasets/}.}
+Our experiment is based on binary classifications problems from LIBSVM.\footnote{\url{https://www.csie.ntu.edu.tw/~cjlin/libsvmtools/datasets}.}
 We adopt three datasets detailed in Table~\ref{tab:htdata}.
 LIBSVM divides each dataset~$\mathcal{D}$ into two disjoint subsets, namely a training dataset~$\mathcal{S}$ and
 a testing dataset~$\mathcal{T}$.
@@ -1255,7 +1259,7 @@ evaluations, and they do not terminate until this number is reached.
         Dataset~$\mathcal{D}$   & {Number of features}   & {Size of~$\mathcal{S}$} & {Size of~$\mathcal{T}$}\\
         \midrule
         splice                  & 60            & 1000 &  2175\\
-        svmguide1               & ~4             & 3088 & 4000\\
+        svmguide1               & ~\,4             & 3088 & 4000\\
         ijcnn1                  & 22            & 49990 & 91701\\
         \bottomrule
     \end{tabular}
@@ -1331,40 +1335,49 @@ Table~\ref{tab:ijcnn1}, as each evaluation of~$P$ takes much time due to the lar
 Note that our intention is not to manifest that \gls{pdfo} outperforms standard solvers for
 general hyperparameter tuning problems, which is unlikely the case. Indeed, \gls{pdfo} cannot be
 applied unless the hyperparameters are continuous.
-Our aim is to provide an
+Our objective is to provide an
 example that shows the possibility of applying Powell's methods to such problems, which is not well studied up to now.
 In doing so, we also hope to call for more investigation on \gls{dfo} methods for
 machine learning problems in general, as is suggested in~\cite{Ghanbari_Scheinberg_2017}.
 
 
-\section{Conclusions}
+\section{Concluding remarks}
 \label{sec:conclude}
 
-We have presented the package \gls{pdfo} for Python and MATLAB, which aims at simplifying the use of
+We have presented the \gls{pdfo} package, which aims at simplifying the use of
 the Powell's \gls{dfo} solvers by providing user-friendly interfaces.
-More information about the package itself can be found on the \gls{pdfo} website~(\url{https://www.pdfo.net/}), together with different examples of use.
-The scope of \gls{pdfo} in the future is not limited only to the Powell's \gls{dfo} solvers.
-For instance, the authors are currently working on a new solver for nonlinearly constrained optimization, named \gls{cobyqa}~\cite{Ragonneau_2022}.
-It is aimed to be added to \gls{pdfo}, and other \gls{dfo} solvers may be included in the future.
+More information about the package can be found on the homepage of the package at
+\mbox{\url{https: //www.pdfo.net}}, together with several examples of use.
+%The scope of \gls{pdfo} in the future is not limited only to the Powell's \gls{dfo} solvers.
+%For instance, the authors are currently working on a new solver for nonlinearly constrained optimization, named \gls{cobyqa}~\cite{Ragonneau_2022}.
+%It is aimed to be added to \gls{pdfo}, and other \gls{dfo} solvers may be included in the future.
 
-\section{Statements and declarations}
+In addition, we have also provided an overview of the Powell's methods behind \gls{pdfo}.
+The overview does not intend to repeat Powell's description about the methods, but rather to provide a
+summary on the main features and structures of the methods, highlighting the intrinsic connections and
+similarities among them. We hope that the overview will ease the understanding of Powell's methods,
+in the same way as the \gls{pdfo} package eases the use of these methods.
 
-\subsection{Funding}
+
+
+\section*{Statements and declarations}
+
+\paragraph{\textnormal{\textbf{Funding.}}}
 
 This work was funded by the University Grants Committee of Hong Kong under the
 projects PF18-24698 (Hong Kong Ph.D. Fellowship Scheme), PolyU 253012/17P, PolyU 153054/20P,
 and PolyU 153066/21P.
 It was also supported by The Hong Kong Polytechnic University under project P0009767.
 
-\subsection{Competing interests}
+\paragraph{\textnormal{\textbf{Competing interests.}}}
 
 The authors have no relevant financial or non-financial interests to disclose.
 
-\subsection{Data availability}
+\paragraph{\textnormal{\textbf{Data availability.}}}
 
-The source code of the \gls{pdfo} package is available at \mbox{\url{https://www.pdfo.net/}}.
-The source code of the numerical experiments presented in this manuscript is available at
-\mbox{\url{https://www.github.com/pdfo/paper/blob/main/experiments/}}.
+The source code of the \gls{pdfo} package is available at \mbox{\url{https://www.pdfo.net}}.
+The source code of the numerical experiments is available at
+\mbox{\url{https://www.github.com/pdfo/paper/blob/main/experiments}}.
 
 \bibliographystyle{spmpsci}
 \bibliography{pdfo}
