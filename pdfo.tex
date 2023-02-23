@@ -99,17 +99,28 @@
 \newabbreviation{rbf}{RBF}{radial basis function}
 \newabbreviation{roc}{ROC}{receiver operating characteristic}
 \newabbreviation{svm}{SVM}{support vector machine}
-\newabbreviation{rs}{\textsc{rs}}{Random Search}
-\newabbreviation{tpe}{\textsc{tpe}}{Tree-Structured Parzen Estimator}
-\newacronym{bobyqa}{\textsc{bobyqa}}{Bound Optimization BY Quadratic Approximation}
-\newacronym{bfgs}{\textsc{bfgs}}{Broyden-Fletcher-Goldfarb-Shanno}
-\newacronym{cg}{\textsc{cg}}{Conjugate Gradient}
-\newacronym{cobyla}{\textsc{cobyla}}{Constrained Optimization BY Linear Approximations}
-\newacronym{cobyqa}{\textsc{cobyqa}}{Constrained Optimization BY Quadratic Approximations}
-\newacronym{lincoa}{\textsc{lincoa}}{LINearly Constrained Optimization Algorithm}
-\newacronym{newuoa}{\textsc{newuoa}}{NEW Unconstrained Optimization Algorithm}
-\newacronym{pdfo}{\textsc{pdfo}}{Powell's Derivative-Free Optimization solvers}
-\newacronym{uobyqa}{\textsc{uobyqa}}{Unconstrained Optimization BY Quadratic Approximation}
+%\newabbreviation{rs}{\textsc{rs}}{Random Search}
+%\newabbreviation{tpe}{\textsc{tpe}}{Tree-Structured Parzen Estimator}
+%\newacronym{bobyqa}{\textsc{bobyqa}}{Bound Optimization BY Quadratic Approximation}
+%\newacronym{bfgs}{\textsc{bfgs}}{Broyden-Fletcher-Goldfarb-Shanno}
+%\newacronym{cg}{\textsc{cg}}{Conjugate Gradient}
+%\newacronym{cobyla}{\textsc{cobyla}}{Constrained Optimization BY Linear Approximations}
+%\newacronym{cobyqa}{\textsc{cobyqa}}{Constrained Optimization BY Quadratic Approximations}
+%\newacronym{lincoa}{\textsc{lincoa}}{LINearly Constrained Optimization Algorithm}
+%\newacronym{newuoa}{\textsc{newuoa}}{NEW Unconstrained Optimization Algorithm}
+%\newacronym{pdfo}{\textsc{pdfo}}{Powell's Derivative-Free Optimization solvers}
+%\newacronym{uobyqa}{\textsc{uobyqa}}{Unconstrained Optimization BY Quadratic Approximation}
+\newabbreviation{rs}{{RS}}{Random Search}
+\newabbreviation{tpe}{{TPE}}{Tree-Structured Parzen Estimator}
+\newacronym{bobyqa}{{BOBYQA}}{Bound Optimization BY Quadratic Approximation}
+\newacronym{bfgs}{{BFGS}}{Broyden-Fletcher-Goldfarb-Shanno}
+\newacronym{cg}{{CG}}{Conjugate Gradient}
+\newacronym{cobyla}{{COBYLA}}{Constrained Optimization BY Linear Approximations}
+\newacronym{cobyqa}{{COBYQA}}{Constrained Optimization BY Quadratic Approximations}
+\newacronym{lincoa}{{LINCOA}}{LINearly Constrained Optimization Algorithm}
+\newacronym{newuoa}{{NEWUOA}}{NEW Unconstrained Optimization Algorithm}
+\newacronym{pdfo}{{PDFO}}{Powell's Derivative-Free Optimization solvers}
+\newacronym{uobyqa}{{UOBYQA}}{Unconstrained Optimization BY Quadratic Approximation}
 %
 \graphicspath{{figures/}}
 %
@@ -186,6 +197,25 @@
 \newcommand{\bobyqafun}{\texttt{bobyqa}\xspace}
 \newcommand{\lincoafun}{\texttt{lincoa}\xspace}
 \renewcommand{\baselinestretch}{1.1}
+
+% Redefine the remark environments to have bold titles.
+% Note: Since the environment cannot be overridden, we first undefine it (both
+% \begin{remark} and \end{remark}) and we then redefine it.
+\makeatletter
+\let\remark\@undefined
+\let\endremark\@undefined
+\spn@wtheorem{remark}{Remark}{\bfseries}{\rmfamily}
+
+% Redefine the proof environment to have bold titles.
+\let\proof\@undefined
+\let\endproof\@undefined
+\spnewtheorem*{proof}{Proof}{\bfseries}{\rmfamily}
+
+% Redefine the subsection headings to be bold.
+\def\subsection{\@startsection{subsection}{2}{\z@}%
+    {-21dd plus-8pt minus-4pt}{10.5dd}
+     {\normalsize\bfseries}}
+\makeatother
 
 %
 \journalname{Mathematical Programming Computation}
@@ -272,7 +302,8 @@ However, \gls{pdfo} has several features that distinguishes itself from others.
     \item \emph{Solver selection.}
     %When using \gls{pdfo}, the user can specifically call one of Powell's solvers. If the user does not specify any solver,
     \gls{pdfo} can automatically select a solver for a given problem.
-    The selection takes into consideration the performance of the solvers on the CUTEst~\cite{Gould_Orban_Toint_2015} problem set.
+    The selection takes into consideration the performance of the solvers on the
+    CUTEst~\cite{Gould_Orban_Toint_2015} problem set.
     %Interestingly, it turns out that the solver with the best performance may not be the most intuitive one.
     %For example, \gls{newuoa} is not always the best choice for solving an unconstrained problem.
 
@@ -344,7 +375,8 @@ MNH~\cite{Wild_2008}, DFLS~\cite{Zhang_Conn_Scheinberg_2010},
 DFO-TR~\cite{Bandeira_Scheinberg_Vicente_2012}, and DFO-LS~\cite{Cartis_Etal_2019,Hough_Roberts_2022}, but there are also successful cases exploiting \glspl{rbf}, such as ORBIT~\cite{Wild_Regis_Shoemaker_2008}, CONORBIT~\cite{Regis_Wild_2017}, and BOOSTERS~\cite{Oeuvray_Bierlaire_2009}.
 %Model-based \gls{dfo} is one of the motivations for studying trust-region and line-search methods with randomized models, for which we refer to~\cite{Bandeira_Scheinberg_Vicente_2014,Gratton_Etal_2018,Cartis_Scheinberg_2018} as examples.
 
-Hybrids between direct-search and model-based approaches exist, for example~\cite{Custodio_Vicente_2007}, Implicit Filtering~\cite[Algorithm~4.7]{Kelley_2011}, and~\cite{Conn_Digabel_2013}.
+Hybrids between direct-search and model-based approaches exist, for
+instance, Implicit Filtering~\cite[Algorithm~4.7]{Kelley_2011} and MADS with quadratic models~\cite{Conn_Digabel_2013}.
 Theory of global convergence and convergence rate has been established for both direct-search and
 model-based methods~\cite{Torczon_1997,Conn_Scheinberg_Toint_1997a,Kolda_Lewis_Torczon_2003,Conn_Scheinberg_Vicente_2009a,Powell_2012,Vicente_2013,Dodangeh_Vicente_2016,Garmanjani_Judice_Vicente_2016}.
 It is worth noting that the performance of \gls{dfo} algorithms is measured in general by the number of function evaluations needed for solving a given problem, as the objective and constraint functions in \gls{dfo} problems are commonly
@@ -358,13 +390,14 @@ papers~\cite{Rios_Sahinidis_2013,Custodio_Scheinberg_Vicente_2017,Larson_Menicke
 \label{sec:powell}
 
 Powell published in 1964 his first \gls{dfo} algorithm based on conjugate
-directions~\cite{Powell_1964},\footnote{According to Google Scholar, this is Powell's second published paper and also the second most cited work.
+directions~\cite{Powell_1964}.\footnote{According to Google Scholar, this is Powell's second published paper and also the second most cited work.
 The earliest and meanwhile most cited one is his paper on the DFP method~\cite{Fletcher_Powell_1963}
 co-authored with Fletcher and published in 1963. DFP is not a DFO algorithm but the first
 quasi-Newton method. The least-change property~\cite{Dennis_Schnabel_1979} of quasi-Newton methods
 is a major motivation for Powell to investigate the least Frobenius norm updating~\cite{Powell_2004b}
-of quadratic models in DFO, which is the backbone of \gls{newuoa}, \gls{bobyqa}, and \gls{lincoa}.}.
-His code for this algorithm is contained in the HSL Mathematical Software Library~\cite{HSL} as subroutine \texttt{VA24}.
+of quadratic models in DFO, which is the backbone of \gls{newuoa}, \gls{bobyqa}, and \gls{lincoa}.}
+His code for this algorithm is contained in the
+HSL Mathematical Software Library as subroutine \texttt{VA24}.\footnote{\url{http://www.hsl.rl.ac.uk/.}}
 It is not included in \gls{pdfo} because the code is not in the public domain, although open-source implementations are available~(see~\cite[footnote~4]{Conn_Scheinberg_Toint_1997b}).
 
 From the 1990s to the final days of his career, Powell developed five model-based \gls{dfo}
@@ -725,7 +758,7 @@ at~\url{https://www.pdfo.net/}.
 Before starting, we
 emphasize that \gls{pdfo} does not re-implement Powell’s solvers but rather enables Python and MATLAB
 to call Powell's Fortran implementation.
-At a low level, it uses F2PY~\footnote{\url{https://numpy.org/doc/stable/f2py/}.} to interface Python with Fortran, and MEX to
+At a low level, it uses F2PY\footnote{\url{https://numpy.org/doc/stable/f2py/}.} to interface Python with Fortran, and MEX to
 interface it with MATLAB, although users never need such knowledge to employ~\gls{pdfo}.
 
 \subsection{Signature of the main function}
@@ -799,7 +832,7 @@ and the number~$8$ is set according to our experiments on the CUTEst~\cite{Gould
 We note that Powell's implementation of \gls{uobyqa} cannot handle problems with univariate
 objective functions, for which \gls{newuoa} is chosen.
 
-In addition to the \pdfofun function, \gls{pdfo} also provides functions named~\cobylafun,
+In addition to the \pdfofun function, \gls{pdfo} provides functions named~\cobylafun,
 \texttt{uobyqa}, \newuoafun, \bobyqafun, and~\lincoafun, which invoke the
 corresponding solvers directly. However, it is highly recommended to call the solvers
 via the~\pdfofun function.
@@ -807,13 +840,15 @@ via the~\pdfofun function.
 \subsection{Bug fixes in the Fortran source code}
 \label{subsec:bug-corrections}
 
-The current version of \gls{pdfo} patches several bugs in the Fortran source code, particularly the following ones.
+The current version of \gls{pdfo} patches several bugs in the original Fortran source code, particularly the following ones.
 \begin{enumerate}
     \item The solvers may encounter infinite loops.
     This happens when the exit conditions of a loop can never be met because variables involved in
     these conditions become NaN due to floating point exceptions.
+    The user's program will never end if this occurs.
     \item The Fortran code may encounter memory errors due to uninitialized indices.
     This is because some indices are initialized according to conditions that can never be met due to NaN, similar to the previous case.
+    The user's program will crash if this occurs.
     %\item \gls{cobyla} may not return the best point that is evaluated; sometimes, it returns
     %a point with a large constraint violation, even though the starting point is feasible.
     %Upon termination, \gls{cobyla} returns the last~$\iter$, which is the best point in the
@@ -822,8 +857,19 @@ The current version of \gls{pdfo} patches several bugs in the Fortran source cod
     %they were not considered good according to an earlier penalty parameter.
 \end{enumerate}
 
-\gls{pdfo} allows the users to call Powell's code without these patches by setting the
-option~\texttt{classical} to true. However, this is not recommended.
+In our extensive tests based on the CUTEst problems, these bugs take effect from time to time but not often.
+They are activated only when the problem is rather ill-conditioned or the inputs are rather
+extreme.
+%, leading to huge values in the intermediate variables, especially in the coefficients of the interpolation models.
+This has been observed, for instance, on the CUTEst problems DANWOODLS, GAUSS1LS, LAKES, and
+VANDERM4 with some perturbation and randomization. We speculate that other model-based \gls{dfo}
+solvers may encounter similar difficulties if they are tested extensively.
+
+Even though these bugs are rarely observed in our tests, it is vital to patch them for two reasons.
+First, their consequences are severe once they occur. Second, application problems are often more irregular and savage than
+the testing problems we use, and hence the bugs may be triggered more often than we expect.
+Nevertheless, \gls{pdfo} allows the users to call Powell's original Fortran code without these patches by setting the
+option~\texttt{classical} to true, which is highly discouraged.
 
 
 \subsection{Handling failures of function evaluations}
@@ -832,7 +878,7 @@ option~\texttt{classical} to true. However, this is not recommended.
 \gls{pdfo} tolerates NaN values returned by function evaluations. Such a value can be used to
 indicate failures of function evaluations, which are common in applications of~\gls{dfo}.
 
-To cope with NaN values, \gls{pdfo} applies a moderated extreme barrier.
+To cope with NaN values, \gls{pdfo} applies a \emph{moderated extreme barrier}.
 Suppose that~$\obj(\tilde{x})$ is evaluated to NaN at a certain~$\tilde{x}\in\R^n$.
 \gls{pdfo} takes the view that~$\tilde{x}$ violates a hidden
 constraint~\mbox{\cite{LeDigabel_Wild_2015,Audet_Caporossi_Jacquet_2020}}.
@@ -845,13 +891,14 @@ A caveat is that setting~$\obj(\tilde{x})$ to \hugefun may lead to
 extreme values or even NaN in the coefficients of the interpolation models, but Powell's solvers
 turn out to be quite tolerant of such values.
 
-The original extreme barrier approach sets~\hugefun to~$\infty$, which is inappropriate for
+The original extreme barrier approach~\cite[eq~(13.2)]{Conn_Scheinberg_Vicente_2009b}
+sets~\hugefun to~$\infty$, which is inappropriate for
 methods based on interpolation. In fact, we also moderate~$\obj(\tilde{x})$ to~$\hugefun$ if it is
 actually evaluated to~$\infty$.
 Our approach is clearly naive, but it is better than terminating the solver once function
 evaluations fail. In our experiments, this simple approach significantly improves the robustness
 of~\gls{pdfo} with respect to failures of function evaluation, as will be demonstrated in Subsection~\ref{sssec:nan}.
-There do exist other more refined approaches~\cite{Audet_Caporossi_Jacquet_2020},
+There do exist other more sophisticated approaches~\cite{Audet_Caporossi_Jacquet_2020},
 which will be explored in the future.
 
 
@@ -898,7 +945,8 @@ This section presents numerical experiments on \gls{pdfo}.
 Since Powell's solvers are widely used as benchmarks in \gls{dfo},
 extensive comparisons with standard \gls{dfo} solvers are
 already available in literature~\cite{More_Wild_2009,Rios_Sahinidis_2013}.
-Repeating such experiments is unnecessary. Instead, we compare \gls{pdfo} with solvers that
+Repeating such experiments is unnecessary.
+Instead, we compare \gls{pdfo} with solvers that
 are popular but less mentioned in existing benchmarking.
 Subsection~\ref{ssec:fd} tests \gls{pdfo} against \gls{bfgs} and \gls{cg} that use finite-difference gradients,
 highlighting the stability of \gls{pdfo} under noise and its robustness with respect to failures of
@@ -916,8 +964,8 @@ PRO 3975WX CPU and 64 GB of memory, the operating system being Ubuntu~22.04, and
 being~3.10.6.
 
 
-\subsection{Comparisons with finite-difference \gls{bfgs} and \gls{cg}}
-\label{ssec:fd}
+\subsection{Stability under noise}
+\label{ssec:noise}
 
 We first compare \gls{pdfo} with finite-difference \gls{bfgs} and \gls{cg} on unconstrained
 problems. The competitors are available in SciPy under the \texttt{minimize} function.
@@ -928,8 +976,8 @@ For \gls{pdfo}, we specify \gls{newuoa} as the solver, while setting all the oth
 In particular, the initial trust-region radius is~$1$, the final trust-region radius is~$10^{-6}$,
 and the number of interpolation points is~$2n + 1$, with~$n$ being the dimension of the problem
 being solved.
-We perform the comparison on~157 unconstrained problems with~$n \le 50$ from the CUTEst
-library~\cite{Gould_Orban_Toint_2015} using PyCUTEst~\cite{Fowkes_Roberts_Burmen_2022}~1.4.
+We perform the comparison on~157 unconstrained problems with~$n \le 50$ from the
+CUTEst~\cite{Gould_Orban_Toint_2015} problem set using PyCUTEst~\cite{Fowkes_Roberts_Burmen_2022}~1.4.
 For each testing problem, the starting point is set to the one provided by CUTEst, and the maximal
 number of function evaluations is set to~$500n$.
 
@@ -939,7 +987,6 @@ with respect to failures of function evaluations. Noise and evaluation failures 
 applications of \gls{dfo}, and many problems suffer from both. We choose to test them separately in
 order to observe more clearly how the solvers react to these difficulties.
 
-\subsection{Stability under noise}
 
 %The first experiment is made without modifying the problems.
 %The optimal value~$\obj_{\ast}$ of a given problem is considered to be the least value reached by all solvers, and an execution is convergent up to a tolerance~$\tau \ge 0$ whenever
@@ -1117,107 +1164,107 @@ improves evidently the robustness of~\gls{pdfo} with respect to failures of func
 even though its a quite naive approach.
 
 
-%\subsection{An example of hyperparameter tuning problem}
-%\label{ssec:hypertune}
+\subsection{An illustration of hyperparameter tuning with~\gls{pdfo}}
+\label{ssec:hypertune}
 
-%We now consider a hyperparameter tuning problem from machine learning and compare \gls{pdfo}
-%with \gls{tpe} and \gls{rs}, two standard solvers for such problems in the Python package~\texttt{hyperopt}~\cite{Bergstra_Yamins_Cox_2013}.
+We now consider a hyperparameter tuning problem from machine learning and compare \gls{pdfo}
+with \gls{tpe} and \gls{rs}, two standard solvers for such problems in the Python package~\texttt{hyperopt}~\cite{Bergstra_Yamins_Cox_2013}.
 
-%Similar to~\cite[\S~5.3]{Ghanbari_Scheinberg_2017},
-%we consider a~$C$-SVC~\cite{Chang_Lin_2011} for binary classification problems with an \gls{rbf}
-%kernel. We will tune two hyperparameters, namely a regularization parameter~$C > 0$ and a kernel
-%coefficient~$\gamma > 0$. The objective is to maximize the AUC (area under the ROC curve) of the
-%classifier.
+Similar to~\cite[\S~5.3]{Ghanbari_Scheinberg_2017},
+we consider a~$C$-SVC~\cite{Chang_Lin_2011} for binary classification problems with an \gls{rbf}
+kernel. We will tune two hyperparameters, namely a regularization parameter~$C > 0$ and a kernel
+coefficient~$\gamma > 0$. The objective is to maximize the AUC (area under the ROC curve) of the
+classifier.
 
-%Our experiments are based on binary classifications problems from the LIBSVM dataset.\footnote{\url{https://www.csie.ntu.edu.tw/~cjlin/libsvmtools/datasets/}.}
-%A description of the datasets is provided in Table~\ref{tab:htdata}.
-%A dataset~$\mathcal{P}$ is divided into two disjoint parts: a training dataset~$\mathcal{L}$ and a testing dataset~$\mathcal{T}$, with~$\mathcal{P} = \mathcal{L} \cup \mathcal{T}$.
+Our experiments are based on binary classifications problems from the LIBSVM dataset.\footnote{\url{https://www.csie.ntu.edu.tw/~cjlin/libsvmtools/datasets/}.}
+A description of the datasets is provided in Table~\ref{tab:htdata}.
+A dataset~$\mathcal{P}$ is divided into two disjoint parts: a training dataset~$\mathcal{L}$ and a testing dataset~$\mathcal{T}$, with~$\mathcal{P} = \mathcal{L} \cup \mathcal{T}$.
 
-%\begin{table}[ht]
-%    \caption{Considered LIBSVM dataset descriptions}
-%    \label{tab:htdata}
-%    \centering
-%    %\begin{tabular}{cS[table-format=2]S[table-format=5]}
-%    \begin{tabular}{ccS[table-format=5]}
-%        \toprule
-%        Dataset~$\mathcal{P}$   & {Dimension}   & {Dataset size}\\
-%        \midrule
-%        splice                  & 60            & 1000\\
-%        svmguide1               & 4             & 3088\\
-%        ijcnn1                  & 22            & 49990\\
-%        \bottomrule
-%    \end{tabular}
-%\end{table}
+\begin{table}[ht]
+    \caption{Considered LIBSVM dataset descriptions}
+    \label{tab:htdata}
+    \centering
+    %\begin{tabular}{cS[table-format=2]S[table-format=5]}
+    \begin{tabular}{ccS[table-format=5]}
+        \toprule
+        Dataset~$\mathcal{P}$   & {Dimension}   & {Dataset size}\\
+        \midrule
+        splice                  & 60            & 1000\\
+        svmguide1               & 4             & 3088\\
+        ijcnn1                  & 22            & 49990\\
+        \bottomrule
+    \end{tabular}
+\end{table}
 
 
-%The problem we consider is as follows.
-%We want to maximize the~$5$-fold \gls{auc} validation score of the \gls{svm} trained on~$\mathcal{L}$ with respect to the hyperparameters~$C$ and~$\gamma$.
-%The \gls{auc} score, a real number in~$[0, 1]$, measures the area underneath the \gls{roc} curve, a graph representing the performance of a binary classification model.
-%This curve plots the true positive classification rate with respect to the false positive classification rate at different classification thresholds.
-%The~$5$-fold \gls{auc} validation score corresponds to the following.
-%The set~$\mathcal{L}$ is split into~$5$ folds, and the model is trained~$5$ times, on each union of~$4$ distinct folds.
-%After each training, the \gls{auc} score is calculated on the remaining fold, which was not involved in the training process, giving rise to~$5$ \gls{auc} scores, the average of which corresponds to the~$5$-fold \gls{auc} validation score.
+The problem we consider is as follows.
+We want to maximize the~$5$-fold \gls{auc} validation score of the \gls{svm} trained on~$\mathcal{L}$ with respect to the hyperparameters~$C$ and~$\gamma$.
+The \gls{auc} score, a real number in~$[0, 1]$, measures the area underneath the \gls{roc} curve, a graph representing the performance of a binary classification model.
+This curve plots the true positive classification rate with respect to the false positive classification rate at different classification thresholds.
+The~$5$-fold \gls{auc} validation score corresponds to the following.
+The set~$\mathcal{L}$ is split into~$5$ folds, and the model is trained~$5$ times, on each union of~$4$ distinct folds.
+After each training, the \gls{auc} score is calculated on the remaining fold, which was not involved in the training process, giving rise to~$5$ \gls{auc} scores, the average of which corresponds to the~$5$-fold \gls{auc} validation score.
 
-%The numerical results for this experiment are provided in Tables~\ref{tab:splice}--\ref{tab:ijcnn1}.
-%The \gls{auc} scores and accuracies presented in the tables correspond to the ones computed on~$\mathcal{T}$ using an \gls{svm} trained on~$\mathcal{L}$, with the tuned parameters~$C$ and~$\gamma$.
-%We use \#$f$ to denote the number of function evaluations, and ``Time'' to represent the computation time.
+The numerical results for this experiment are provided in Tables~\ref{tab:splice}--\ref{tab:ijcnn1}.
+The \gls{auc} scores and accuracies presented in the tables correspond to the ones computed on~$\mathcal{T}$ using an \gls{svm} trained on~$\mathcal{L}$, with the tuned parameters~$C$ and~$\gamma$.
+We use \#$f$ to denote the number of function evaluations, and ``Time'' to represent the computation time.
 
-%In terms of \gls{auc} score and accuracy, we observe that \gls{pdfo} achieves a clearly better result than \gls{tpe} and \gls{rs} on the ``splice'' dataset, and they all attain comparable results on all the other datasets.
-%However, \gls{pdfo} always uses much less function evaluations, and hence, much less computation time.
-%The difference in the computation time is particularly visible on the dataset ``ijcnn1'' in Table~\ref{tab:ijcnn1}, as the size of this dataset is large, so that each function evaluation takes much time.
-%In summary, we can conclude that \gls{pdfo} performs better than \gls{tpe} and \gls{rs} on these problems.
+In terms of \gls{auc} score and accuracy, we observe that \gls{pdfo} achieves a clearly better result than \gls{tpe} and \gls{rs} on the ``splice'' dataset, and they all attain comparable results on all the other datasets.
+However, \gls{pdfo} always uses much less function evaluations, and hence, much less computation time.
+The difference in the computation time is particularly visible on the dataset ``ijcnn1'' in Table~\ref{tab:ijcnn1}, as the size of this dataset is large, so that each function evaluation takes much time.
+In summary, we can conclude that \gls{pdfo} performs better than \gls{tpe} and \gls{rs} on these problems.
 
-%\begin{table}[!ht]
-%    \caption{Hyperparameter tuning on the dataset ``splice''}
-%    \label{tab:splice}
-%    \centering
-%    %\begin{tabular}{cSSS[table-format=3]S}
-%    \begin{tabular}{ccccS}
-%        \toprule
-%        Solver      & {AUC Score ($10^{-1}$)}   & {Accuracy ($10^{-1}$)}    & {\#$f$}   & {Time (\si{\second})}\\
-%        \midrule
-%        \gls{pdfo}  & 9.27                      & 7.37                      & 33            & 5.11\\
-%        \gls{rs}    & 5.00                      & 5.20                      & 100           & 8.23\\
-%        \gls{rs}    & 5.00                      & 5.20                      & 300           & 24.73\\
-%        \gls{tpe}   & 5.00                      & 5.20                      & 100           & 8.22\\
-%        \gls{tpe}   & 5.00                      & 5.20                      & 300           & 23.57\\
-%        \bottomrule
-%    \end{tabular}
-%\end{table}
+\begin{table}[!ht]
+    \caption{Hyperparameter tuning on the dataset ``splice''}
+    \label{tab:splice}
+    \centering
+    %\begin{tabular}{cSSS[table-format=3]S}
+    \begin{tabular}{ccccS}
+        \toprule
+        Solver      & {AUC Score ($10^{-1}$)}   & {Accuracy ($10^{-1}$)}    & {\#$f$}   & {Time (\si{\second})}\\
+        \midrule
+        \gls{pdfo}  & 9.27                      & 7.37                      & 33            & 5.11\\
+        \gls{rs}    & 5.00                      & 5.20                      & 100           & 8.23\\
+        \gls{rs}    & 5.00                      & 5.20                      & 300           & 24.73\\
+        \gls{tpe}   & 5.00                      & 5.20                      & 100           & 8.22\\
+        \gls{tpe}   & 5.00                      & 5.20                      & 300           & 23.57\\
+        \bottomrule
+    \end{tabular}
+\end{table}
 
-%\begin{table}[!ht]
-%    \caption{Hyperparameter tuning on the dataset ``svmguide1''}
-%    \centering
-%    \begin{tabular}{ccccS}
-%        \toprule
-%        Solver      & {AUC Score ($10^{-1}$)}   & {Accuracy ($10^{-1}$)}    & {\#$f$}   & {Time (\si{\second})}\\
-%        \midrule
-%        \gls{pdfo}  & 9.95                      & 9.66                      & 51            & 2.83\\
-%        \gls{rs}    & 9.94                      & 9.61                      & 100           & 10.22\\
-%        \gls{rs}    & 9.95                      & 9.68                      & 300           & 30.75\\
-%        \gls{tpe}   & 9.95                      & 9.65                      & 100           & 8.65\\
-%        \gls{tpe}   & 9.95                      & 9.68                      & 300           & 22.38\\
-%        \bottomrule
-%    \end{tabular}
-%\end{table}
+\begin{table}[!ht]
+    \caption{Hyperparameter tuning on the dataset ``svmguide1''}
+    \centering
+    \begin{tabular}{ccccS}
+        \toprule
+        Solver      & {AUC Score ($10^{-1}$)}   & {Accuracy ($10^{-1}$)}    & {\#$f$}   & {Time (\si{\second})}\\
+        \midrule
+        \gls{pdfo}  & 9.95                      & 9.66                      & 51            & 2.83\\
+        \gls{rs}    & 9.94                      & 9.61                      & 100           & 10.22\\
+        \gls{rs}    & 9.95                      & 9.68                      & 300           & 30.75\\
+        \gls{tpe}   & 9.95                      & 9.65                      & 100           & 8.65\\
+        \gls{tpe}   & 9.95                      & 9.68                      & 300           & 22.38\\
+        \bottomrule
+    \end{tabular}
+\end{table}
 
-%\begin{table}[!ht]
-%    \caption{Hyperparameter tuning on the dataset ``ijcnn1''}
-%    \label{tab:ijcnn1}
-%    \centering
-%%    \begin{tabular}{cS[table-format=3]SSS}
-%    \begin{tabular}{ccccS}
-%        \toprule
-%        Solver      & {AUC Score ($10^{-1}$)}   & {Accuracy ($10^{-1}$)}    &{\#$f$}  & {Time (\SI{}[10^3]{\second})}\\
-%        \midrule
-%        \gls{pdfo}  & 9.97                      & 9.80                      & 44            & 2.48\\
-%        \gls{rs}    & 9.97                      & 9.82                      & 100           & 3.99\\
-%        \gls{rs}    & 9.97                      & 9.77                      & 300           & 11.52\\
-%        \gls{tpe}   & 9.98                      & 9.79                      & 100           & 3.42\\
-%        \gls{tpe}   & 9.98                      & 9.79                      & 300           & 8.81\\
-%        \bottomrule
-%    \end{tabular}
-%\end{table}
+\begin{table}[!ht]
+    \caption{Hyperparameter tuning on the dataset ``ijcnn1''}
+    \label{tab:ijcnn1}
+    \centering
+%    \begin{tabular}{cS[table-format=3]SSS}
+    \begin{tabular}{ccccS}
+        \toprule
+        Solver      & {AUC Score ($10^{-1}$)}   & {Accuracy ($10^{-1}$)}    &{\#$f$}  & {Time (\SI{}[10^3]{\second})}\\
+        \midrule
+        \gls{pdfo}  & 9.97                      & 9.80                      & 44            & 2.48\\
+        \gls{rs}    & 9.97                      & 9.82                      & 100           & 3.99\\
+        \gls{rs}    & 9.97                      & 9.77                      & 300           & 11.52\\
+        \gls{tpe}   & 9.98                      & 9.79                      & 100           & 3.42\\
+        \gls{tpe}   & 9.98                      & 9.79                      & 300           & 8.81\\
+        \bottomrule
+    \end{tabular}
+\end{table}
 
 
 \section{Conclusions}
