@@ -9,20 +9,24 @@ COPY_PAPER_FIGURES = False
 if __name__ == "__main__":
     cwd = os.getcwd()
 
-    # Generate the performance and data profiles on the plain problems with n <= 10.
-    profiles = Profiles(1, 10, "unconstrained")
-    profiles(["NEWUOA", "BOBYQA", "LINCOA", "COBYLA", "UOBYQA"])
-    del profiles
-
     # Generate the performance and data profiles on the plain problems with n <= 50.
     profiles = Profiles(1, 50, "unconstrained")
     profiles(["NEWUOA", "BFGS", "CG"])
     profiles(["NEWUOA", "BOBYQA", "LINCOA", "COBYLA"])
     del profiles
 
+    # Generate the performance and data profiles on the plain problems with n <= 10.
+    profiles = Profiles(1, 10, "unconstrained")
+    profiles(["NEWUOA", "BOBYQA", "LINCOA", "COBYLA", "UOBYQA"])
+    del profiles
+
     # Generate the performance and data profiles on the problems containing NaNs.
     for rerun in [1, 10]:
         profiles = Profiles(1, 50, "unconstrained", feature="nan", nan_rate=0.01, rerun=rerun)
+        profiles(["PDFO", "PDFO-(no-barrier)", "BFGS", "CG"])
+        del profiles
+
+        profiles = Profiles(1, 50, "unconstrained", feature="nan", nan_rate=0.05, rerun=rerun)
         profiles(["PDFO", "PDFO-(no-barrier)", "BFGS", "CG"])
         del profiles
 
