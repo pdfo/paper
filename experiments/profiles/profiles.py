@@ -172,7 +172,7 @@ class Profiles:
         f0 = merits[:, 0, :, 0]
 
         # Determine the least merit function values obtained on each problem.
-        f_min = np.min(merits, (1, 3))
+        f_min = np.min(merits, (1, 2, 3))
         if self.feature in ["noisy", "digits", "nan"]:
             _log.info(f'Starting the computations with feature="plain"')
             rerun_sav = self.feature_options["rerun"]
@@ -181,7 +181,7 @@ class Profiles:
             self.feature = "plain"
             merits_plain, _ = self.run_all(solvers, options, load, **kwargs)
             f_min_plain = np.min(merits_plain, (1, 2, 3))
-            f_min = np.minimum(f_min, f_min_plain[:, np.newaxis])
+            f_min = np.minimum(f_min, f_min_plain)
             self.feature_options["rerun"] = rerun_sav
             self.feature = feature_sav
 
@@ -200,8 +200,8 @@ class Profiles:
             for i in range(n_problems):
                 for j in range(len(solvers)):
                     for k in range(self.feature_options["rerun"]):
-                        if np.isfinite(f_min[i, k]):
-                            threshold = max(tau * f0[i, k] + (1.0 - tau) * f_min[i, k], f_min[i, k])
+                        if np.isfinite(f_min[i]):
+                            threshold = max(tau * f0[i, k] + (1.0 - tau) * f_min[i], f_min[i])
                         else:
                             threshold = -np.inf
                         if np.min(merits[i, j, k, :]) <= threshold:
