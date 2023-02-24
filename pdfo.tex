@@ -47,7 +47,8 @@
 \DeclareMathOperator*\argmin{arg\,min}
 \DeclareMathOperator\range{\mathcal{R}}
 \DeclareMathOperator\rank{rank}
-\newcommand{\trs}{{\scriptstyle{\mathsf{T}}}}
+\newcommand{\trs}{{\scriptscriptstyle{\mathsf{T}}}}
+\newcommand{\sn}{{\scriptscriptstyle{N}}}
 \newcommand{\ones}{\mathbbm{1}}
 \newcommand{\C}{\mathbb{C}}
 \newcommand{\F}{\mathbb{F}}
@@ -572,12 +573,12 @@ interpolation system or the corresponding \kkt system using the Sherman-Morrison
 To keep the interpolation problem well-conditioned, $y_k^{\drop}$ is chosen
 to enlarge the denominator in this formula, which is also the ratio between
 the determinants of the old and new coefficient matrices.\footnote{
-    Let~$W$ be a square matrix and consider~$W_+ = W + UV^\T$, where $U$ and~$V$ are two
+    Suppose that~$W$ is a square matrix and consider~$W_+ = W + UV^\T$, where $U$ and~$V$ are two
     matrices of the same size and $UV^\T$ has the same size as $W$.
     Then $\det(W_+) = \det(W)\det(I+V^\T W^{-1}U)$, and the
     Sherman-Morrison-Woodbury formula
     is $W_+^{-1} = W^{-1} -W^{-1}U(I+V^\T W^{-1}U)^{-1} V^\T W^{-1}$, assuming that both~$W$
-    and~$(I+V^\T W^{-1}U)$ are nonsingular. The number~$\det(I+V^\T W^{-1}U)$ is the only
+    and~$I+V^\T W^{-1}U$ are nonsingular. The number~$\det(I+V^\T W^{-1}U)$ is the only
     denominator involved in the numerical computation of the formula.
 }
 In fully determined interpolation, the aforementioned denominator is~$\ell_k^\drop(\iter^{\trust})$,
@@ -870,8 +871,8 @@ In our extensive tests based on the CUTEst problems, these bugs take effect from
 They are activated only when the problem is rather ill-conditioned or the inputs are rather
 extreme.
 %, leading to huge values in the intermediate variables, especially in the coefficients of the interpolation models.
-This has been observed, for instance, on the CUTEst problems DANWOODLS, GAUSS1LS, LAKES, and
-VANDERM4 with some perturbation and randomization.
+This has been observed, for instance, on the CUTEst problems DANWOODLS, GAUSS1LS, and LAKES
+with some perturbation and randomization.
 
 Even though these bugs are rarely observed in our tests, it is vital to patch them for two reasons.
 First, their consequences are severe once they occur. Second, application problems are often more irregular and savage than
@@ -899,7 +900,7 @@ A caveat is that setting~$\obj(\tilde{x})$ to \hugefun may lead to
 extreme values or even NaN in the coefficients of the interpolation models, but Powell's solvers
 turn out to be quite tolerant of such values.
 
-The original extreme barrier approach~\cite[eq.~(13.2)]{Conn_Scheinberg_Vicente_2009b}
+The original extreme barrier approach~\cite[equation~(13.2)]{Conn_Scheinberg_Vicente_2009b}
 sets~\hugefun to~$\infty$, which is inappropriate for
 methods based on interpolation. In fact, we also moderate~$\obj(\tilde{x})$ to~$\hugefun$ if it is
 actually evaluated to~$\infty$.
@@ -1208,16 +1209,17 @@ Our experiment is inspired by~\cite[\S~5.3]{Ghanbari_Scheinberg_2017}, which inv
 application of trust-region \gls{dfo} methods to hyperparameter tuning.
 Similar to~\mbox{\cite[\S~5.3]{Ghanbari_Scheinberg_2017}},
 we tune the $C$-SVC model detailed in~\cite[\S~2.1]{Chang_Lin_2011} for binary classifications.
-Given a dataset~$\{(u_i,z_i)\}_{i=1}^N$, with~$u_i \in \R^d$ being a vector of features
+Given a dataset~$\{(u_i,z_i)\}_{i=1}^\sn$, with~$u_i \in \R^d$ being a vector of features
 and~$z_i \in \{-1,1\}$ being the corresponding label,
 the $C$-SVC constructs a classifier by solving
 \begin{equation}
     \label{eq:svc}
         \min_{\alpha} ~ \frac{1}{2} \alpha^\trs Q \alpha - \alpha^\trs \ones
-        \quad \st \quad 0 \leq \alpha \leq C, ~ \alpha^\trs z = 0, ~\alpha \in\R^{N},
+        \quad \st \quad 0 \leq \alpha \leq C, ~ \alpha^\trs z = 0, ~\alpha \in\R^{\sn},
 \end{equation}
-where~$C\in(0,\infty)$ is a hyperparameter, $z\in\R^{N}$ is the vector whose~$i$th entry is~$z_i$,~$\ones\in\R^N$
-is the vector of all ones, and~$Q\in\R^{N\times N}$ is the matrix whose~$(i,j)$ entry is~$K(u_i,u_j)$
+where~$C\in(0,\infty)$ is a hyperparameter, $z\in\R^{\sn}$ is the vector whose~$i$th entry is~$z_i$,
+~$\ones\in\R^\sn$
+is the vector of all ones, and~$Q\in\R^{\sn\times \sn}$ is the matrix whose~$(i,j)$ entry is~$K(u_i,u_j)$
 with a kernel function~$K\mathrel{:} \R^{d}\times\R^{d} \to \R$.
 We take the Gaussian kernel~$K(u,v) = \exp(-\gamma\norm{u-v}^2)$, where~$\gamma \in (0,\infty)$ is
 another hyperparameter.
