@@ -255,7 +255,7 @@ class Profiles:
             plt.ylim(0, 1)
             plt.xlabel(r"$\log_2(\mathrm{NF}/\mathrm{NF}_{\min})$")
             plt.ylabel(fr"Performance profiles ($\tau=10^{{-{log_tau}}}$)")
-            plt.legend(labelspacing=0.3, loc="lower right")
+            plt.legend(handlelength=1.25, handletextpad=0.25, labelspacing=0.3, loc="lower right")
             pdf_perf.savefig(fig, bbox_inches="tight")
             plt.close()
 
