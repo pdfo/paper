@@ -179,7 +179,7 @@
 \widowpenalty=10000
 \displaywidowpenalty=10000
 % Checks page or column breaks for issues with widow or orphan lines
-%\usepackage[prevent-all]{widows-and-orphans}
+\usepackage[prevent-all]{widows-and-orphans}
 
 \usepackage{xspace}
 
@@ -206,7 +206,7 @@
 \newcommand{\newuoafun}{\texttt{newuoa}\xspace}
 \newcommand{\bobyqafun}{\texttt{bobyqa}\xspace}
 \newcommand{\lincoafun}{\texttt{lincoa}\xspace}
-\renewcommand{\baselinestretch}{1.05}
+\renewcommand{\baselinestretch}{1.04}
 
 % Redefine the remark environments to have bold titles.
 % Note: Since the environment cannot be overridden, we first undefine it (both
@@ -432,7 +432,7 @@ model-based methods~\cite{Torczon_1997,Conn_Scheinberg_Toint_1997a,Kolda_Lewis_T
 It is worth noting that the performance of \gls{dfo} algorithms is measured in general by the number of function evaluations needed for solving a given problem, as the objective and constraint functions in \gls{dfo} problems are commonly
 expensive to evaluate.
 Therefore, the worst-case complexity in terms of function evaluations is a major theoretical aspect of \gls{dfo} algorithms.
-Examples of such complexity analysis can be found in~\cite{Vicente_2013,Gratton_Etal_2015,Dodangeh_Vicente_2016,Dodangeh_Vicente_Zhang_2016}.
+Examples of such complexity analysis can be found in~\cite{Vicente_2013,Gratton_Etal_2015,Dodangeh_Vicente_2016,Garmanjani_Judice_Vicente_2016}.
 For more extensive discussions on \gls{dfo} methods and theory, see the monographs~\cite{Conn_Scheinberg_Vicente_2009b,Audet_Hare_2017}, the survey
 papers~\cite{Rios_Sahinidis_2013,Custodio_Scheinberg_Vicente_2017,Larson_Menickelly_Wild_2019}, the recent thesis~\cite{Ragonneau_2022}, and the references therein.
 
@@ -1405,16 +1405,17 @@ summary on the main features and structures of the methods, highlighting the int
 similarities among them. We hope that the overview will ease the understanding of Powell's methods,
 in the same way as the \gls{pdfo} package eases the use of these methods.
 
-We stress that \gls{pdfo} does not provide Python or MATLAB implementations of Powell's \gls{dfo}
-solvers, but only provide interfaces to Powell's implementations. The implementation of Powell's
-solvers in Python, MATLAB, and other languages is a project in progress under the name of
-PRIMA~(Reference Implementation for Powell's methods with Modernization and Amelioration)~\cite{Zhang_prima}.
-
-\gls{pdfo} provides an interface for \gls{dfo} solvers. It can accommodate solvers other than those
-by Powell, for example, the COBYQA (Constrained Optimization BY Quadratic Approximation) for general
-nonlinearly constrained \gls{dfo} problems~(see~\cite[Chapters 5--7]{Ragonneau_2022}
+Besides Powell's solvers, \gls{pdfo} also provides a unified interface for \gls{dfo} solvers.
+Such a unified interface can facilitate the development and comparison of different \gls{dfo} solvers.
+The interface of \gls{pdfo} can readily accommodate solvers other than those by Powell, for example,
+the COBYQA (Constrained Optimization BY Quadratic Approximations) solver for general nonlinearly
+constrained \gls{dfo} problems~(see~\cite[Chapters 5--7]{Ragonneau_2022}
 and~\cite{Ragonneau_Zhang_cobyqa}).
 
+Finally, we stress that \gls{pdfo} does not provide Python or MATLAB implementations of Powell's \gls{dfo}
+solvers, but only interfaces Powell's implementations with these languages. The implementation of Powell's
+solvers in Python, MATLAB, and other languages is a project in progress under the name of
+PRIMA~(Reference Implementation for Powell's methods with Modernization and Amelioration)~\cite{Zhang_prima}.
 
 
 \section*{Statements and declarations}
