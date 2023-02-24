@@ -20,12 +20,12 @@ from .problem import Problem
 _log = logging.getLogger(__name__)
 
 # Set up matplotlib for plotting the profiles.
-std_cycle = cycler(color=["#1f77b4", "#2ca02c", "#000000", "#d62728", "#9467bd"])
-std_cycle += cycler(linestyle=[(0, (1, 1)), (0, (5, 3)), (0, ()), (0, (5, 3, 1, 3)), (0, (7, 5))])
+std_cycle = cycler(color=["#1f77b4", "#2ca02c", "#000000", "#d62728"])
+std_cycle += cycler(linestyle=[(0, (1, 1)), (0, (5, 3)), (0, ()), (0, (5, 3, 1, 3))])
 plt.rc("axes", prop_cycle=std_cycle)
 plt.rc("lines", linewidth=1)
 plt.rc("text", usetex=True)
-plt.rc("font", family="serif", size=17)
+plt.rc("font", family="serif", size=16)
 
 
 class Profiles:
@@ -255,7 +255,7 @@ class Profiles:
             plt.ylim(0, 1)
             plt.xlabel(r"$\log_2(\mathrm{NF}/\mathrm{NF}_{\min})$")
             plt.ylabel(fr"Performance profiles ($\tau=10^{{-{log_tau}}}$)")
-            plt.legend(loc="lower right")
+            plt.legend(labelspacing=0.3, loc="lower right")
             pdf_perf.savefig(fig, bbox_inches="tight")
             plt.close()
 
