@@ -206,7 +206,7 @@
 \newcommand{\newuoafun}{\texttt{newuoa}\xspace}
 \newcommand{\bobyqafun}{\texttt{bobyqa}\xspace}
 \newcommand{\lincoafun}{\texttt{lincoa}\xspace}
-\renewcommand{\baselinestretch}{1.07}
+\renewcommand{\baselinestretch}{1.05}
 
 % Redefine the remark environments to have bold titles.
 % Note: Since the environment cannot be overridden, we first undefine it (both
@@ -265,15 +265,22 @@
 \begin{abstract}
     Late Professor M. J. D. Powell designed five derivative-free optimization methods, namely
     \gls{cobyla}, \gls{uobyqa}, \gls{newuoa}, \gls{bobyqa}, and \gls{lincoa}.
-    The algorithms were implemented in Fortran 77 and may not be easily accessible to some users.
+    The algorithms were implemented in Fortran 77 and hence may not be easily accessible to some users.
     This paper introduces the \gls{pdfo} package, which provides user-friendly
     Python and MATLAB interfaces to Powell's code.
-    With \gls{pdfo}, users can call each of Powell's algorithms directly based on their own choice.
-    Alternatively, if the user does not specify any algorithm, the package can also select one
-    automatically based on the problem characteristics.
-    We also provide an overview of Powell's methods and share some observations on these methods
-    based on experiments conducted using~\gls{pdfo}.
-    % When a problem can be solved by multiple algorithms (for example, an unconstrained problem can be solved by all five algorithms), the selection is made based on experimental results on the CUTEst problems.
+    With \gls{pdfo}, users of such languages can call Powell's Fortran solvers easily without any
+    need of dealing with the Fortran code.
+    Moreover, \gls{pdfo} includes bug fixes and improvements, which are particularly important for
+    handling problems that suffer from ill-conditioning or failures of function evaluations.
+    %With \gls{pdfo}, users can call each of Powell's algorithms directly based on their own choice.
+    %Alternatively, if the user does not specify any algorithm, the package can also select one
+    %automatically based on the problem characteristics.
+    In addition, we provide an overview of Powell's methods, sketching them from a uniform
+    perspective, summarizing their main features, and highlighting the similarities and
+    interconnections among them.
+    We also present some experiments on \gls{pdfo} to demonstrate its stability under noise,
+    tolerance of failures in function evaluations, and potential in solving certain hyperparameter
+    optimization problems.
 
     \keywords{Derivative-free optimization \and COBYLA \and UOBYQA \and NEWUOA \and BOBYQA \and LINCOA}
     \subclass{65K05 \and 90C30 \and 90C56 \and 90-04}
@@ -321,7 +328,6 @@ NLopt includes multi-language interfaces for \gls{cobyla}, \gls{newuoa}, and \gl
 minqa wraps \gls{uobyqa}, \gls{newuoa}, and \gls{bobyqa} in R;\footnote{\url{https://CRAN.R-project.org/package=minqa}\,.}
 SciPy makes \gls{cobyla} available in Python under its optimization library.\footnote{\url{https://docs.scipy.org/doc/scipy/reference/optimize.minimize-cobyla.html}\,.}
 However, \gls{pdfo} has several features that distinguish it from others.
-
 \begin{enumerate}
     \item \emph{Comprehensiveness.}
     To the best of our knowledge, \gls{pdfo} is the only package that provides all of \gls{cobyla},
@@ -367,15 +373,17 @@ methods. We will not repeat Powell's description of these methods but summarize 
 view point, aiming at easing the understanding of Powell's methods and paving the way for further
 development based on them.
 
-\red{
 The remaining part of this paper is organized as follows.
-Section~\ref{sec:dfo} briefly reviews \gls{dfo} methods in order to provide the context of Powell's algorithms.
-We then present an overview of Powell's \gls{dfo} algorithms in Section~\ref{sec:powell}
-A detailed exposition of~\gls{pdfo} is given in Section~\ref{sec:pdfo}
-%, highlighting some features that are not available in Powell's original solvers.
-Section~\ref{sec:numerical} presents some numerical experiments conducted using~\gls{pdfo}.
+Section~\ref{sec:dfo} briefly reviews \gls{dfo} methods in order to provide the context of \gls{pdfo}.
+We then present an overview of Powell's \gls{dfo} methods in Section~\ref{sec:powell},
+including a sketch of the algorithms and a summary of their main features.
+A detailed exposition of~\gls{pdfo} is given in Section~\ref{sec:pdfo},
+highlighting its solver selection, problem preprocessing, bug fixes,
+and handling of function evaluation failures.
+Section~\ref{sec:numerical} presents some experiments on~\gls{pdfo}, demonstrating its
+stability under noise, tolerance of function evaluation failures, and potential in
+hyperparameter optimization.
 We conclude the paper with some remarks in Section~\ref{sec:conclude}.
-}
 
 \section{A brief review of \glsfmtshort{dfo} methods}
 \label{sec:dfo}
@@ -777,7 +785,7 @@ an infeasible method, which requires~$\obj$ to be defined even when the linear c
 \label{sec:pdfo}
 
 This section details the main features of \gls{pdfo}, in particular the signature of the main
-function, problem preprocessing, solver selection, bug fixes, and handling failures of function
+function, solver selection, problems preprocessing, bug fixes, and handling failures of function
 evaluations. For more features of~\gls{pdfo}, we refer to its homepage
 at~\url{https://www.pdfo.net}\,.
 
@@ -804,8 +812,10 @@ It takes for input an optimization problem of the form
 where~$\obj$, $\ceq$, and~$\cub$ are real-valued functions. The bound constraints are given
 by~$n$-dimensional vectors~$\xl$ and~$\xu$, which may take infinite values. The linear constraints
 are formulated by real matrices~$\aeq$ and~$\aub$ together with real vectors~$\beq$ and~$\bub$ of
-proper sizes. Being a specialization of~\eqref{eq:nlc}, problem~\eqref{eq:pdfo} is broad enough to
-cover numerous real applications of~\gls{dfo}.
+proper sizes.
+Note that we allow one or more of the constraints~\eqref{eq:pdfo-b}--\eqref{eq:pdfo-nl} to be absent.
+Being a specialization of~\eqref{eq:nlc}, problem~\eqref{eq:pdfo} is broad enough to
+cover numerous applications of~\gls{dfo}.
 
 In the Python version of~\gls{pdfo}, the signature of the~\pdfofun function is compatible with
 the \texttt{minimize} function available in the \texttt{scipy.optimize} module of
@@ -816,6 +826,28 @@ the \texttt{fmincon} function available in the Optimization Toolbox of MATLAB.
 In both Python and MATLAB, users can check the detailed syntax of~\pdfofun by the
 standard~\texttt{help} command.
 
+\subsection{Automatic selection of the solver}
+\label{subsec:solver-selection}
+
+When invoking the~\pdfofun function, the user may specify the solver to call in the backend.
+However, if the user does not do so or chooses a solver that is incapable of solving the problem (e.g., \gls{uobyqa} cannot solve
+constrained problems), then \pdfofun issues a warning and selects the solver as follows.
+\begin{enumerate}
+    \item If the problem is unconstrained, then \gls{uobyqa} is selected when~$2 \le n \le 8$, and \gls{newuoa} is selected when~$n = 1$ or~$n > 8$.
+    \item If the problem is bound-constrained, then \gls{bobyqa} is selected.
+    \item If the problem is linearly constrained, then \gls{lincoa} is selected.
+    \item Otherwise, \gls{cobyla} is selected.
+\end{enumerate}
+The problem type is detected automatically according to the input.
+In the unconstrained case, we select \gls{uobyqa} for small problems because it is more efficient,
+and the number~$8$ is set according to our experiments on the CUTEst~\cite{Gould_Orban_Toint_2015} problems.
+We note that Powell's implementation of \gls{uobyqa} cannot handle problems with univariate
+objective functions, for which \gls{newuoa} is chosen.
+
+In addition to the \pdfofun function, \gls{pdfo} provides functions named~\cobylafun,
+\texttt{uobyqa}, \newuoafun, \bobyqafun, and~\lincoafun, which invoke the
+corresponding solvers directly. However, it is highly recommended to call the solvers
+via the~\pdfofun function.
 
 \subsection{Problem preprocessing}
 \label{subsec:pdfo-preprocessing}
@@ -840,28 +872,6 @@ equality constraint as two inequalities, but our approach reduces the dimension 
 which is beneficial for the efficiency of \gls{dfo} solvers in general.
 
 
-\subsection{Automatic selection of the solver}
-\label{subsec:solver-selection}
-
-When invoking the~\pdfofun function, the user may specify the solver to call in the backend.
-However, if the user does not do so or chooses a solver that is incapable of solving the problem (e.g., \gls{uobyqa} cannot solve
-constrained problems), then \pdfofun issues a warning and selects the solver as follows.
-\begin{enumerate}
-    \item If the problem is unconstrained, then \gls{uobyqa} is selected when~$2 \le n \le 8$, and \gls{newuoa} is selected when~$n = 1$ or~$n > 8$.
-    \item If the problem is bound-constrained, then \gls{bobyqa} is selected.
-    \item If the problem is linearly constrained, then \gls{lincoa} is selected.
-    \item Otherwise, \gls{cobyla} is selected.
-\end{enumerate}
-The problem type is detected automatically according to the input.
-In the unconstrained case, we select \gls{uobyqa} for small problems because it is more efficient,
-and the number~$8$ is set according to our experiments on the CUTEst~\cite{Gould_Orban_Toint_2015} problems.
-We note that Powell's implementation of \gls{uobyqa} cannot handle problems with univariate
-objective functions, for which \gls{newuoa} is chosen.
-
-In addition to the \pdfofun function, \gls{pdfo} provides functions named~\cobylafun,
-\texttt{uobyqa}, \newuoafun, \bobyqafun, and~\lincoafun, which invoke the
-corresponding solvers directly. However, it is highly recommended to call the solvers
-via the~\pdfofun function.
 
 \subsection{Bug fixes in the Fortran source code}
 \label{subsec:bug-corrections}
@@ -981,7 +991,7 @@ the purpose of our experiments is the following.
         Subsection~\ref{ssec:barrier} for handling failures of function
         evaluations. This is done in~Subsection~\ref{ssec:nan} by testing \gls{pdfo} with and
         without the barrier on unconstrained CUTEst problems.
-    \item Illustrate the potential of \gls{pdfo} in solving hyperparameter tuning problems from
+    \item Illustrate the potential of \gls{pdfo} in solving hyperparameter optimization problems from
         machine learning, echoing the observations made in~\cite{Ghanbari_Scheinberg_2017} about
         trust-region \gls{dfo} methods for such problems.
         This is done in Subsection~\ref{ssec:hypertune} by comparing~\gls{pdfo} with two solvers
@@ -1213,16 +1223,16 @@ We speculate that the moderated extreme barrier will also benefit other model-ba
 including those based on finite differences. It deserves further investigation in the future.
 
 
-\subsection{An illustration of hyperparameter tuning with~\gls{pdfo}}
+\subsection{An illustration of hyperparameter optimization with~\gls{pdfo}}
 \label{ssec:hypertune}
 
-We now consider a hyperparameter tuning problem from machine learning and illustrate the potential
+We now consider a hyperparameter optimization problem from machine learning and illustrate the potential
 of \gls{pdfo} for such problems.
-We compare \gls{pdfo} with \gls{rs} and \gls{tpe}, two optimizers
-from the Python package~\texttt{hyperopt} for hyperparameter tuning.
+We compare \gls{pdfo} with \gls{rs} and \gls{tpe}, two solvers
+from the Python package~\texttt{hyperopt} for hyperparameter optimization.
 
 Our experiment is inspired by~\cite[\S~5.3]{Ghanbari_Scheinberg_2017}, which investigates the
-application of trust-region \gls{dfo} methods to hyperparameter tuning.
+application of trust-region \gls{dfo} methods to hyperparameter optimization.
 Similar to~\mbox{\cite[\S~5.3]{Ghanbari_Scheinberg_2017}},
 we tune the $C$-SVC model detailed in~\cite[\S~2.1]{Chang_Lin_2011} for binary classifications.
 Given a dataset~$\{(u_i,z_i)\}_{i=1}^\sn$, with~$u_i \in \R^d$ being a vector of features
@@ -1362,7 +1372,7 @@ The difference in the computing time is particularly visible on the dataset ``ij
 Table~\ref{tab:ijcnn1}, as each evaluation of~$P$ takes much time due to the large data size.
 
 Note that our intention is not to manifest that \gls{pdfo} outperforms standard solvers for
-general hyperparameter tuning problems, which is unlikely the case. Indeed, \gls{pdfo} is not
+general hyperparameter optimization problems, which is unlikely the case. Indeed, \gls{pdfo} is not
 applicable unless the hyperparameters are continuous variables.
 Our objective is rather to provide an
 example that shows the possibility of applying Powell's methods to such problems, which is not well studied up to now.
@@ -1384,7 +1394,7 @@ an extensive documentation of the options, and several examples to illustrate th
 %For instance, the authors are currently working on a new solver for nonlinearly constrained optimization, named \gls{cobyqa}~\cite{Ragonneau_2022}.
 %It is aimed to be added to \gls{pdfo}, and other \gls{dfo} solvers may be included in the future.
 
-In addition, we have also provided an overview of Powell's methods behind \gls{pdfo}.
+In addition, we have provided an overview of Powell's methods behind \gls{pdfo}.
 The overview does not intend to repeat Powell's description of the methods, but rather to provide a
 summary on the main features and structures of the methods, highlighting the intrinsic connections and
 similarities among them. We hope that the overview will ease the understanding of Powell's methods,
