@@ -1109,9 +1109,8 @@ more carefully according to the noise level and the smoothness of the problems.
 Our experiment does not include such fine-tuning but adopts the default settings of \gls{cg} and
 \gls{bfgs} in SciPy, as well as the default configurations of~\gls{pdfo}.
 
-Similar to what is shown in~\cite[\S~2]{Shi_Etal_2022}, we can conclude that the performance of
-finite-difference \gls{cg} and \gls{bfgs} is encouraging when there is no noise, yet much more care is needed when
-the problems are noisy.
+To summarize, the performance of finite-difference \gls{cg} and \gls{bfgs} is encouraging when
+there is no noise, yet much more care is needed when the problems are noisy.
 In contrast, \gls{pdfo} adapts to noise automatically in our experiment, demonstrating good stability under noise
 without requiring knowledge about the noise level. This is because Powell's methods (\gls{newuoa} in
 this experiment) gradually adjust the geometry of the interpolation set during the iterations,
