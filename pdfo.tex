@@ -509,7 +509,8 @@ where~$\qspace$ is the space of polynomials on~$\R^n$ of degree at most~$2$, and
     \label{eq:leastchange}
     \func_k(Q) = \norm[\big]{\nabla^2 Q - \nabla^2 \objm[k - 1]}_{\frob}^2,
 \end{equation}
-which is inspired by the least-change property of quasi-Newton updates~\cite{Dennis_Schnabel_1979}, although other functionals are possible~(see~\cite{Conn_Toint_1996,Bandeira_Scheinberg_Vicente_2012,Powell_2013,Zhang_2014} for example).
+which is inspired by the least-change property of quasi-Newton updates~\cite{Dennis_Schnabel_1979},
+although other functionals are possible~(see~\cite{Conn_Toint_1996,Bandeira_Scheinberg_Vicente_2012,Powell_2013,Zhang_2014,Xie_Yuan_2023} for example).
 The first model~$\objm[1]$ is obtained by setting~$\objm[0] = 0$.
 Powell~\cite{Powell_2013} referred to his approach as the \emph{symmetric Broyden update} of
 quadratic models (see also~\cite[\S~3.6]{Zhang_2012} and~\cite[\S~2.4.2]{Ragonneau_2022}).
@@ -622,7 +623,9 @@ fails to render a large enough denominator, which does not happen often~(see~\ci
 Given the two possible updates~\eqref{eq:xpt-update-tr} and~\eqref{eq:xpt-update-geo} of the
 interpolation set, it is clear that the number of interpolation points remains constant.
 As mentioned earlier, the number is~$n+1$ in \gls{cobyla} and~$(n+1)(n+2)/2$ in \gls{uobyqa}.
-\gls{newuoa}, \gls{bobyqa}, and \gls{lincoa} set this number to an integer in~$[n+2, (n+1)(n+2)/2]$.
+\gls{newuoa}, \gls{bobyqa}, and \gls{lincoa} set this number to an integer in~$[n+2, (n+1)(n+2)/2]$,
+with the default value being~$2n+1$, which is proved optimal in terms of the well-poisedness of
+the initial interpolation set chosen by Powell for \gls{newuoa}~\cite{Ragonneau_Zhang_2023a}.%
 
 
 \subsection{\glsfmtshort{cobyla}}
