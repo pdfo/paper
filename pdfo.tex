@@ -131,6 +131,7 @@
 \newacronym{newuoa}{{NEWUOA}}{NEW Unconstrained Optimization Algorithm}
 \newacronym{pdfo}{{PDFO}}{Powell's Derivative-Free Optimization solvers}
 \newacronym{uobyqa}{{UOBYQA}}{Unconstrained Optimization BY Quadratic Approximation}
+\newacronym{prima}{{PRIMA}}{Reference Implementation for Powell’s methods with Modernization and Amelioration}
 %
 \graphicspath{{figures/}}
 %
@@ -265,16 +266,18 @@
 \begin{abstract}
     Late Professor M. J. D. Powell designed five derivative-free optimization methods, namely
     \gls{cobyla}, \gls{uobyqa}, \gls{newuoa}, \gls{bobyqa}, and \gls{lincoa}.
-    The algorithms were implemented in Fortran 77 and hence may not be easily accessible to some users.
+    He also implemented the algorithms into publicly available solvers, which are renowned
+    for their efficiency and stability.
+    However, these solvers were implemented in Fortran 77 and hence may not be easily accessible to some users.
     This paper introduces the \gls{pdfo} package, which provides user-friendly
     Python and MATLAB interfaces to Powell's code.
     With \gls{pdfo}, users of such languages can call Powell's Fortran solvers easily without any
     need of dealing with the Fortran code.
-    Moreover, \gls{pdfo} includes bug fixes and improvements, which are particularly important for
-    handling problems that suffer from ill-conditioning or failures of function evaluations.
     %With \gls{pdfo}, users can call each of Powell's algorithms directly based on their own choice.
     %Alternatively, if the user does not specify any algorithm, the package can also select one
     %automatically based on the problem characteristics.
+    Moreover, \gls{pdfo} includes bug fixes and improvements, which are particularly important for
+    handling problems that suffer from ill-conditioning or failures of function evaluations.
     In addition, we provide an overview of Powell's methods, sketching them from a uniform
     perspective, summarizing their main features, and highlighting the similarities and
     interconnections among them.
@@ -370,13 +373,13 @@ However, \gls{pdfo} has several features that distinguish it from others.
 
 In addition to the \gls{pdfo} package, this paper also provides an overview of Powell's \gls{dfo}
 methods. We will not repeat Powell's description of these methods but summarize them from a uniform
-view point, aiming at easing the understanding of Powell's methods and paving the way for further
+viewpoint, aiming at easing the understanding of Powell's methods and paving the way for further
 development based on them.
 
 The analysis for Powell's \gls{dfo} methods is not within the scope of this paper.
-Under some assumptions, Powell's algorithms may be covered by existing theory for trust-region \gls{dfo}
-methods~\cite[Chapter~10]{Conn_Scheinberg_Vicente_2009b}. However, it will still be interesting to
-pursue a tailored theory for Powell's algorithms.
+Under some assumptions, adapted versions of Powell's algorithms may be covered by existing theory
+for trust-region \gls{dfo} methods~\cite[Chapter~10]{Conn_Scheinberg_Vicente_2009b}. However, it
+will still be interesting to pursue a tailored theory for Powell's algorithms.
 
 The remaining part of this paper is organized as follows.
 Section~\ref{sec:dfo} briefly reviews \gls{dfo} methods in order to provide the context of \gls{pdfo}.
@@ -400,7 +403,7 @@ Consider a nonlinear optimization problem
 \end{equation}
 where~$\obj : \R^n \to \R$ is the objective function and~$\fset \subseteq \R^n$ represents the feasible region.
 As summarized in~\cite{Conn_Scheinberg_Vicente_2009b}, two strategies have been developed to tackle
-the problem~\eqref{eq:nlc} without using derivatives, which we will introduce in the following.
+problem~\eqref{eq:nlc} without using derivatives, which we will introduce in the following.
 
 The first strategy, known as direct search,\footnote{In some early papers (e.g.,~\cite{Powell_1994,Powell_1998})
 Powell and many other authors used ``direct search'' to mean what is known as ``\glsfmtlong{dfo}'' today. Powell rarely used the word ``derivative-free optimization.''
@@ -984,7 +987,7 @@ which will be explored in the future.
 This section presents numerical experiments on \gls{pdfo}.
 Since Powell's solvers are widely used as benchmarks in \gls{dfo},
 extensive comparisons with standard \gls{dfo} solvers are
-already available in literature~\cite{More_Wild_2009,Rios_Sahinidis_2013}.
+already available in the literature~\cite{More_Wild_2009,Rios_Sahinidis_2013}.
 Instead of repeating such comparisons, which is unnecessary,
 the purpose of our experiments is the following.
 \begin{enumerate}
@@ -1077,7 +1080,7 @@ To make our results more reliable, when~$\sigma>0$, the final performance profil
 averaging the profiles obtained through the above procedure over ten independent runs. In addition, the
 value~$\obj_{\ast}$ in the convergence test~\eqref{eq:cvt} is set to the least value of~$\obj$ obtained
 by all solvers during all these ten runs plus a run with~$\sigma = 0$.
-Finally, for a better scaling of the profiles, we plot the binary logarithm of the normalized cost
+Finally, for better scaling of the profiles, we plot the binary logarithm of the normalized cost
 on the horizontal axis, instead of the normalized cost itself.
 
 Figure~\ref{fig:noise} shows the performance profiles of the solvers for the noise levels~$\sigma = 0$, $\sigma = 10^{-10}$,  and~$\sigma = 10^{-8}$.
@@ -1153,7 +1156,7 @@ adaptively controlled geometry, including finite-difference methods with well-ch
 parameters~\cite{Shi_Etal_2022a}.
 
 
-\subsection{Robustness with respect failures of function evaluations}
+\subsection{Robustness with respect to failures of function evaluations}
 \label{ssec:nan}
 
 We now test the robustness of the solvers with respect to failures of function evaluations.
@@ -1310,8 +1313,8 @@ evaluations, and they do not terminate until this number is reached.
 
 
 To assess the quality of the tuned parameters~$(\bar{C}, \bar{\gamma})$, we solve~\eqref{eq:svc}
-on~$\mathcal{S}$ with~$(C, \gamma)=(\bar{C}, \bar{\gamma})$, and calculate both the AUC score and the accuracy of the resulting
-classifier on~$\mathcal{T}$, the latter being the fraction of correctly classified data points.
+on~$\mathcal{S}$ with~$(C, \gamma)=(\bar{C}, \bar{\gamma})$, and calculate both the AUC score and
+accuracy of the resulting classifier on~$\mathcal{T}$, the latter being the fraction of correctly classified data points.
 Note that~$\mathcal{T}$ is not involved in the tuning process.
 Tables~\ref{tab:splice}--\ref{tab:ijcnn1} present the results for this experiment,
 where \#$f$ denotes the number of function evaluations and ``Time'' represents the computing
@@ -1370,7 +1373,7 @@ time for obtaining~$(\bar{C}, \bar{\gamma})$.
     \end{tabular}
 \end{table}
 
-In terms of the AUC score and the accuracy, \gls{pdfo} achieves a clearly better result than \gls{rs}
+In terms of the AUC score and accuracy, \gls{pdfo} achieves a clearly better result than \gls{rs}
 and \gls{tpe} on the ``splice'' dataset, and they all attain comparable results on the other datasets.
 However, \gls{pdfo} always uses much less function evaluations, and hence, much less computing time.
 The difference in the computing time is particularly visible on the dataset ``ijcnn1'' in
@@ -1401,21 +1404,21 @@ an extensive documentation of the options, and several examples to illustrate th
 
 In addition, we have provided an overview of Powell's methods behind \gls{pdfo}.
 The overview does not intend to repeat Powell's description of the methods, but rather to provide a
-summary on the main features and structures of the methods, highlighting the intrinsic connections and
+summary of the main features and structures of the methods, highlighting the intrinsic connections and
 similarities among them. We hope that the overview will ease the understanding of Powell's methods,
 in the same way as the \gls{pdfo} package eases the use of these methods.
 
 Besides Powell's solvers, \gls{pdfo} also provides a unified interface for \gls{dfo} solvers.
-Such a unified interface can facilitate the development and comparison of different \gls{dfo} solvers.
-The interface of \gls{pdfo} can readily accommodate solvers other than those by Powell, for example,
-the COBYQA (Constrained Optimization BY Quadratic Approximations) solver for general nonlinearly
+Such an interface can facilitate the development and comparison of different \gls{dfo} solvers.
+The interface can readily accommodate solvers other than those by Powell, for example,
+the \gls{cobyqa} (\glsxtrlong{cobyqa}) solver for general nonlinearly
 constrained \gls{dfo} problems~(see~\cite[Chapters 5--7]{Ragonneau_2022}
 and~\cite{Ragonneau_Zhang_cobyqa}).
 
-Finally, we stress that \gls{pdfo} does not provide Python or MATLAB implementations of Powell's \gls{dfo}
-solvers, but only interfaces Powell's implementations with these languages. The implementation of Powell's
-solvers in Python, MATLAB, and other languages is a project in progress under the name of
-PRIMA~(Reference Implementation for Powell's methods with Modernization and Amelioration)~\cite{Zhang_prima}.
+Finally, we stress that \gls{pdfo} does not implement Powell's \gls{dfo} solvers in Python
+or MATLAB, but only interfaces Powell's implementation with these languages. The implementation of
+these solvers in Python, \mbox{MATLAB}, and other languages is a project in progress under the name of
+\gls{prima}~(\glsxtrlong{prima})~\cite{Zhang_prima}.
 
 
 \section*{Statements and declarations}
