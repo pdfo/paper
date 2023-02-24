@@ -235,6 +235,7 @@
 % 1. Abstract
 % 2. More emphasis on the ``overview'' section.
 % 3. More concluding remarks.
+% 4. Future work: other languages, PRIMA, COBYQA
 
 %
 \journalname{Mathematical Programming Computation}
@@ -262,15 +263,17 @@
 \maketitle
 
 \begin{abstract}
-    Late Professor M. J. D. Powell designed five derivative-free optimization methods, namely \gls{cobyla}, \gls{uobyqa}, \gls{newuoa}, \gls{bobyqa}, and \gls{lincoa}.
+    Late Professor M. J. D. Powell designed five derivative-free optimization methods, namely
+    \gls{cobyla}, \gls{uobyqa}, \gls{newuoa}, \gls{bobyqa}, and \gls{lincoa}.
     The algorithms were implemented in Fortran 77 and may not be easily accessible to some users.
-    This paper introduces the \gls{pdfo}~(\glsxtrlong{pdfo}) package, which provides user-friendly Python and MATLAB interfaces to Powell's code.
-    %, and has been downloaded more than \num{50000} times as of February 2023 (mirror downloads excluded).
+    This paper introduces the \gls{pdfo} package, which provides user-friendly
+    Python and MATLAB interfaces to Powell's code.
     With \gls{pdfo}, users can call each of Powell's algorithms directly based on their own choice.
-    Alternatively, if the user does not specify any algorithm, the package can also select one automatically based on the problem characteristics.
-    % When a problem can be solved by multiple algorithms (for example, an unconstrained problem can be solved by all five algorithms), the selection is made based on experimental results on the CUTEst problems.
+    Alternatively, if the user does not specify any algorithm, the package can also select one
+    automatically based on the problem characteristics.
     We also provide an overview of Powell's methods and share some observations on these methods
     based on experiments conducted using~\gls{pdfo}.
+    % When a problem can be solved by multiple algorithms (for example, an unconstrained problem can be solved by all five algorithms), the selection is made based on experimental results on the CUTEst problems.
 
     \keywords{Derivative-free optimization \and COBYLA \and UOBYQA \and NEWUOA \and BOBYQA \and LINCOA}
     \subclass{65K05 \and 90C30 \and 90C56 \and 90-04}
@@ -293,10 +296,14 @@ He did not only propose these algorithms but also implemented them into publicly
 Renowned for their robustness and efficiency, these solvers are used in a wide spectrum of applications, for instance, aeronautical engineering~\cite{Gallard_Etal_2018}, astronomy~\cite{Mamon_Biviano_Boue_2013}, computer vision~\cite{Izadinia_Shan_Seitz_2017}, robotics~\cite{Mombaur_Truong_Laumond_2010}, and statistics~\cite{Bates_Etal_2015}.
 
 However, Powell coded the solvers in Fortran 77, an old-fashion language that damps the enthusiasm of many users to exploit these solvers in their projects.
-There has been considerable demand from both researchers and practitioners for the availability of Powell's solvers in more user-friendly languages such as Python and MATLAB.
-Our aim is to wrap Powell's Fortran code into a package named \gls{pdfo}, which enables users of such languages to call Powell's solvers without any need to deal with the Fortran code.
-For each supported language, \gls{pdfo} provides a simple function that can invoke one of Powell's solvers according to the user's request (if any) or according to the type of the problem to solve.
-The current release (Version 1.2) of \gls{pdfo} supports Python and MATLAB, with more languages to be covered in the future.
+There has been a continued demand from both researchers and practitioners for the availability of Powell's solvers in more user-friendly languages such as Python and MATLAB.
+
+Responding to such a demand, this paper presents a package named \gls{pdfo}, an acronym for ``\glsxtrlong{pdfo}.''
+\gls{pdfo} interfaces Powell's Fortran solvers with other languages,
+enabling users of such languages to call Powell's solvers without any need to deal with the Fortran code.
+For each supported language, \gls{pdfo} provides a simple function that can invoke one of Powell's
+solvers according to the user's request~(if any) or according to the type of the problem to solve.
+The current release~(Version~1.2) of \gls{pdfo} supports Python and MATLAB, with more languages to be covered in the future.
 The signature of the Python subroutine is consistent with the \texttt{minimize} function of the SciPy optimization library; the signature of the MATLAB subroutine is consistent with the \texttt{fmincon} function of the MATLAB Optimization Toolbox.
 \gls{pdfo} is cross-platform, available on Linux, macOS, and Windows at
 \begin{center}
@@ -355,11 +362,17 @@ However, \gls{pdfo} has several features that distinguish it from others.
     For example, the user can request \gls{pdfo} to scale the problem according to bound constraints on the variables before solving.
 \end{enumerate}
 
+In addition to the \gls{pdfo} package, this paper also provides an overview of Powell's \gls{dfo}
+methods. We will not repeat Powell's description of these methods but summarize them from a uniform
+view point, aiming at easing the understanding of Powell's methods and paving the way for further
+development based on them.
+
 \red{
 The remaining part of this paper is organized as follows.
 Section~\ref{sec:dfo} briefly reviews \gls{dfo} methods in order to provide the context of Powell's algorithms.
-We then present an overview of Powell's \gls{dfo} algorithms in Section~\ref{sec:powell}.
-A detailed exposition of~\gls{pdfo} is given in Section~\ref{sec:pdfo}.
+We then present an overview of Powell's \gls{dfo} algorithms in Section~\ref{sec:powell}
+A detailed exposition of~\gls{pdfo} is given in Section~\ref{sec:pdfo}
+%, highlighting some features that are not available in Powell's original solvers.
 Section~\ref{sec:numerical} presents some numerical experiments conducted using~\gls{pdfo}.
 We conclude the paper with some remarks in Section~\ref{sec:conclude}.
 }
