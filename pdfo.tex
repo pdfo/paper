@@ -3,7 +3,7 @@
 \RequirePackage{fix-cm}
 \documentclass[
     smallextended,  % one column (second format)
-    %draft,         % to make overfull boxes visible
+    % draft,        % to make overfull boxes visible
     final,          % the opposite of draft
     % referee,      % required to produce a hardcopy for the referee with a special layout (bigger interline spacing)
 ]{svjour3}
@@ -11,6 +11,7 @@
 \usepackage{amsfonts}
 \usepackage{amsmath}
 \usepackage{amssymb}
+\usepackage{bbm}
 \usepackage{booktabs}
 \usepackage{caption}
 \usepackage[acronym]{glossaries-extra}
@@ -22,13 +23,6 @@
 \usepackage{subcaption}
 \usepackage{url}
 \usepackage{xargs}
-\usepackage{bbm}
-
-%
-% Get back the full figure name
-%
-\def\figurename{Figure}%
-
 %
 % Get back the upright capital Greek letters
 %
@@ -44,11 +38,11 @@
 \DeclareMathSymbol{\Psi}{\mathalpha}{operators}{"09}
 \DeclareMathSymbol{\Omega}{\mathalpha}{operators}{"0A}
 %
-\newcommand{\trs}{{\scriptstyle{\mathsf{T}}}}
-\newcommand{\ones}{\mathbbm{1}}
 \DeclareMathOperator*\argmin{arg\,min}
 \DeclareMathOperator\range{\mathcal{R}}
 \DeclareMathOperator\rank{rank}
+\newcommand{\trs}{{\scriptstyle{\mathsf{T}}}}
+\newcommand{\ones}{\mathbbm{1}}
 \newcommand{\C}{\mathbb{C}}
 \newcommand{\F}{\mathbb{F}}
 \newcommand{\N}{\mathbb{N}}
@@ -108,17 +102,17 @@
 \newabbreviation{rbf}{RBF}{radial basis function}
 \newabbreviation{roc}{ROC}{receiver operating characteristic}
 \newabbreviation{svm}{SVM}{support vector machine}
-%\newabbreviation{rs}{\textsc{rs}}{Random Search}
-%\newabbreviation{tpe}{\textsc{tpe}}{Tree-Structured Parzen Estimator}
-%\newacronym{bobyqa}{\textsc{bobyqa}}{Bound Optimization BY Quadratic Approximation}
-%\newacronym{bfgs}{\textsc{bfgs}}{Broyden-Fletcher-Goldfarb-Shanno}
-%\newacronym{cg}{\textsc{cg}}{Conjugate Gradient}
-%\newacronym{cobyla}{\textsc{cobyla}}{Constrained Optimization BY Linear Approximations}
-%\newacronym{cobyqa}{\textsc{cobyqa}}{Constrained Optimization BY Quadratic Approximations}
-%\newacronym{lincoa}{\textsc{lincoa}}{LINearly Constrained Optimization Algorithm}
-%\newacronym{newuoa}{\textsc{newuoa}}{NEW Unconstrained Optimization Algorithm}
-%\newacronym{pdfo}{\textsc{pdfo}}{Powell's Derivative-Free Optimization solvers}
-%\newacronym{uobyqa}{\textsc{uobyqa}}{Unconstrained Optimization BY Quadratic Approximation}
+% \newabbreviation{rs}{\textsc{rs}}{Random Search}
+% \newabbreviation{tpe}{\textsc{tpe}}{Tree-Structured Parzen Estimator}
+% \newacronym{bobyqa}{\textsc{bobyqa}}{Bound Optimization BY Quadratic Approximation}
+% \newacronym{bfgs}{\textsc{bfgs}}{Broyden-Fletcher-Goldfarb-Shanno}
+% \newacronym{cg}{\textsc{cg}}{Conjugate Gradient}
+% \newacronym{cobyla}{\textsc{cobyla}}{Constrained Optimization BY Linear Approximations}
+% \newacronym{cobyqa}{\textsc{cobyqa}}{Constrained Optimization BY Quadratic Approximations}
+% \newacronym{lincoa}{\textsc{lincoa}}{LINearly Constrained Optimization Algorithm}
+% \newacronym{newuoa}{\textsc{newuoa}}{NEW Unconstrained Optimization Algorithm}
+% \newacronym{pdfo}{\textsc{pdfo}}{Powell's Derivative-Free Optimization solvers}
+% \newacronym{uobyqa}{\textsc{uobyqa}}{Unconstrained Optimization BY Quadratic Approximation}
 \newabbreviation{rs}{{RS}}{Random Search}
 \newabbreviation{tpe}{{TPE}}{Tree-Structured Parzen Estimator}
 \newacronym{bobyqa}{{BOBYQA}}{Bound Optimization BY Quadratic Approximation}
@@ -162,7 +156,7 @@
     group-separator={,},
 }
 %
-\input{ushyphex}    % hyphenation exceptions for US English
+\input{ushyphex}  % hyphenation exceptions for US English
 
 %
 \usepackage{microtype}
@@ -173,7 +167,7 @@
 \interdisplaylinepenalty=10000
 \relpenalty=10000
 \binoppenalty=10000
-%% no widow or orphan lines
+% no widow or orphan lines
 \clubpenalty=10000
 \widowpenalty=10000
 \displaywidowpenalty=10000
@@ -369,7 +363,7 @@ We conclude the paper with some remarks in Section~\ref{sec:conclude}.
 Consider a nonlinear optimization problem
 \begin{equation}
     \label{eq:nlc}
-    \min_{x \in \fset} \obj(x),
+    \min_{x \in \fset} ~ \obj(x),
 \end{equation}
 where~$\obj : \R^n \to \R$ is the objective function and~$\fset \subseteq \R^n$ represents the feasible region.
 As summarized in~\cite{Conn_Scheinberg_Vicente_2009b}, two strategies have been developed to tackle
@@ -454,7 +448,7 @@ After choosing the trust-region center~$\iter$, with the trust-region model~$\ob
 according to~\eqref{eq:itpls}, a trial point~$\iter^{\trust}$ is then obtained by solving approximately the trust-region subproblem
 \begin{equation}
     \label{eq:trsp}
-        \min_{x \in \fsetm}  ~\objm(x) \quad \st \quad ~\norm{x - \iter} \le \rad,
+        \min_{x \in \fsetm} ~ \objm(x) \quad \st \quad ~\norm{x - \iter} \le \rad,
 \end{equation}
 where~$\rad$ is the trust-region radius, and~$\norm{\cdot}$ is the~$\ell_2$-norm in~$\R^n$.
 In this subproblem, the set~$\fsetm \subseteq \R^n$ is a local approximation of the feasible region~$\fset$.
@@ -500,13 +494,13 @@ with~$\abs{\xpt}$ being less than~$(n + 1)(n + 2) / 2$, the remaining degrees of
 More specifically, this means building~$\objm$ by solving
 \begin{equation}
     \label{eq:undqitp}
-        \min_{Q \in \qspace}  ~ \func_k(Q) \quad \st \quad Q(y) = \obj(y), ~ y \in \xpt,
+        \min_{Q \in \qspace} ~ \func_k(Q) \quad \st \quad Q(y) = \obj(y), ~ y \in \xpt,
 \end{equation}
 where~$\qspace$ is the space of polynomials on~$\R^n$ of degree at most~$2$, and~$\func_k$ is the aforementioned functional.
 \gls{newuoa}, \gls{bobyqa}, and \gls{lincoa} construct quadratic models in this way, with
 \begin{equation}
     \label{eq:leastchange}
-    \func_k(Q) = \norm{\nabla^2 Q - \nabla^2 \objm[k - 1]}_{\frob}^2,
+    \func_k(Q) = \norm[\big]{\nabla^2 Q - \nabla^2 \objm[k - 1]}_{\frob}^2,
 \end{equation}
 which is inspired by the least-change property of quasi-Newton updates~\cite{Dennis_Schnabel_1979}, although other functionals are possible~(see~\cite{Conn_Toint_1996,Bandeira_Scheinberg_Vicente_2012,Powell_2013,Zhang_2014} for example).
 The first model~$\objm[1]$ is obtained by setting~$\objm[0] = 0$.
@@ -546,7 +540,7 @@ The choice of the base point~$y^{\base}$ is also worth mentioning.
 \Gls{cobyla} sets~$y^{\base}$ to the center~$x_k$ of the current trust region.
 In contrast, the other four algorithms initiate~$y^{\base}$ to the starting point provided by the
 user and keep it unchanged except for occasionally updating~$y^{\base}$ to~$\iter$, without which
-the distance~$\|y^{\base}-\iter\|$ may become unfavorably large for the numerical solution of the
+the distance~$norm{y^{\base}-\iter}$ may become unfavorably large for the numerical solution of the
 interpolation problem (see~\cite[\S~5]{Powell_2004b} and~\cite[\S~7]{Powell_2006} for more elaboration).
 
 \subsubsection{The interpolation set}
@@ -724,7 +718,7 @@ can be found in~\cite[\S~6.2.1 and \S~6.2.2]{Ragonneau_2022}.
 \gls{uobyqa}, imposing a lower bound~$\radlb$ on~$\rad$ when updating~$\rad$.
 
 When solving the geometry-improving subproblem~\eqref{eq:biglag},
-\gls{newuoa} first takes $\iter \pm \radalt (y_k^\drop - \iter)/\|y_k^\drop -\iter\|$,
+\gls{newuoa} first takes $\iter \pm \radalt (y_k^\drop - \iter)/\norm{y_k^\drop -\iter}$,
 with the sign that provides the larger value of~$\ell_k^\drop$, and then revises it by
 a procedure similar to the two-dimensional searches that improve the TCG step for~\eqref{eq:trsp}~(see~\cite[\S~6]{Powell_2006}).
 \gls{bobyqa} computes two approximate solutions to~\eqref{eq:biglag} and chooses the better one:
@@ -740,14 +734,14 @@ It computes
     \item a point obtained by a gradient step that maximizes~$\abs{\ell_k^{\drop}}$ within the trust region, and
     \item a point obtained by a projected gradient step that maximizes~$\abs{\ell_k^{\drop}}$ within the trust region, the projection being made onto the null space of the constraints that are considered active at~$\iter$.
 \end{enumerate}
-Note that the first two cases disregard the linear constraints (i.e.~$x\in\fsetm \equiv
+Note that the first two cases disregard the linear constraints (i.e.~$x\in\fsetm =
 \fset$), while the third case
 considers only the active constraints.
 \gls{lincoa} first selects the point among the first two alternatives for a larger value of~$\abs{\ell_k^{\drop}}$.
 Further, this point is replaced with the third alternative if the latter nearly satisfies the linear
 constraints while rendering a value of~$\abs{\ell_k^{\drop}}$ that is not too small compared with the above one.
 
-\gls{bobyqa} respects the bound constraints~$x\in\fsetm \equiv \fset$ when
+\gls{bobyqa} respects the bound constraints~$x\in\fsetm = \fset$ when
 solving the trust-region subproblem~\eqref{eq:trsp} and the geometry-improving subproblem~\eqref{eq:biglag},
 even though these problems are solved approximately. It also chooses the initial interpolation
 set~$\xpt[1]$ within the bounds. Therefore, \gls{bobyqa} is a feasible method.
@@ -756,7 +750,7 @@ subproblem and when setting up the initial interpolation set. Consequently, \gls
 an infeasible method, which requires~$\obj$ to be defined even when the linear constraints are not satisfied.
 
 
-\section{The \gls{pdfo} package}
+\section{The \glsfmtshort{pdfo} package}
 \label{sec:pdfo}
 
 This section details the main features of \gls{pdfo}, in particular the signature of the main
@@ -1213,13 +1207,13 @@ and~$z_i \in \{-1,1\}$ being the corresponding label,
 the $C$-SVC constructs a classifier by solving
 \begin{equation}
     \label{eq:svc}
-        \min_{\alpha}  ~\frac{1}{2} \alpha^\trs Q \alpha - \alpha^\trs \ones
+        \min_{\alpha} ~ \frac{1}{2} \alpha^\trs Q \alpha - \alpha^\trs \ones
         \quad \st \quad 0 \leq \alpha \leq C, ~ \alpha^\trs z = 0, ~\alpha \in\R^{N},
 \end{equation}
 where~$C\in(0,\infty)$ is a hyperparameter, $z\in\R^{N}$ is the vector whose~$i$th entry is~$z_i$,~$\ones\in\R^N$
 is the vector of all ones, and~$Q\in\R^{N\times N}$ is the matrix whose~$(i,j)$ entry is~$K(u_i,u_j)$
 with a kernel function~$K\mathrel{:} \R^{d}\times\R^{d} \to \R$.
-We take the Gaussian kernel~$K(u,v) = \exp(-\gamma\|u-v\|^2)$, where~$\gamma \in (0,\infty)$ is
+We take the Gaussian kernel~$K(u,v) = \exp(-\gamma\norm{u-v}^2)$, where~$\gamma \in (0,\infty)$ is
 another hyperparameter.
 See~\cite[\S~2.1]{Chang_Lin_2011} for more details.
 
