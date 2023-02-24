@@ -21,7 +21,7 @@ _log = logging.getLogger(__name__)
 
 # Set up matplotlib for plotting the profiles.
 std_cycle = cycler(color=["#1f77b4", "#2ca02c", "#000000", "#d62728"])
-std_cycle += cycler(linestyle=[(0, (1, 1)), (0, (5, 3)), (0, ()), (0, (5, 3, 1, 3))])
+std_cycle += cycler(linestyle=[(0, (5, 3, 1, 3)), (0, (5, 3)), (0, ()), (0, (1, 1))])
 plt.rc("axes", prop_cycle=std_cycle)
 plt.rc("lines", linewidth=1)
 plt.rc("text", usetex=True)
