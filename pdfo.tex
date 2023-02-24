@@ -373,6 +373,11 @@ methods. We will not repeat Powell's description of these methods but summarize 
 view point, aiming at easing the understanding of Powell's methods and paving the way for further
 development based on them.
 
+The analysis for Powell's \gls{dfo} methods is not within the scope of this paper.
+Under some assumptions, Powell's algorithms may be covered by existing theory for trust-region \gls{dfo}
+methods~\cite[Chapter~10]{Conn_Scheinberg_Vicente_2009b}. However, it will still be interesting to
+pursue a tailored theory for Powell's algorithms.
+
 The remaining part of this paper is organized as follows.
 Section~\ref{sec:dfo} briefly reviews \gls{dfo} methods in order to provide the context of \gls{pdfo}.
 We then present an overview of Powell's \gls{dfo} methods in Section~\ref{sec:powell},
@@ -1400,6 +1405,15 @@ summary on the main features and structures of the methods, highlighting the int
 similarities among them. We hope that the overview will ease the understanding of Powell's methods,
 in the same way as the \gls{pdfo} package eases the use of these methods.
 
+We stress that \gls{pdfo} does not provide Python or MATLAB implementations of Powell's \gls{dfo}
+solvers, but only provide interfaces to Powell's implementations. The implementation of Powell's
+solvers in Python, MATLAB, and other languages is a project in progress under the name of
+PRIMA~(Reference Implementation for Powell's methods with Modernization and Amelioration)~\cite{Zhang_prima}.
+
+\gls{pdfo} provides an interface for \gls{dfo} solvers. It can accommodate solvers other than those
+by Powell, for example, the COBYQA (Constrained Optimization BY Quadratic Approximation) for general
+nonlinearly constrained \gls{dfo} problems~(see~\cite[Chapters 5--7]{Ragonneau_2022}
+and~\cite{Ragonneau_Zhang_cobyqa}).
 
 
 
