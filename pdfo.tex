@@ -205,7 +205,7 @@
 \newcommand{\newuoafun}{\texttt{newuoa}\xspace}
 \newcommand{\bobyqafun}{\texttt{bobyqa}\xspace}
 \newcommand{\lincoafun}{\texttt{lincoa}\xspace}
-\renewcommand{\baselinestretch}{1.05}
+\renewcommand{\baselinestretch}{1.07}
 
 % Redefine the remark environments to have bold titles.
 % Note: Since the environment cannot be overridden, we first undefine it (both
@@ -996,7 +996,7 @@ For \gls{pdfo}, we specify \gls{newuoa} as the solver, while setting all the oth
 In particular, the initial trust-region radius is~$1$, the final trust-region radius is~$10^{-6}$,
 and the number of interpolation points is~$2n + 1$, with~$n$ being the dimension of the problem
 being solved.
-We perform the comparison on~157 unconstrained problems with~$n \le 50$ from the
+We perform the comparison on~158 unconstrained problems with~$n \le 50$ from the
 CUTEst~\cite{Gould_Orban_Toint_2015} problem set using PyCUTEst~1.4~\cite{Fowkes_Roberts_Burmen_2022}.
 For each testing problem, the starting point is set to the one provided by CUTEst, and the maximal
 number of function evaluations is set to~$500n$.
@@ -1044,7 +1044,7 @@ solvers can only evaluate~$\tilde{\obj}_\sigma$, which is contaminated unless~$\
 To make our results more reliable, when~$\sigma>0$, the final performance profile is obtained by
 averaging the profiles obtained through the above procedure over ten independent runs. In addition, the
 value~$\obj_{\ast}$ in the convergence test~\eqref{eq:cvt} is set to the least value of~$\obj$ obtained
-by all solvers during all these ten runs \red{{plus a run with~$\sigma = 0$}}.
+by all solvers during all these ten runs plus a run with~$\sigma = 0$.
 Finally, for a better scaling of the profiles, we plot the binary logarithm of the normalized cost
 on the horizontal axis, instead of the normalized cost itself.
 
@@ -1092,20 +1092,24 @@ Two profiles are included for each noise level, with the convergence tolerance b
     \label{fig:noise}
 \end{figure}
 
-In the noise-free case ($\sigma = 0$), \gls{pdfo} is more efficient than
-\gls{cg} and \gls{bfgs}, although the difference is less visible when~$\tau$ is
+In the noise-free case ($\sigma = 0$), \gls{pdfo} is more efficient than finite-difference
+\gls{cg} and \gls{bfgs}, although the distinction is less visible when~$\tau$ is
 smaller, and~\gls{bfgs} can solve slightly more problems than~\gls{pdfo}.
-When there is noise ($\sigma >0$), the advantage of \gls{pdfo} becomes significant.
+When there is noise~($\sigma >0$), the advantage of \gls{pdfo} becomes significant.
 The performances of \gls{cg} and \gls{bfgs} deteriorate considerably in the noisy case, even if the
 noise level is not high and the convergence tolerance is not demanding.
+We do not include the result with larger values of~$\sigma$, as \gls{cg} and \gls{bfgs} will barely
+solve any problem, while \gls{pdfo} can still tackle a significant proportion of them
+up to a reasonable precision.
 
-Note that our results do not contradict the observations in~\cite{Shi_Etal_2022a,Shi_Etal_2022}, where the
-difference parameter~$h$ is chosen more carefully according to the noise level and the smoothness of
-the problems.
+However, given the fact that \gls{cg} and \gls{bfgs} take the finite difference parameter~$h \approx 10^{-8}$,
+their unfavorable performance is not surprising.
+It does not contradict the observations in~\cite{Shi_Etal_2022a,Shi_Etal_2022}, where~$h$ is chosen
+more carefully according to the noise level and the smoothness of the problems.
 Our experiment does not include such fine-tuning but adopts the default settings of \gls{cg} and
 \gls{bfgs} in SciPy, as well as the default configurations of~\gls{pdfo}.
 
-As shown in~\cite[\S~2]{Shi_Etal_2022}, the performance of finite-difference methods is encouraging when there is no noise, yet much more care is needed when the problems are noisy.
+The same as what is shown in~\cite[\S~2]{Shi_Etal_2022}, the performance of finite-difference methods is encouraging when there is no noise, yet much more care is needed when the problems are noisy.
 In contrast, \gls{pdfo} adapts to noise automatically in our experiment, demonstrating good stability under noise
 without requiring knowledge about the noise level. This is because Powell's methods gradually adjust
 the geometry of the interpolation set during the iterations, which
@@ -1129,7 +1133,7 @@ also include the finite-difference \gls{cg} and~\gls{bfgs} tested before, which 
 handle evaluation failures particularly. The solvers are set up in the same way as in the
 previous experiment, and we still employ the~$157$ unconstrained CUTEst problems used previously.
 
-Let~$p \in (0,1)$ be the failure probability of function evaluations.
+Let~$p \in [0,1]$ be the failure probability of function evaluations.
 For a testing problem with the objective function~$\obj$, we define
 \begin{equation}
     \label{eq:nan-obj}
@@ -1275,6 +1279,7 @@ evaluations, and they do not terminate until this number is reached.
 To assess the quality of the tuned parameters~$(\bar{C}, \bar{\gamma})$, we solve~\eqref{eq:svc}
 on~$\mathcal{S}$ with~$(C, \gamma)=(\bar{C}, \bar{\gamma})$, and calculate both the AUC score and the accuracy of the resulting
 classifier on~$\mathcal{T}$, the latter being the fraction of correctly classified data points.
+Note that~$\mathcal{T}$ is not involved in the tuning process.
 Tables~\ref{tab:splice}--\ref{tab:ijcnn1} present the results for this experiment,
 where \#$f$ denotes the number of function evaluations and ``Time'' represents the computing
 time for obtaining~$(\bar{C}, \bar{\gamma})$.
