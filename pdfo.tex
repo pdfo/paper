@@ -1096,9 +1096,9 @@ In the noise-free case ($\sigma = 0$), \gls{pdfo} is more efficient than finite-
 \gls{cg} and \gls{bfgs}, although the distinction is less visible when~$\tau$ is
 smaller, and~\gls{bfgs} can solve slightly more problems than~\gls{pdfo}.
 When there is noise~($\sigma >0$), the advantage of \gls{pdfo} becomes significant.
-The performances of \gls{cg} and \gls{bfgs} deteriorate considerably in the noisy case, even if the
+The performances of \gls{cg} and \gls{bfgs} deteriorate considerably under noise, even if the
 noise level is not high and the convergence tolerance is not demanding.
-We do not include the result with larger values of~$\sigma$, as \gls{cg} and \gls{bfgs} will barely
+We do not include the results with larger values of~$\sigma$, as \gls{cg} and \gls{bfgs} will barely
 solve any problem, while \gls{pdfo} can still tackle a significant proportion of them
 up to a reasonable precision.
 
@@ -1109,14 +1109,15 @@ more carefully according to the noise level and the smoothness of the problems.
 Our experiment does not include such fine-tuning but adopts the default settings of \gls{cg} and
 \gls{bfgs} in SciPy, as well as the default configurations of~\gls{pdfo}.
 
-The same as what is shown in~\cite[\S~2]{Shi_Etal_2022}, the performance of finite-difference methods is encouraging when there is no noise, yet much more care is needed when the problems are noisy.
+Similar to what is shown in~\cite[\S~2]{Shi_Etal_2022}, we can conclude that the performance of
+finite-difference \gls{cg} and \gls{bfgs} is encouraging when there is no noise, yet much more care is needed when
+the problems are noisy.
 In contrast, \gls{pdfo} adapts to noise automatically in our experiment, demonstrating good stability under noise
-without requiring knowledge about the noise level. This is because Powell's methods gradually adjust
-the geometry of the interpolation set during the iterations, which
-enables the methods to make progress until the interpolation points are too close to distinguish
-noise from true objective function values.
+without requiring knowledge about the noise level. This is because Powell's methods (\gls{newuoa} in
+this experiment) gradually adjust the geometry of the interpolation set during the iterations,
+making progress until the interpolation points are too close to distinguish noise from true objective function values.
 This is not specific to Powell's methods
-but also applies to other methods that sample the objective function on a set of points with
+but also applies to other algorithms that sample the objective function on a set of points with
 adaptively controlled geometry, including finite-difference methods with well-chosen difference
 parameters~\cite{Shi_Etal_2022a}.
 
