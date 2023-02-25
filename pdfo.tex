@@ -417,7 +417,7 @@ the Nelder-Mead algorithm~\cite{Nelder_Mead_1965}, the MADS methods~\cite{Audet_
 See~\cite{Kolda_Lewis_Torczon_2003},~\cite[Chapters~7 and~8]{Conn_Scheinberg_Vicente_2009b},
 ~\cite[Part~3]{Audet_Hare_2017}, and~\cite[\S~2.1]{Larson_Menickelly_Wild_2019} for more discussions
 on this paradigm, and we refer to~\cite{Gratton_Etal_2015,Gratton_Etal_2019} for recent developments
-ofrandomized methods in this category.
+of randomized methods in this category.
 
 The second strategy approximates the original problem~\eqref{eq:nlc} by relatively simple models and locates the iterates according to these models.
 Algorithms applying this strategy are referred to as model-based methods. They often make use of the models within a trust-region framework~\cite{Conn_Scheinberg_Vicente_2009a} or a line-search framework~\cite{Berahas_Byrd_Nocedal_2019}.
@@ -484,7 +484,7 @@ Instead of repeating Powell's description of these algorithms, we outline them i
 
 \subsubsection{The trust-region subproblem}
 
-In all the five algorithms, iteration~$k$ places the trust-region center~$\iter$ at the ``best'' point where the objective function and constraints have been evaluated so far.
+In all five algorithms, iteration~$k$ places the trust-region center~$\iter$ at the ``best'' point where the objective function and constraints have been evaluated so far.
 Such a point is selected according to the objective function or a merit function that takes the constraints into account.
 After choosing the trust-region center~$\iter$, with the trust-region model~$\objm$ constructed
 according to~\eqref{eq:itpls}, a trial point~$\iter^{\trust}$ is then obtained by solving approximately the trust-region subproblem
@@ -1385,7 +1385,7 @@ time for obtaining~$(\bar{C}, \bar{\gamma})$.
 
 In terms of the AUC score and accuracy, \gls{pdfo} achieves a clearly better result than \gls{rs}
 and \gls{tpe} on the ``splice'' dataset, and they all attain comparable results on the other datasets.
-However, \gls{pdfo} always uses much less function evaluations, and hence, much less computing time.
+However, \gls{pdfo} always uses much fewer function evaluations, and hence, much less computing time.
 The difference in the computing time is particularly visible on the dataset ``ijcnn1'' in
 Table~\ref{tab:ijcnn1}, as each evaluation of~$P$ takes much time due to the large data size.
 
