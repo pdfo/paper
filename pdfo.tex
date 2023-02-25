@@ -59,15 +59,21 @@
 \newcommand{\T}{\mathsf{T}}
 \newcommand{\Z}{\mathbb{Z}}
 \newcommand{\abs}[2][]{#1\lvert#2#1\rvert}
-\newcommand{\aeq}{A_{\scriptscriptstyle\mathcal{E}}}
-\newcommand{\aub}{A_{\scriptscriptstyle\mathcal{I}}}
+%\newcommand{\aeq}{A_{\scriptscriptstyle\mathcal{E}}}
+%\newcommand{\aub}{A_{\scriptscriptstyle\mathcal{I}}}
+\newcommand{\aeq}{A_{\scriptscriptstyle\text{E}}}
+\newcommand{\aub}{A_{\scriptscriptstyle\text{I}}}
 \newcommand{\base}{{\text{b}}}
-\newcommand{\beq}{b_{\scriptscriptstyle\mathcal{E}}}
-\newcommand{\bub}{b_{\scriptscriptstyle\mathcal{I}}}
+%\newcommand{\beq}{b_{\scriptscriptstyle\mathcal{E}}}
+%\newcommand{\bub}{b_{\scriptscriptstyle\mathcal{I}}}
+\newcommand{\beq}{b_{\scriptscriptstyle\text{E}}}
+\newcommand{\bub}{b_{\scriptscriptstyle\text{I}}}
 \newcommand{\ceil}[2][]{#1\lceil#2#1\rceil}
-\newcommand{\ceq}{\con[\scriptscriptstyle\mathcal{E}]}
+%\newcommand{\ceq}{\con[\scriptscriptstyle\mathcal{E}]}
+\newcommand{\ceq}{\con[\scriptscriptstyle{\text{E}}]}
 \newcommand{\con}[1][i]{c\ifthenelse{\equal{#1}{}}{}{_{#1}}}
-\newcommand{\cub}{\con[\scriptscriptstyle\mathcal{I}]}
+%\newcommand{\cub}{\con[\scriptscriptstyle\mathcal{I}]}
+\newcommand{\cub}{\con[\scriptscriptstyle\text{I}]}
 \newcommand{\drop}{{\text{d}}}
 \newcommand{\du}{\mathrm{d}}
 \newcommand{\eqdef}{\mathrel{\stackrel{\mathsf{def}}{=}}}
@@ -410,7 +416,8 @@ Powell and many other authors used ``direct search'' to mean what is known as ``
 The only exceptions known to us are his last paper~\cite{Powell_2015} and his distinguished lecture
 titled ``A parsimonious way of constructing quadratic models from values of the objective function in
 derivative-free optimization'' at the National Center for Mathematics and Interdisciplinary Sciences,
-Beijing on November 4, 2011~\cite{Buhmann_Fletcher_Iserles_Toint_2018}.}, explores the objective
+Beijing on November 4, 2011~\cite{Buhmann_Fletcher_Iserles_Toint_2018}.}
+explores the objective
 function~$\obj$ and chooses iterates by simple comparisons of function values, examples including
 the Nelder-Mead algorithm~\cite{Nelder_Mead_1965}, the MADS methods~\cite{Audet_Dennis_2006,Digabel_2011}, and BFO~\cite{Porcelli_Toint_2017,Porcelli_Toint_2020,Porcelli_Toint_2022}.
 See~\cite{Kolda_Lewis_Torczon_2003},~\cite[Chapters~7 and~8]{Conn_Scheinberg_Vicente_2009b},~\cite[Part~3]{Audet_Hare_2017}, and~\cite[\S~2.1]{Larson_Menickelly_Wild_2019} for more discussions on this paradigm, and we refer to~\cite{Gratton_Etal_2015,Gratton_Etal_2019} for recent developments on randomized methods in this category.
@@ -584,14 +591,14 @@ interpolation problem (see~\cite[\S~5]{Powell_2004b} and~\cite[\S~7]{Powell_2006
 \label{ssec:iptset}
 
 The strategy to update~$\xpt$ is crucial.
-It should recycle points from previous iterations, at which the objective and constraint functions
-have already been evaluated.
+It should reuse points from previous iterations, at which the objective and constraint functions
+have been evaluated.
 Meanwhile, it needs to maintain the geometry of the interpolation set so that it is well poised,
 or equivalently, the interpolation problem is well conditioned~\cite{Conn_Scheinberg_Vicente_2009b}.
 %the interpolation problem is well conditioned~\cite{Sauer_Xu_1995,Conn_Scheinberg_Vicente_2009b}.
 
-At a normal iteration, a point~$\iter^{\trust} \in \R^n$ is computed by solving the trust-region
-subproblem~\eqref{eq:trsp}, and Powell's \gls{dfo} methods update the interpolation set as
+At a normal iteration, Powell's methods compute a point~$\iter^{\trust} \in \R^n$ by solving the
+trust-region subproblem~\eqref{eq:trsp}, and then update the interpolation set as
 \begin{equation}
     \label{eq:xpt-update-tr}
     \xpt[k + 1] = \big(\xpt \cup \set{\iter^{\trust}}\big) \setminus \set{y_k^{\drop}},
@@ -817,8 +824,8 @@ It takes for input an optimization problem of the form
                             & ~ \cub(x) \le 0, ~ \ceq(x) = 0, \label{eq:pdfo-nl}
     \end{align}
 \end{subequations}
-where~$\obj$, $\ceq$, and~$\cub$ are real-valued functions. The bound constraints are given
-by~$n$-dimensional vectors~$\xl$ and~$\xu$, which may take infinite values. The linear constraints
+where~$\obj$ a real-valued objective function, while $\ceq$ and $\cub$ are vector-valued constraint functions.
+The bound constraints are given by~$n$-dimensional vectors~$\xl$ and~$\xu$, which may take infinite values. The linear constraints
 are formulated by real matrices~$\aeq$ and~$\aub$ together with real vectors~$\beq$ and~$\bub$ of
 proper sizes.
 Note that we allow one or more of the constraints~\eqref{eq:pdfo-b}--\eqref{eq:pdfo-nl} to be absent.
