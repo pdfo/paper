@@ -137,7 +137,7 @@
 \newacronym{newuoa}{{NEWUOA}}{NEW Unconstrained Optimization Algorithm}
 \newacronym{pdfo}{{PDFO}}{Powell's Derivative-Free Optimization solvers}
 \newacronym{uobyqa}{{UOBYQA}}{Unconstrained Optimization BY Quadratic Approximation}
-\newacronym{prima}{{PRIMA}}{Reference Implementation for Powell’s methods with Modernization and Amelioration}
+\newacronym{prima}{{PRIMA}}{Reference Implementation for Powell's methods with Modernization and Amelioration}
 %
 \graphicspath{{figures/}}
 %
@@ -584,7 +584,7 @@ The choice of the base point~$y^{\base}$ is also worth mentioning.
 \Gls{cobyla} sets~$y^{\base}$ to the center~$x_k$ of the current trust region.
 In contrast, the other four algorithms initiate~$y^{\base}$ to the starting point provided by the
 user and keep it unchanged except for occasionally updating~$y^{\base}$ to~$\iter$, without which
-the distance~$norm{y^{\base}-\iter}$ may become unfavorably large for the numerical solution of the
+the distance~$\norm{y^{\base}-\iter}$ may become unfavorably large for the numerical solution of the
 interpolation problem (see~\cite[\S~5]{Powell_2004b} and~\cite[\S~7]{Powell_2006} for more elaboration).
 
 \subsubsection{The interpolation set}
@@ -698,7 +698,7 @@ function~$\objm$ within the trust region subject to no increase in any greatest 
 linearized constraints.
 
 \gls{cobyla} assesses the quality of points and updates the trust-region radius according to
-an~$\ell_\infty$ merit function and a reduction ratio based on the merit
+an~$\ell_\infty$-merit function and a reduction ratio based on the merit
 function~(see~\cite[equations~(5),~(9), and~(10)]{Powell_1994}). It never increases
 the trust-region radius, and reduces the trust-region radius if the geometry of~$\xpt$ is acceptable
 but the trust-region trial point~$\iter^\trust$ is too close to~$\iter$ or renders a reduction ratio
@@ -1403,7 +1403,7 @@ machine learning problems in general as suggested in~\cite{Ghanbari_Scheinberg_2
 We have presented the \gls{pdfo} package, which aims at simplifying the use of
 Powell's \gls{dfo} solvers by providing user-friendly interfaces.
 More information about the package can be found on the homepage of the package at
-\mbox{\url{https: //www.pdfo.net}}\,, including the detailed syntax of the interfaces,
+\mbox{\url{https://www.pdfo.net}}\,, including the detailed syntax of the interfaces,
 an extensive documentation of the options, and several examples to illustrate the~usage.
 %The scope of \gls{pdfo} in the future is not limited only to Powell's \gls{dfo} solvers.
 %For instance, the authors are currently working on a new solver for nonlinearly constrained optimization, named \gls{cobyqa}~\cite{Ragonneau_2022}.
