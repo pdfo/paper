@@ -237,13 +237,6 @@
      {\normalsize\bfseries}}
 \makeatother
 
-% TODO:
-% 0. Check the red parts.
-% 1. Abstract
-% 2. More emphasis on the ``overview'' section.
-% 3. More concluding remarks.
-% 4. Future work: other languages, PRIMA, COBYQA
-
 %
 \journalname{Mathematical Programming Computation}
 \title{PDFO --- A Cross-Platform Package for Powell's Derivative-Free Optimization Solvers}
@@ -367,7 +360,7 @@ However, \gls{pdfo} has several features that distinguish it from others.
     %In addition, \gls{pdfo} provides \gls{cobyla} in double precision, whereas Powell used single precision when he implemented it in the 1990s.
 
     \item \emph{Fault tolerance.}
-    \gls{pdfo} tolerates failures of function evaluations when NaN values are returned.
+        \gls{pdfo} tolerates failures of function evaluations. % when NaN values are returned.
     In case of such failures, \gls{pdfo} will not exit but try to progress.
     %Moreover, \gls{pdfo} ensures that the returned solution is not a point where the evaluation
     %fails, while the original code of Powell may return a point whose objective function value is numerically~NaN.
@@ -528,7 +521,7 @@ To decide a quadratic model~$\objm$ completely by the linear system~\eqref{eq:qi
 \gls{uobyqa} requires that~$\xpt$ contains~$(n+1)(n+2)/2$ points, and~$f$ should have been evaluated at all these points before this linear system can be formed.
 Even though most of these points will be reused at the subsequent iterations so that the number of
 function evaluations needed per iteration is tiny (see Section~\ref{ssec:iptset}), we must perform~$(n + 1)(n + 2) / 2$ function evaluations during the very first iteration.
-This is impracticable unless~$n$ is small, which motivates the use of underdetermined quadratic interpolation.
+This is impracticable unless~$n$ is small, which motivates the underdetermined quadratic interpolation.
 
 \paragraph{\textnormal{\textbf{Underdetermined quadratic interpolation.}}}
 
@@ -603,12 +596,13 @@ trust-region subproblem~\eqref{eq:trsp}, and then update the interpolation set a
     \label{eq:xpt-update-tr}
     \xpt[k + 1] = \big(\xpt \cup \set{\iter^{\trust}}\big) \setminus \set{y_k^{\drop}},
 \end{equation}
-where~$y_k^{\drop} \in \xpt$ is chosen to maintain the well-poisedness of~$\xpt[k + 1]$.
-Note that~$y_k^{\drop}$ is selected after evaluating~$\iter^{\trust}$.
-Recall that Powell's methods update the inverse of either the coefficient matrix of the
-interpolation system or the corresponding \kkt system using the Sherman-Morrison-Woodbury formula.
+where~$y_k^{\drop} \in \xpt$ is selected after obtaining~$\iter^{\trust}$, aiming to maintain the
+well-poisedness of~$\xpt[k + 1]$.
+%Note that~$y_k^{\drop}$ is selected after~$\iter^{\trust}$ is obtained.
+As mentioned, Powell's methods update the inverse of the coefficient matrix for either the
+interpolation system or the corresponding \kkt system by the Sherman-Morrison-Woodbury formula.
 To keep the interpolation problem well-conditioned, $y_k^{\drop}$ is chosen
-to enlarge the denominator in this formula, which is also the ratio between
+to enlarge the magnitude of the denominator in this formula, which is also the ratio between
 the determinants of the old and new coefficient matrices.\footnote{
     Suppose that~$W$ is a square matrix and consider~$W_+ = W + UV^\T$, where $U$ and~$V$ are two
     matrices of the same size and $UV^\T$ has the same size as $W$.
@@ -618,13 +612,12 @@ the determinants of the old and new coefficient matrices.\footnote{
     and~$I+V^\T W^{-1}U$ are nonsingular. The number~$\det(I+V^\T W^{-1}U)$ is the only
     denominator involved in the numerical computation of the formula.
 }
-In fully determined interpolation, the aforementioned denominator is~$\ell_k^\drop(\iter^{\trust})$,
-where~$\ell_k^\drop$ is the Lagrange function associated with~$\xpt$ corresponding to~$y_k^\drop$
-(see~\mbox{\cite[\S~2]{Powell_2001}}, particularly \mbox{equations~(10)--(13)}).
-In underdetermined quadratic interpolation, the denominator is lower
-bounded by~$[\ell_k^{\drop}(\iter^{\trust})]^2$ (see~\mbox{\cite[\S~2]{Powell_2004c}}, particularly
-equation~(2.12) and Lemma~1, where the denominator is $\sigma$, and~$\ell_k^{\drop}(\iter^{\trust})$
-is~$\tau$).
+In the fully determined interpolation, this denominator is~$\ell_k^\drop(\iter^{\trust})$,
+where~$\ell_k^\drop$ is the Lagrange function associated with~$\xpt$ corresponding
+to~$y_k^\drop$~(see equations~\mbox{(10)--(13)} and~\S~2 of~\cite{Powell_2001}).
+In the underdetermined interpolation, the denominator is lower
+bounded by~$[\ell_k^{\drop}(\iter^{\trust})]^2$~(see equation~(2.12), Lemma~1, and~\S~2 of \cite{Powell_2004c},
+where the denominator is $\sigma$, and~$\ell_k^{\drop}(\iter^{\trust})$ is~$\tau$).
 However, Powell's methods do not choose the point~$y_k^\drop$ merely according to this denominator, but also
 takes into account its distance to the trust-region center, giving a higher priority to farther
 points, as we can see in~\cite[equation~(56)]{Powell_2002} and~\cite[equations~(7.4)--(7.5)]{Powell_2006}, for example.
@@ -650,11 +643,11 @@ the current trust-region center~$\iter$, and then obtain~$\iter^{\geo}$ by solvi
 \end{equation}
 for some~$\radalt \in (0, \rad]$.
 The motivation for this problem is again to enlarge the magnitude of the
-denominator in the aforementioned Sherman-Morrison-Woodbury updating formula:
+aforementioned denominator in the Sherman-Morrison-Woodbury updating formula:
 for~\gls{uobyqa}, the denominator is $\ell_k^{\drop}(x)$, while for~\gls{newuoa}, \gls{bobyqa},
 and \gls{lincoa}, the denominator is lower bounded by $[\ell_k^{\drop}(x)]^2$.
-Indeed, \gls{newuoa} also tries maximizing the denominator directly when~\eqref{eq:biglag}
-fails to render a large enough denominator, which does not happen often~(see~\cite[\S~6]{Powell_2006}).
+In addition, \gls{newuoa} maximizes the denominator directly if~\eqref{eq:biglag}
+fails to render a large enough denominator, which rarely happens~\cite[\S~6]{Powell_2006}.
 
 Given the two possible updates~\eqref{eq:xpt-update-tr} and~\eqref{eq:xpt-update-geo} of the
 interpolation set, it is clear that the number of interpolation points remains constant.
@@ -880,7 +873,7 @@ a feasible problem will not be modified by~\gls{lincoa}.
 Another noticeable preprocessing of the constraints made by \gls{pdfo} is the treatment of the
 linear equality constraints in~\eqref{eq:pdfo-l}.
 As long as these constraints are consistent, we reformulate~\eqref{eq:pdfo} into
-an~$(n - \rank \aeq)$-dimensional problem by eliminating these constraints.  This is done using a
+an~$(n - \rank \aeq)$-dimensional problem by eliminating these constraints.  This is done by a
 QR factorization of~$\aeq$. The main motivation for this reformation comes again from~\gls{lincoa},
 which accepts only linear inequality constraints. An alternative approach is to write a linear
 equality constraint as two inequalities, but our approach reduces the dimension of the problem,
