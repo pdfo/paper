@@ -375,7 +375,7 @@ methods. We will not repeat Powell's description of these methods but summarize 
 viewpoint, aiming at easing the understanding of Powell's methods and paving the way for further
 development based on them.
 
-The analysis for Powell's \gls{dfo} methods is not within the scope of this paper.
+The analysis of Powell's \gls{dfo} methods is not within the scope of this paper.
 Under some assumptions, adapted versions of Powell's algorithms may be covered by existing theory
 for trust-region \gls{dfo} methods~\cite[Chapter~10]{Conn_Scheinberg_Vicente_2009b}. However, it
 will still be interesting to pursue a tailored theory for Powell's algorithms.
@@ -616,7 +616,7 @@ In the fully determined interpolation, this denominator is~$\ell_k^\drop(\iter^{
 where~$\ell_k^\drop$ is the Lagrange function associated with~$\xpt$ corresponding
 to~$y_k^\drop$~(see equations~\mbox{(10)--(13)} and~\S~2 of~\cite{Powell_2001}).
 In the underdetermined interpolation, the denominator is lower
-bounded by~$[\ell_k^{\drop}(\iter^{\trust})]^2$~(see equation~(2.12), Lemma~1, and~\S~2 of \cite{Powell_2004c},
+bounded by~$[\ell_k^{\drop}(\iter^{\trust})]^2$~(see equation~(2.12), Lemma~1, and~\S~2 of~\cite{Powell_2004c},
 where the denominator is $\sigma$, and~$\ell_k^{\drop}(\iter^{\trust})$ is~$\tau$).
 However, Powell's methods do not choose the point~$y_k^\drop$ merely according to this denominator, but also
 takes into account its distance to the trust-region center, giving a higher priority to farther
@@ -873,7 +873,7 @@ a feasible problem will not be modified by~\gls{lincoa}.
 Another noticeable preprocessing of the constraints made by \gls{pdfo} is the treatment of the
 linear equality constraints in~\eqref{eq:pdfo-l}.
 As long as these constraints are consistent, we reformulate~\eqref{eq:pdfo} into
-an~$(n - \rank \aeq)$-dimensional problem by eliminating these constraints.  This is done by a
+an~$(n - \rank \aeq)$-dimensional problem by eliminating these constraints.  This is done using a
 QR factorization of~$\aeq$. The main motivation for this reformation comes again from~\gls{lincoa},
 which accepts only linear inequality constraints. An alternative approach is to write a linear
 equality constraint as two inequalities, but our approach reduces the dimension of the problem,
@@ -1159,8 +1159,8 @@ parameters~\cite{Shi_Etal_2022a}.
 \subsection{Robustness with respect to failures of function evaluations}
 \label{ssec:nan}
 
-We now test the robustness of the solvers with respect to failures of function evaluations.
-We assume that the objective function returns NaN when the evaluation fails, which occurs randomly
+We now test the robustness of the solvers when function evaluations fail from time to time.
+We assume that the objective function returns NaN if the evaluation fails, which occurs randomly
 with a certain probability. As mentioned in Section~\ref{ssec:barrier}, \gls{pdfo} uses a moderated extreme
 barrier to handle such failures. To verify the effectiveness of this approach, we compare \gls{pdfo}
 with its variant that does not apply the barrier. To make the experiment more informative, we
