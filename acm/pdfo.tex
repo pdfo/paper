@@ -1,25 +1,27 @@
-\documentclass[manuscript,screen,review]{acmart}
+\documentclass[
+    screen,  % A screen version: hyperlinks are colored
+    review,  % A review version: lines are numbered and hyperlinks are colored
+    % nonacm,  % A non-ACM version: no ACM copyright notice
+]{acmart}
 \usepackage{booktabs}
-\usepackage{caption}
 \usepackage{subcaption}
+\usepackage{microtype}
 
-% Mathematics
-\usepackage{mathtools}
+%% Mathematics
 \usepackage{bbm}
 \numberwithin{equation}{section}
 
-% SI units
+%% SI units
 \usepackage{siunitx}
 \sisetup{
     group-minimum-digits=4,
     group-separator={,},
 }
 
-% Graphics
-\usepackage{graphicx}
+%% Graphics
 \graphicspath{{figures/}}
 
-% Listings
+%% Listings
 \usepackage{listings}
 \usepackage{lstautogobble}
 \lstset{
@@ -46,12 +48,13 @@
     }
 }{}
 
-% Glossaries
+%% Glossaries
 \usepackage[acronym]{glossaries-extra}
 \glsdisablehyper
 \renewcommand*{\glsfirstlongdefaultfont}[1]{#1\nolinebreak}
 \newabbreviation{dfo}{DFO}{derivative-free optimization}
 \newabbreviation{psb}{PSB}{Powell's symmetric Broyden}
+\newabbreviation{mdo}{MDO}{Multidisciplinary Design Optimization}
 \newabbreviation{rbf}{RBF}{radial basis function}
 \newabbreviation{roc}{ROC}{receiver operating characteristic}
 \newabbreviation{svm}{SVM}{support vector machine}
@@ -68,7 +71,7 @@
 \newacronym{uobyqa}{{UOBYQA}}{Unconstrained Optimization BY Quadratic Approximation}
 \newacronym{prima}{{PRIMA}}{Reference Implementation for Powell's methods with Modernization and Amelioration}
 
-% Control sequences, macros, and definitions
+%% Control sequences, macros, and definitions
 \usepackage{ifthen}
 \usepackage{xargs}
 \usepackage{xspace}
@@ -140,7 +143,7 @@
 % \setcopyright{acmcopyright}
 % \copyrightyear{2023}
 % \acmYear{2023}
-% \acmDOI{XXXXXXX.XXXXXXX}
+\acmDOI{}
 
 
 \begin{document}
@@ -150,18 +153,21 @@
 %%
 \acmJournal{TOMS}
 \title{PDFO --- A Cross-Platform Package for Powell's Derivative-Free Optimization Solvers}
+% \subtitle{}
 \author{Tom M. Ragonneau}
-\email{tom.ragonneau@polyu.edu.hk}
 \orcid{0000-0003-2717-2876}
+\email{tom.ragonneau@polyu.edu.hk}
 \author{Zaikun Zhang}
-\email{zaikun.zhang@polyu.edu.hk}
 \orcid{0000-0001-8934-8190}
+\email{zaikun.zhang@polyu.edu.hk}
 \affiliation{%
-    \institution{Department of Applied Mathematics, The Hong Kong Polytechnic University}
+    % \position{}
+    \institution{The Hong Kong Polytechnic University}
+    \department{Department of Applied Mathematics}
     % \streetaddress{}
-    % \city{}
+    \city{Hong Kong SAR}
     % \state{}
-    \country{Hong Kong}
+    \country{China}
     % \postcode{}
 }
 
@@ -199,9 +205,9 @@
 
 \keywords{derivative-free optimization, COBYLA, UOBYQA, NEWUOA, BOBYQA, LINCOA}
 
-\received{\today}
-% \received[revised]{12 March 2009}
-% \received[accepted]{5 June 2009}
+% \received{}
+% \received[revised]{}
+% \received[accepted]{}
 
 \maketitle
 
@@ -229,7 +235,7 @@ The signature of the Python subroutine is consistent with the \texttt{minimize} 
     \url{https://www.pdfo.net}\,.
 \end{center}
 It has been downloaded more than \num{50000} times as of February 2023, mirror downloads excluded.
-Moreover, it is one of the optimization engines in GEMSEO~\cite{Gallard_Etal_2018},\footnote{\url{https://gemseo.readthedocs.io}\,.} an industrial software package for Multidisciplinary Design Optimization (MDO).
+Moreover, it is one of the optimization engines in GEMSEO~\cite{Gallard_Etal_2018},\footnote{\url{https://gemseo.readthedocs.io}\,.} an industrial software package for \gls{mdo}.
 
 \Gls{pdfo} is not the first attempt to facilitate the usage of Powell's solvers in languages other than Fortran.
 Various efforts have been made in this direction.
@@ -273,7 +279,7 @@ A detailed exposition of~\gls{pdfo} is given in Section~\ref{sec:pdfo}, highligh
 Section~\ref{sec:numerical} presents some experiments on \gls{pdfo}, demonstrating its stability under noise, tolerance of function evaluation failures, and potential in hyperparameter optimization.
 We conclude the paper with some remarks in Section~\ref{sec:conclude}.
 
-\section{A brief review of \gls{dfo} methods}
+\section{A brief review of \texorpdfstring{\gls{dfo}}{DFO} methods}
 \label{sec:dfo}
 
 Consider a nonlinear optimization problem
@@ -289,7 +295,7 @@ The first strategy, known as direct search,\footnote{
     Powell rarely used the word ``derivative-free optimization.''
     The only exceptions known to us are his last paper~\cite{Powell_2015} and his distinguished lecture titled ``A parsimonious way of constructing quadratic models from values of the objective function in derivative-free optimization'' at the National Center for Mathematics and Interdisciplinary Sciences, Beijing on November 4, 2011~\cite{Buhmann_Fletcher_Iserles_Toint_2018}.
 } samples the objective function~$\obj$ and chooses iterates by simple comparisons of function values, examples including the Nelder-Mead algorithm~\cite{Nelder_Mead_1965}, the MADS methods~\cite{Audet_Dennis_2006,Digabel_2011}, and BFO~\cite{Porcelli_Toint_2017,Porcelli_Toint_2020,Porcelli_Toint_2022}.
-See~\cite{Kolda_Lewis_Torczon_2003},~\cite[Chapters~7 and~8]{Conn_Scheinberg_Vicente_2009b},~\mbox{\cite[Part~3]{Audet_Hare_2017}}, and~\mbox{\cite[\S~2.1]{Larson_Menickelly_Wild_2019}} for more discussions on this paradigm, and we refer to~\cite{Gratton_Etal_2015,Gratton_Etal_2019} for recent developments of randomized methods in this category.
+See~\cite{Kolda_Lewis_Torczon_2003},~\cite[Chapters~7 and~8]{Conn_Scheinberg_Vicente_2009b},~\cite[Part~3]{Audet_Hare_2017}, and~\cite[\S~2.1]{Larson_Menickelly_Wild_2019} for more discussions on this paradigm, and we refer to~\cite{Gratton_Etal_2015,Gratton_Etal_2019} for recent developments of randomized methods in this category.
 
 The second strategy approximates the original problem~\eqref{eq:nlc} by relatively simple models and locates the iterates according to these models.
 Algorithms applying this strategy are referred to as model-based methods.
@@ -343,7 +349,7 @@ Such a point is selected according to the objective function or a merit function
 After choosing the trust-region center~$\iter$, with the trust-region model~$\objm$ constructed according to~\eqref{eq:itpls}, a trial point~$\iter^{\trust}$ is then obtained by solving approximately the trust-region subproblem
 \begin{equation}
     \label{eq:trsp}
-    \min_{x \in \fsetm} ~ \objm(x) \quad \st \quad ~ \norm{x - \iter} \le \rad,
+    \min_{x \in \fsetm} ~ \objm(x) \quad \st \quad \norm{x - \iter} \le \rad,
 \end{equation}
 where~$\rad$ is the trust-region radius, and~$\norm{\cdot}$ is the~$\ell_2$-norm in~$\R^n$.
 In this subproblem, the set~$\fsetm \subseteq \R^n$ is a local approximation of the feasible region~$\fset$.
@@ -360,14 +366,14 @@ Given a base point~$y^{\base}\in \R^n$, which may depend on~$k$, a linear model~
     \label{eq:litpls}
     \objm(y^{\base}) + (y -y^{\base})^{\T} \nabla \objm(y^{\base})  = \obj(y),  ~ y \in \xpt,
 \end{equation}
-which is a linear system with respect to~$\obj(y^\base) \in \R$ and~$\nabla \obj(y^\base) \in \R^n$, the degrees of freedom being~$n+1$.
+which is a linear system with respect to~$\obj(y^\base) \in \R$ and~$\nabla \obj(y^\base) \in \R^n$, the degrees of freedom being~$n + 1$.
 \Gls{cobyla} builds linear models by the system~\eqref{eq:litpls}, with~$\xpt$ being an interpolation set of~$n + 1$ points updated along the iterations.
 Similarly, if~$\objm$ is a quadratic model, then~\eqref{eq:itpls} is equivalent to
 \begin{equation}
     \label{eq:qitpls}
     \objm(y^{\base}) + (y - y^{\base})^{\T} \nabla \objm(y^{\base}) + \frac{1}{2} (y - y^{\base})^{\T}  \nabla^2 \objm(y^{\base}) (y - y^{\base}) = \obj(y),  ~ y \in \xpt,
 \end{equation}
-a linear system with unknowns~$\objm(y^\base) \in \R$, $\nabla \objm(y^\base) \!\in\! \R^n$, and~$\nabla^2 \objm(y^{\base})\!\in\!\R^{n \times n}$, the degrees of freedom being~$(n + 1)(n + 2) / 2$ due to the symmetry of~$\nabla^2 \objm(y^\base)$.
+a linear system with unknowns~$\objm(y^\base) \in \R$, $\nabla \objm(y^\base) \!\in\! \R^n$, and~$\nabla^2 \objm(y^{\base})\!\in\!\R^{n \times n}$, the degrees of freedom being~${(n + 1)(n + 2) / 2}$ due to the symmetry of~$\nabla^2 \objm(y^\base)$.
 \Gls{uobyqa} constructs quadratic models by the system~\eqref{eq:qitpls}.
 To decide a quadratic model~$\objm$ completely by this system alone, \gls{uobyqa} requires that~$\xpt$ contains~$(n + 1) (n + 2) / 2$ points, and~$\obj$ should have been evaluated at all these points before the system can be formed.
 Even though most of these points will be reused at the subsequent iterations so that the number of function evaluations needed per iteration is tiny (see Section~\ref{subsec:iptset}), we must perform~$(n + 1)(n + 2) / 2$ function evaluations during the very first iteration.
@@ -390,7 +396,7 @@ where~$\qspace$ is the space of polynomials on~$\R^n$ of degree at most~$2$.
 which is inspired by the least-change property of quasi-Newton updates~\cite{Dennis_Schnabel_1979}, although other functionals are possible (see~\cite{Conn_Toint_1996,Bandeira_Scheinberg_Vicente_2012,Powell_2013,Zhang_2014,Xie_Yuan_2023} for example).
 The first model~$\objm[1]$ is obtained by setting~$\objm[0] = 0$.
 Powell~\cite{Powell_2013} referred to his approach as the \emph{symmetric Broyden update} of quadratic models (see also~\cite[\S~3.6]{Zhang_2012} and~\cite[\S~2.4.2]{Ragonneau_2022}).
-It can be regarded as a derivative-free version of \gls{psb} quasi-Newton update~\cite{Powell_1970b}, which minimizes the functional~$\func_k$ among all quadratic polynomials that fulfill~$Q(\iter) = \obj(\iter)$, $\nabla Q(\iter) = \nabla \obj(\iter)$, and~$\nabla Q(\iter[k - 1]) = \nabla \obj(\iter[k - 1])$ (see~\cite[Theorem~4.2]{Dennis_Schnabel_1979}), with~$\iter$ and~$\iter[k - 1]$ being the current and the previous iterates, respectively.
+It can be regarded as a derivative-free version of \gls{psb} quasi-Newton update~\cite{Powell_1970b}, which minimizes the functional~$\func_k$ among all quadratic polynomials that fulfill~$Q(\iter) = \obj(\iter)$, $\nabla Q(\iter) = \nabla \obj(\iter)$, and~${\nabla Q(\iter[k - 1]) = \nabla \obj(\iter[k - 1])}$ (see~\cite[Theorem~4.2]{Dennis_Schnabel_1979}), with~$\iter$ and~$\iter[k - 1]$ being the current and the previous iterates, respectively.
 The interpolation problem~\mbox{\eqref{eq:undqitp}--\eqref{eq:leastchange}} is a convex quadratic programming problem with respect to the coefficients of the quadratic model.
 
 \paragraph{\textnormal{\textbf{Solving the interpolation problem.}}}
@@ -402,7 +408,7 @@ Since each iteration of \gls{cobyla} alters the interpolation set~$\xpt$ by only
 For the underdetermined quadratic interpolation~\mbox{\eqref{eq:undqitp}--\eqref{eq:leastchange}}, \gls{newuoa}, \gls{bobyqa}, and \gls{lincoa} maintain and update the inverse of the coefficient matrix for the KKT system of~\mbox{\eqref{eq:undqitp}--\eqref{eq:leastchange}}.
 The update is also done by the Sherman-Morrison-Woodbury formula as detailed in~\cite[\S~2]{Powell_2004c}.
 In this case, each iteration modifies the coefficient matrix and its inverse by rank-$2$ updates.
-In addition, the columns of this inverse matrix readily provide the coefficients of Lagrange functions that make the interpolation problem~\mbox{\eqref{eq:undqitp}--\eqref{eq:leastchange}} easy to solve (see~\cite[\S~3]{Powell_2004b})
+In addition, the columns of this inverse matrix readily provide the coefficients of Lagrange functions that make the interpolation problem~\mbox{\eqref{eq:undqitp}--\eqref{eq:leastchange}} easy to solve (see~\mbox{\cite[\S~3]{Powell_2004b}}).
 
 \paragraph{\textnormal{\textbf{The base point.}}}
 
@@ -426,12 +432,12 @@ At a normal iteration, Powell's methods compute a point~$\iter^{\trust} \in \R^n
 where~$y_k^{\drop} \in \xpt$ is selected after obtaining~$\iter^{\trust}$, aiming to maintain the well-poisedness of~$\xpt[k + 1]$.
 As mentioned, Powell's methods update the inverse of the coefficient matrix for either the interpolation system or the corresponding \kkt system by the Sherman-Morrison-Woodbury formula.
 To keep the interpolation problem well-conditioned, $y_k^{\drop}$ is chosen to enlarge the magnitude of the denominator in this formula, which is also the ratio between the determinants of the old and new coefficient matrices.\footnote{
-    Suppose that~$W$ is a square matrix and consider~$W_+ = W + UV^\T$, where $U$ and~$V$ are two matrices of the same size and $UV^\T$ has the same size as $W$.
-    Then $\det(W_+) = \det(W)\det(I+V^\T W^{-1}U)$, and the Sherman-Morrison-Woodbury formula is $(W_+)^{-1} = W^{-1} -W^{-1}U(I+V^\T W^{-1}U)^{-1} V^\T W^{-1}$, assuming that both~$W$ and~$I+V^\T W^{-1}U$ are nonsingular.
+    Suppose that~$W$ is a square matrix and consider~$W_+ = W + UV^\T$, where~$U$ and~$V$ are two matrices of the same size and~$UV^\T$ has the same size as~$W$.
+    Then~$\det(W_+) = \det(W)\det(I+V^\T W^{-1}U)$, and the Sherman-Morrison-Woodbury formula is~$(W_+)^{-1} = W^{-1} -W^{-1}U(I+V^\T W^{-1}U)^{-1} V^\T W^{-1}$, assuming that both~$W$ and~$I+V^\T W^{-1}U$ are nonsingular.
     The number~$\det(I+V^\T W^{-1}U)$ is the only denominator involved in the numerical computation of the formula.
 }
 In the fully determined interpolation, this denominator is~$\ell_k^\drop(\iter^{\trust})$, where~$\ell_k^\drop$ is the Lagrange function associated with~$\xpt$ corresponding to~$y_k^\drop$~(see equations~\mbox{(10)--(13)} and~\S~2 of~\cite{Powell_2001}).
-In the underdetermined case, the denominator is lower bounded by~$[\ell_k^{\drop}(\iter^{\trust})]^2$~(see equation~(2.12), Lemma~1, and~\S~2 of~\cite{Powell_2004c}, where the denominator is $\sigma$, and~$\ell_k^{\drop}(\iter^{\trust})$ is~$\tau$).
+In the underdetermined case, the denominator is lower bounded by~$[\ell_k^{\drop}(\iter^{\trust})]^2$~(see equation~(2.12), Lemma~1, and~\S~2 of~\cite{Powell_2004c}, where the denominator is~$\sigma$, and~$\ell_k^{\drop}(\iter^{\trust})$ is~$\tau$).
 However, Powell's methods do not choose the point~$y_k^\drop$ merely according to this denominator, but also take into account its distance to the trust-region center, giving a higher priority to farther points, as we can see in~\cite[equation~(56)]{Powell_2002} and~\cite[equations~(7.4)--(7.5)]{Powell_2006}, for example.
 
 An alternative update of the interpolation set takes place when the methods detect that~$\objm$ does not represent~$\obj$ well enough, attempting to improve the geometry of the interpolation set.
@@ -441,21 +447,21 @@ In this case, the methods first select a point~$y_k^{\drop} \in \xpt$ to drop fr
     \xpt[k + 1] = \big(\xpt \setminus \set{y_k^{\drop}}\big) \cup \set{\iter^{\geo}},
 \end{equation}
 where~$\iter^{\geo} \in \R^n$ is chosen to improve the well-poisedness of~$\xpt[k + 1]$.
-In \gls{cobyla}, the choice of~$y_k^{\drop}$ and~$\iter^{\geo}$ is guided by the geometrical fact that the interpolation set forms a simplex in~$\R^n$, trying to keep~$\xpt[k + 1]$ away from falling into an~$(n - 1)$-dimensional subspace, as is detailed in~\mbox{\cite[equations~(15)--(17)]{Powell_1994}}.
+In \gls{cobyla}, the choice of~$y_k^{\drop}$ and~$\iter^{\geo}$ is guided by the geometrical fact that the interpolation set forms a simplex in~$\R^n$, trying to keep~$\xpt[k + 1]$ away from falling into an~$(n - 1)$-dimensional subspace, as is detailed in~\cite[equations~(15)--(17)]{Powell_1994}.
 The other four methods select~$y_k^{\drop}$ from~$\xpt$ by maximizing its distance to the current trust-region center~$\iter$, and then obtain~$\iter^{\geo}$ by solving
 \begin{equation}
     \label{eq:biglag}
         \max_{x \in \fset} ~ \abs{\ell_k^{\drop}(x)} \quad \st \quad  \norm{x - \iter} \le \radalt
 \end{equation}
 for some~$\radalt \in (0, \rad]$.
-The motivation for this problem is again to enlarge the magnitude of the aforementioned denominator in the Sherman-Morrison-Woodbury updating formula: for~\gls{uobyqa}, the denominator is $\ell_k^{\drop}(x)$, while for~\gls{newuoa}, \gls{bobyqa}, and \gls{lincoa}, the denominator is lower bounded by $[\ell_k^{\drop}(x)]^2$.
+The motivation for this problem is again to enlarge the magnitude of the aforementioned denominator in the Sherman-Morrison-Woodbury updating formula: for~\gls{uobyqa}, the denominator is~$\ell_k^{\drop}(x)$, while for~\gls{newuoa}, \gls{bobyqa}, and \gls{lincoa}, the denominator is lower bounded by~$[\ell_k^{\drop}(x)]^2$.
 In addition, \gls{newuoa} maximizes this denominator directly if~\eqref{eq:biglag} fails to make its magnitude large enough, which rarely happens~\cite[\S~6]{Powell_2006}.
 
 Given the two possible updates~\eqref{eq:xpt-update-tr} and~\eqref{eq:xpt-update-geo} of the interpolation set, it is clear that the number of interpolation points remains constant.
 As mentioned earlier, this number is~$n + 1$ in \gls{cobyla} and~$(n + 1) (n + 2) / 2$ in \gls{uobyqa}.
 \Gls{newuoa}, \gls{bobyqa}, and \gls{lincoa} set it to an integer in~$[n+2, (n + 1) (n + 2) / 2]$, with the default value being~$2n + 1$, which is proved optimal in terms of the well-poisedness of the initial interpolation set chosen by Powell for \gls{newuoa}~\cite{Ragonneau_Zhang_2023a}.
 
-\subsection{\gls{cobyla}}
+\subsection{\texorpdfstring{\gls{cobyla}}{COBYLA}}
 \label{subsec:cobyla}
 
 Published in 1994, \gls{cobyla} was the first model-based \gls{dfo} solver by Powell.
@@ -464,7 +470,7 @@ It aims to solve problem~\eqref{eq:nlc} with the feasible region
 \begin{equation*}
     \fset \eqdef \set{x \in \R^n : \con(x) \ge 0, ~ i = 1, \dots, m},
 \end{equation*}
-where~$\con : \R^n \to \R$ denotes the~$i$th constraint function for each $i \in \set{1, 2, \dots, m}$.
+where~$\con : \R^n \to \R$ denotes the~$i$th constraint function for each~$i \in \set{1, 2, \dots, m}$.
 The same as the objective function, all constraints are assumed to be accessible only through function values.
 
 As mentioned before, iteration~$k$ of \gls{cobyla} models the objective and the constraint functions with linear interpolants on the interpolation set~$\xpt$ of~$n + 1$ points.
@@ -481,12 +487,12 @@ In the first stage, it solves
 \end{equation*}
 where~$[t]_{-} = \max \set{0, -t}$ for any~$t \in \R$.
 In doing so, the method attempts to reduce the~$\ell_{\infty}$-violation of the linearized constraints within the trust region.
-If the first stage finds a point in the interior of the trust region, then the second stage uses the resultant freedom in $x$ to minimize the linearized objective function~$\objm$ within the trust region subject to no increase in any greatest violation of the linearized constraints.
+If the first stage finds a point in the interior of the trust region, then the second stage uses the resultant freedom in~$x$ to minimize the linearized objective function~$\objm$ within the trust region subject to no increase in any greatest violation of the linearized constraints.
 
 \Gls{cobyla} assesses the quality of points and updates the trust-region radius according to an~$\ell_\infty$-merit function and a reduction ratio based on it (see~\cite[equations~(5),~(9), and~(10)]{Powell_1994}).
 It never increases the trust-region radius, and reduces the radius if the geometry of~$\xpt$ is acceptable but the trust-region trial point~$\iter^\trust$ is too close to~$\iter$ or does not render a big enough reduction ratio~\cite[equation~(11)]{Powell_1994}.
 
-\subsection{\gls{uobyqa}}
+\subsection{\texorpdfstring{\gls{uobyqa}}{UOBYQA}}
 \label{subsec:uobyqa}
 
 In 2002, Powell published \gls{uobyqa}~\cite{Powell_2002}, named after ``\glsxtrlong{uobyqa}.''
@@ -505,7 +511,7 @@ The value of~$\radlb[k]$ is never increased and is decreased when the \gls{uobyq
 It decides so if~$\rad[k]$ reaches its lower bound~$\radlb[k]$, the current trust-region trial step does not perform well, and the current interpolation set seems adequate for the current resolution.
 See~\cite[\S~3]{Powell_2002} for more information on the updates of~$\rad$ and~$\radlb[k]$.
 
-\subsection{\gls{newuoa}, \gls{bobyqa}, and \gls{lincoa}}
+\subsection{\texorpdfstring{\gls{newuoa}}{NEWUOA}, \texorpdfstring{\gls{bobyqa}}{BOBYQA}, and \texorpdfstring{\gls{lincoa}}{LINCOA}}
 \label{subsec:nbloa}
 
 Later on, based on the underdetermined quadratic interpolation introduced in Subsection~\ref{subsec:iptprob},
@@ -522,11 +528,9 @@ To solve the trust-region subproblem~\eqref{eq:trsp}, \gls{newuoa} employs the S
 An accessible description of the TCG algorithms employed by \gls{bobyqa} and \gls{lincoa} can be found in~\cite[\S~6.2.1 and \S~6.2.2]{Ragonneau_2022}.
 \Gls{newuoa}, \gls{bobyqa}, and \gls{lincoa} manage the trust-region radius in a way similar to \gls{uobyqa}, imposing a lower bound~$\radlb$ on~$\rad$ when updating~$\rad$.
 
-\begin{sloppypar}
-    When solving the geometry-improving subproblem~\eqref{eq:biglag}, \gls{newuoa} first takes $\iter \pm \radalt (y_k^\drop - \iter)/\norm{y_k^\drop -\iter}$, with the sign that provides the larger value of~$\ell_k^\drop$, and then revises it by a procedure similar to the two-dimensional searches that improve the TCG step for~\eqref{eq:trsp}~(see~\cite[\S~6]{Powell_2006}).
-    \Gls{bobyqa} computes two approximate solutions to~\eqref{eq:biglag} and chooses the better one: the first one solves~\eqref{eq:biglag} with an additional constraint that~$x$ is located on the straight lines through~$\iter$ and another point in~$\xpt$, and the second is obtained by a Cauchy step for~\eqref{eq:biglag} (see~\cite[\S~3]{Powell_2009}).
-    The geometry-improving step of \gls{lincoa} is more complex, as it is chosen from three approximate solutions to~\eqref{eq:biglag}:
-\end{sloppypar}
+When solving the geometry-improving subproblem~\eqref{eq:biglag}, \gls{newuoa} first takes~$\iter \pm \radalt (y_k^\drop - \iter)/\norm{y_k^\drop -\iter}$, with the sign that provides the larger value of~$\ell_k^\drop$, and then revises it by a procedure similar to the two-dimensional searches that improve the TCG step for~\eqref{eq:trsp}~(see~\cite[\S~6]{Powell_2006}).
+\Gls{bobyqa} computes two approximate solutions to~\eqref{eq:biglag} and chooses the better one: the first one solves~\eqref{eq:biglag} with an additional constraint that~$x$ is located on the straight lines through~$\iter$ and another point in~$\xpt$, and the second is obtained by a Cauchy step for~\eqref{eq:biglag} (see~\cite[\S~3]{Powell_2009}).
+The geometry-improving step of \gls{lincoa} is more complex, as it is chosen from three approximate solutions to~\eqref{eq:biglag}:
 \begin{enumerate}
     \item the point that maximizes~$\abs{\ell_k^{\drop}}$ within the trust region on the lines through~$\iter$ and another point in~$\xpt$,
     \item a point obtained by a gradient step that maximizes~$\abs{\ell_k^{\drop}}$ within the trust region, and
@@ -541,7 +545,7 @@ Therefore, \gls{bobyqa} is a feasible method.
 In contrast, \gls{lincoa} may violate the linear constraints when solving the geometry-improving subproblem and when setting up the initial interpolation set.
 Consequently, \gls{lincoa} is an infeasible method, which requires~$\obj$ to be defined even when the linear constraints are not satisfied.
 
-\section{The \gls{pdfo} package}
+\section{The \texorpdfstring{\gls{pdfo}}{PDFO} package}
 \label{sec:pdfo}
 
 This section details the main features of \gls{pdfo}, in particular the signature of the main function, solver selection, problems preprocessing, bug fixes, and handling failures of function evaluations.
@@ -566,7 +570,7 @@ It takes for input an optimization problem of the form
 where~$\obj$ a real-valued objective function, while~$\ceq$ and~$\cub$ are vector-valued constraint functions.
 The bound constraints are given by~$n$-dimensional vectors~$\xl$ and~$\xu$, which may take infinite values.
 The linear constraints are formulated by real matrices~$\aeq$ and~$\aub$ together with real vectors~$\beq$ and~$\bub$ of proper sizes.
-We allow one or more of the constraints~\eqref{eq:pdfo-b}--\eqref{eq:pdfo-nl} to be absent.
+We allow one or more of the constraints~\mbox{\eqref{eq:pdfo-b}--\eqref{eq:pdfo-nl}} to be absent.
 Being a specialization of~\eqref{eq:nlc}, problem~\eqref{eq:pdfo} is broad enough to cover numerous applications of \gls{dfo}.
 
 In the Python version of \gls{pdfo}, the signature of the \pdfofun function is compatible with the \texttt{minimize} function available in the \texttt{scipy.optimize} module of SciPy.
@@ -688,7 +692,7 @@ For a testing problem with the objective function~$\obj$, we define
     \label{eq:noisy-obj}
     \tilde{\obj}_\sigma(\iter[]) = [1 + \sigma R(\iter[])] \obj(\iter[]),
 \end{equation}
-with $R(\iter[])\sim \NN(0, 1)$ being independent and identically distributed when~$x$ varies.
+with~$R(\iter[]) \sim \NN(0, 1)$ being independent and identically distributed when~$x$ varies.
 If~$\sigma = 0$, then~$\tilde{f}_\sigma = f$, corresponding to the noise-free case.
 In general,~$\sigma$ equals the standard deviation of the noise.
 
@@ -785,7 +789,7 @@ For a testing problem with the objective function~$\obj$, we define
         \, \text{NaN} & \text{otherwise},
     \end{cases}
 \end{equation}
-where $U(\iter[])$ follows the uniform distribution on~$[0, 1]$, being independent and identically distributed when~$x$ varies.
+where~$U(\iter[])$ follows the uniform distribution on~$[0, 1]$, being independent and identically distributed when~$x$ varies.
 Note that~$\hat{\obj}_0 = f$.
 In the experiment, the solvers can evaluate~$\obj$ only via~$\hat{\obj}_p$.
 We plot the performance profiles of the solvers in a way that is similar to the previous experiment.
@@ -828,19 +832,19 @@ Two profiles are included for each~$p$, with the convergence tolerance being~$\t
 The contrast is clear.
 Compared with finite-difference \gls{cg} and \gls{bfgs}, \gls{pdfo} is more efficient and solves significantly more problems given the same convergence tolerance.
 Moreover, comparing \gls{pdfo} and its no-barrier counterpart, we see that the moderated extreme barrier improves evidently the robustness of \gls{pdfo} with respect to failures of function evaluations, even though it is a quite naive approach.
-When~$p = 0.05$, the function evaluation fails roughly once every \num{20} times, but \gls{pdfo} can still solve almost~$60\%$ of the problems up to the convergence tolerance~$\tau = 10^{-4}$ in the sense of~\eqref{eq:cvt}, whereas all its competitors solve less than $25\%$.
+When~$p = 0.05$, the function evaluation fails roughly once every \num{20} times, but \gls{pdfo} can still solve almost~$60\%$ of the problems up to the convergence tolerance~$\tau = 10^{-4}$ in the sense of~\eqref{eq:cvt}, whereas all its competitors solve less than~$25\%$.
 We speculate that the moderated extreme barrier will also benefit other model-based \gls{dfo} methods, including those based on finite differences.
 It deserves further investigation in the future.
 
-\subsection{An illustration of hyperparameter optimization with \gls{pdfo}}
+\subsection{An illustration of hyperparameter optimization with \texorpdfstring{\gls{pdfo}}{PDFO}}
 \label{subsec:hypertune}
 
 We now consider a hyperparameter optimization problem from machine learning and illustrate the potential of \gls{pdfo} for such problems.
 We compare \gls{pdfo} with \gls{rs} and \gls{tpe}, two solvers from the Python package \texttt{hyperopt} for hyperparameter optimization.
 
 Our experiment is inspired by~\cite[\S~5.3]{Ghanbari_Scheinberg_2017}, which investigates the application of trust-region \gls{dfo} methods to hyperparameter optimization.
-Similar to~\cite[\S~5.3]{Ghanbari_Scheinberg_2017}, we tune the $C$-SVC model detailed in~\cite[\S~2.1]{Chang_Lin_2011} for binary classifications.
-Given a dataset~$\{(u_i,z_i)\}_{i=1}^\sn$, with~$u_i \in \R^d$ being a vector of features and~$z_i \in \{-1,1\}$ being the corresponding label, the $C$-SVC constructs a classifier by solving
+Similar to~\cite[\S~5.3]{Ghanbari_Scheinberg_2017}, we tune the~$C$-SVC model detailed in~\cite[\S~2.1]{Chang_Lin_2011} for binary classifications.
+Given a dataset~$\{(u_i,z_i)\}_{i=1}^\sn$, with~$u_i \in \R^d$ being a vector of features and~$z_i \in \{-1,1\}$ being the corresponding label, the~$C$-SVC constructs a classifier by solving
 \begin{equation}
     \label{eq:svc}
         \min_{\alpha} ~ \frac{1}{2} \alpha^\trs Q \alpha - \alpha^\trs \ones \quad \st \quad 0 \leq \alpha \leq C, ~ \alpha^\trs z = 0, ~ \alpha \in\R^{\sn},
@@ -858,12 +862,12 @@ We model this process as solving the problem
 where~$P(C, \gamma)$ measures the performance corresponding to parameters~$(C, \gamma)$.
 In our experiment, we define~$P$ based on the AUC score~\cite[\S~3]{Ghanbari_Scheinberg_2017}, which lies in~$[0,1]$ and measures the quality of a classifier on a dataset, the higher the better.
 More precisely, $P(C, \gamma)$ is set to a five-fold cross-validation AUC score as follows.
-Split the training dataset~$\mathcal{S}$ into five folds, and train the $C$-SVC five times, each time solving~\eqref{eq:svc} on a union of four distinct folds.
+Split the training dataset~$\mathcal{S}$ into five folds, and train the~$C$-SVC five times, each time solving~\eqref{eq:svc} on a union of four distinct folds.
 After each training, calculate the AUC score of the resulting classifier on the fold not involved in the training, leading to five scores, the average of which is~$P(C, \gamma)$.
 
-Our experiment is based on binary classification problems from \mbox{LIBSVM},\footnote{\url{https://www.csie.ntu.edu.tw/~cjlin/libsvmtools/datasets}\,.} where we adopt three datasets detailed in Table~\ref{tab:htdata}.
+Our experiment is based on binary classification problems from LIBSVM,\footnote{\url{https://www.csie.ntu.edu.tw/~cjlin/libsvmtools/datasets}\,.} where we adopt three datasets detailed in Table~\ref{tab:htdata}.
 LIBSVM divides each dataset~$\mathcal{D}$ into two disjoint subsets, namely a training dataset~$\mathcal{S}$ and a testing dataset~$\mathcal{T}$.
-Given~$\mathcal{D}$, we evaluate~$P$ based on~$\mathcal{S}$ by the procedure described above, with~\eqref{eq:svc} being handled by the SVC class of the Python package \mbox{scikit-learn}.\footnote{\url{https://scikit-learn.org/stable/modules/generated/sklearn.svm.SVC.html}\,.}
+Given~$\mathcal{D}$, we evaluate~$P$ based on~$\mathcal{S}$ by the procedure described above, with~\eqref{eq:svc} being handled by the SVC class of the Python package scikit-learn.\footnote{\url{https://scikit-learn.org/stable/modules/generated/sklearn.svm.SVC.html}\,.}
 Then we solve~\eqref{eq:hypertune} by~\gls{pdfo}, \gls{rs}, or \gls{tpe} to obtain the tuned parameters~$(\bar{C}, \bar{\gamma})$.
 As in~\cite[\S~5.3]{Ghanbari_Scheinberg_2017}, we modify the constraints of~\eqref{eq:hypertune} to~$C \in [10^{-6}, 1]$ and~$\gamma \in [1, 10^{3}]$.
 For better scaling of the problem, we perform the maximization with respect to~$(\log_{10}C,\, \log_{10}\gamma)$ instead of~$(C, \gamma)$, the initial guess being chosen randomly from~$[-6, 0] \times [0, 3]$.
@@ -952,7 +956,7 @@ In doing so, we also hope to call for more investigation on \gls{dfo} methods fo
 \label{sec:conclude}
 
 We have presented the \gls{pdfo} package, which aims at simplifying the use of Powell's \gls{dfo} solvers by providing user-friendly interfaces.
-More information about the package can be found on the homepage of the package at \mbox{\url{https://www.pdfo.net}}\,, including the detailed syntax of the interfaces, an extensive documentation of the options, and several examples to illustrate the usage.
+More information about the package can be found on the homepage of the package at \url{https://www.pdfo.net}\,, including the detailed syntax of the interfaces, an extensive documentation of the options, and several examples to illustrate the usage.
 
 In addition, we have provided an overview of Powell's methods behind \gls{pdfo}.
 The overview does not intend to repeat Powell's description of the methods, but rather to provide a summary of the main features and structures of the methods, highlighting the intrinsic connections and similarities among them.
@@ -964,7 +968,12 @@ The interface can readily accommodate solvers other than those by Powell, for ex
 constrained \gls{dfo} problems (see~\cite[Chapters~5--7]{Ragonneau_2022} and~\cite{Ragonneau_Zhang_cobyqa}).
 
 Finally, we stress that \gls{pdfo} does not implement Powell's \gls{dfo} solvers in Python or MATLAB, but only interfaces Powell's implementation with such languages.
-The implementation of these solvers in Python, \mbox{MATLAB}, and other languages is a project in progress under the name of \gls{prima} (\glsxtrlong{prima})~\cite{Zhang_prima}.
+The implementation of these solvers in Python, MATLAB, and other languages is a project in progress under the name of \gls{prima} (\glsxtrlong{prima})~\cite{Zhang_prima}.
+
+\begin{acks}
+    This work was funded by the \grantsponsor{1}{University Grants Committee of Hong Kong}{https://www.ugc.edu.hk} under the projects \grantnum{1}{PF18-24698} (Hong Kong Ph.D. Fellowship Scheme), \grantnum{1}{PolyU 253012/17P}, \grantnum{1}{PolyU 153054/20P}, and \grantnum{1}{PolyU 153066/21P}.
+    It was also supported by \grantsponsor{2}{The Hong Kong Polytechnic University}{https://www.polyu.edu.hk} under project \grantnum{2}{P0009767}.
+\end{acks}
 
 \bibliographystyle{ACM-Reference-Format}
 \bibliography{pdfo}
