@@ -24,13 +24,16 @@ old/
 *.ps
 *.eps
 *.pdf
-!figures/*.pdf
+!figures/perf-*.pdf
+!arxiv/perf-*.pdf
+
 
 ## Generated if empty string is given at "Please type another file name for output:"
 .pdf
 
 ## Bibliography auxiliary files (bibtex/biblatex/biber)
 *.bbl
+!arxiv/*.bbl
 *.bcf
 *.blg
 *-blx.aux
@@ -38,6 +41,7 @@ old/
 *.run.xml
 
 ## Build tool auxiliary files
+arxiv/latexmkrc
 *.fdb_latexmk
 *.synctex
 *.synctex(busy)
