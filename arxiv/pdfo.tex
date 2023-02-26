@@ -327,7 +327,7 @@ The first strategy, known as direct search,\footnote{
     Powell rarely used the word ``derivative-free optimization.''
     The only exceptions known to us are his last paper~\cite{Powell_2015} and his distinguished lecture titled ``A parsimonious way of constructing quadratic models from values of the objective function in derivative-free optimization'' at the National Center for Mathematics and Interdisciplinary Sciences, Beijing on November 4, 2011~\cite{Buhmann_Fletcher_Iserles_Toint_2018}.
 } samples the objective function~$\obj$ and chooses iterates by simple comparisons of function values, examples including the Nelder-Mead algorithm~\cite{Nelder_Mead_1965}, the MADS methods~\cite{Audet_Dennis_2006,Digabel_2011}, and BFO~\cite{Porcelli_Toint_2017,Porcelli_Toint_2020,Porcelli_Toint_2022}.
-See~\cite{Kolda_Lewis_Torczon_2003},~\cite[Chapters~7 and~8]{Conn_Scheinberg_Vicente_2009b},~\cite[Part~3]{Audet_Hare_2017}, and~\cite[\S~2.1]{Larson_Menickelly_Wild_2019} for more discussions on this paradigm, and we refer to~\cite{Gratton_Etal_2015,Gratton_Etal_2019} for recent developments of randomized methods in this category.
+See~\cite{Kolda_Lewis_Torczon_2003},~\cite[Chapters~7 and~8]{Conn_Scheinberg_Vicente_2009b},~\mbox{\cite[Part~3]{Audet_Hare_2017}}, and~\mbox{\cite[\S~2.1]{Larson_Menickelly_Wild_2019}} for more discussions on this paradigm, and we refer to~\cite{Gratton_Etal_2015,Gratton_Etal_2019} for recent developments of randomized methods in this category.
 
 The second strategy approximates the original problem~\eqref{eq:nlc} by relatively simple models and locates the iterates according to these models.
 Algorithms applying this strategy are referred to as model-based methods.
@@ -479,7 +479,7 @@ In this case, the methods first select a point~$y_k^{\drop} \in \xpt$ to drop fr
     \xpt[k + 1] = \big(\xpt \setminus \set{y_k^{\drop}}\big) \cup \set{\iter^{\geo}},
 \end{equation}
 where~$\iter^{\geo} \in \R^n$ is chosen to improve the well-poisedness of~$\xpt[k + 1]$.
-In \gls{cobyla}, the choice of~$y_k^{\drop}$ and~$\iter^{\geo}$ is guided by the geometrical fact that the interpolation set forms a simplex in~$\R^n$, trying to keep~$\xpt[k + 1]$ away from falling into an~$(n - 1)$-dimensional subspace, as is detailed in~\cite[equations~(15)--(17)]{Powell_1994}.
+In \gls{cobyla}, the choice of~$y_k^{\drop}$ and~$\iter^{\geo}$ is guided by the geometrical fact that the interpolation set forms a simplex in~$\R^n$, trying to keep~$\xpt[k + 1]$ away from falling into an~$(n - 1)$-dimensional subspace, as is detailed in~\mbox{\cite[equations~(15)--(17)]{Powell_1994}}.
 The other four methods select~$y_k^{\drop}$ from~$\xpt$ by maximizing its distance to the current trust-region center~$\iter$, and then obtain~$\iter^{\geo}$ by solving
 \begin{equation}
     \label{eq:biglag}
@@ -1012,7 +1012,7 @@ It was also supported by The Hong Kong Polytechnic University under project P000
 
 \paragraph{\textnormal{\textbf{Data availability.}}}
 
-The source code of the \gls{pdfo} package is available at \mbox{\url{https://www.pdfo.net}}\,.
+The source code of the \gls{pdfo} package is available at \url{https://www.pdfo.net}\,.
 The source code of the numerical experiments is available at \url{https://www.github.com/pdfo/paper/blob/main/experiments}\,.
 
 \bibliographystyle{plain}
