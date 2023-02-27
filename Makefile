@@ -11,3 +11,4 @@ latex: pdfo
 .PHONY: clean
 clean:
 	$(LC) -c
+	rm -f comment.cut
