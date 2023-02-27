@@ -16,6 +16,7 @@ old/
 *.cb
 *.cb2
 .*.lb
+*.bbl
 
 ## Intermediate documents
 *.dvi
