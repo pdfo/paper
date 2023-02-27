@@ -155,7 +155,7 @@ R.~Garmanjani, D.~J\`{u}dice, and L.~N. Vicente.
 H.~Ghanbari and K.~Scheinberg.
 \newblock Black-box optimization in machine learning with trust region based
   derivative free algorithm.
-\newblock Technical Report 17T-005, COR@L, Bethlehem, PA, USA, 2017.
+\newblock Technical Report 17T-005, COR\@L, Bethlehem, PA, USA, 2017.
 
 \bibitem{Gould_Orban_Toint_2015}
 N.~I.~M. Gould, D.~Orban, and {\relax Ph.L}~Toint.
@@ -216,7 +216,7 @@ S.~Le~Digabel.
 \bibitem{LeDigabel_Wild_2015}
 S.~{Le Digabel} and S.~M. Wild.
 \newblock A taxonomy of constraints in simulation-based optimization.
-\newblock {\em arXiv:1505.07881}, 2015.
+\newblock arXiv:1505.07881, 2015.
 
 \bibitem{Mamon_Biviano_Boue_2013}
 G.~A. Mamon, A.~Biviano, and G.~Bou\'{e}.
@@ -267,7 +267,7 @@ M.~Porcelli and {\relax Ph.L}~Toint.
 \bibitem{Porcelli_Toint_2022}
 M.~Porcelli and {\relax Ph.L}~Toint.
 \newblock Exploiting problem structure in derivative free optimization.
-\newblock {\em ACM Trans. Math. Software}, 48, 2022.
+\newblock {\em ACM Trans. Math. Software}, 48:1--25, 2022.
 
 \bibitem{Powell_1964}
 M.~J.~D. Powell.
@@ -389,11 +389,11 @@ H.~J.~M. Shi, Y.~Xie, M.~Q. Xuan, and J.~Nocedal.
   derivative-free optimization.
 \newblock {\em SIAM J. Sci. Comput.}, 44:A2302--A2321, 2022.
 
-\bibitem{Shi_Etal_2022}
+\bibitem{Shi_Etal_2023}
 H.~J.~M. Shi, M.~Q. Xuan, F.~Oztoprak, and J.~Nocedal.
 \newblock On the numerical performance of derivative-free optimization methods
   based on finite-difference approximations.
-\newblock {\em Optim. Methods Softw.}, 2022.
+\newblock {\em Optim. Methods Softw.}, 38:289--311, 2023.
 
 \bibitem{Steihaug_1983}
 T.~Steihaug.
