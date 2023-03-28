@@ -1,5 +1,6 @@
 import csv
 import logging
+import os
 import re
 import subprocess
 import sys
@@ -105,6 +106,7 @@ class Profiles:
             self.storage_dir = Path(self.storage_dir, options_details)
 
         # Get the CUTEst problems.
+        self.top_cwd = os.getcwd()
         self.problem_names = sorted(pycutest.find_problems("constant linear quadratic sum of squares other", constraints, True, origin="academic modelling real-world", n=[self.n_min, self.n_max], m=[self.m_min, self.m_max], userM=False))
 
     def __call__(self, solvers, solver_names=None, options=None, load=True, **kwargs):
@@ -338,6 +340,11 @@ class Profiles:
                     return Problem(problem_name)
         except (AttributeError, FileNotFoundError, ModuleNotFoundError, RuntimeError) as err:
             _log.warning(f"{problem_name}: {err}")
+        finally:
+            # This patches a current bug of pycutest. When a problem fails to load, it seems that PyCUTEst deletes the
+            # corresponding cache folder. However, it does not restore the current working directory, which is now
+            # set to an unexisting folder. This causes the next problem to fail to load.
+            os.chdir(self.top_cwd)
 
     def get_sif_n_max(self, name):
         # Get all the available SIF parameters for all variables.
