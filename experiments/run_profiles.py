@@ -15,21 +15,20 @@ if __name__ == "__main__":
     profiles(["CG", "BFGS", "NEWUOA"], ["CG", "BFGS", "PDFO"])
     del profiles
 
-    # Generate the performance and data profiles on the problems containing NaNs.
-    for rerun in [1, 10]:
-        profiles = Profiles(1, 50, "unconstrained", feature="nan", nan_rate=0.01, rerun=rerun)
-        profiles(["CG", "BFGS", "PDFO", "PDFO-(no-barrier)"])
-        del profiles
-
-        profiles = Profiles(1, 50, "unconstrained", feature="nan", nan_rate=0.05, rerun=rerun)
-        profiles(["CG", "BFGS", "PDFO", "PDFO-(no-barrier)"])
-        del profiles
-
     # Generate the performance and data profiles on the noisy problems with n <= 50 and different noise levels.
-    for noise_level in [1e-10, 1e-8, 1e-6]:
+    for noise_level in [1e-10, 1e-8]:
         profiles = Profiles(1, 50, "unconstrained", feature="noisy", noise_level=noise_level)
         profiles(["CG", "BFGS", "NEWUOA"], ["CG", "BFGS", "PDFO"])
         del profiles
+
+    # Generate the performance and data profiles on the problems containing NaNs.
+    profiles = Profiles(1, 50, "unconstrained", feature="nan", nan_rate=0.01)
+    profiles(["CG", "BFGS", "PDFO", "PDFO-(no-barrier)"])
+    del profiles
+
+    profiles = Profiles(1, 50, "unconstrained", feature="nan", nan_rate=0.05)
+    profiles(["CG", "BFGS", "PDFO", "PDFO-(no-barrier)"])
+    del profiles
 
     # Generate the profiles for the paper.
     os.chdir(cwd)

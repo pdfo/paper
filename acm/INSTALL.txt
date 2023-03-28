@@ -1,9 +1,0 @@
-The Python version of PDFO can be installed using pip:
-
-python -m pip install pdfo
-
-It can be tested using the unittest module of Python:
-
-python -m unittest pdfo.testpdfo
-
-For more information, see https://www.pdfo.net .

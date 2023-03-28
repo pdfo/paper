@@ -9,28 +9,25 @@ from scipy.optimize import Bounds, LinearConstraint, minimize
 class Problem:
 
     def __init__(self, *args, **kwargs):
-        problem = pycutest.import_problem(*args, **kwargs)
+        self._p = pycutest.import_problem(*args, **kwargs)
 
-        self.name = problem.name
-        self.n = problem.n
-        self.m = problem.m
-        self.x0 = np.array(problem.x0, copy=True)
-        self.sif_params = problem.sifParams
-        self.var_type = np.array(problem.vartype, copy=True)
-        self.xl = np.array(problem.bl, copy=True)
-        self.xu = np.array(problem.bu, copy=True)
+        self.name = self._p.name
+        self.n = self._p.n
+        self.m = self._p.m
+        self.x0 = np.array(self._p.x0, copy=True)
+        self.var_type = np.array(self._p.vartype, copy=True)
+        self.xl = np.array(self._p.bl, copy=True)
+        self.xu = np.array(self._p.bu, copy=True)
         self.xl[self.xl <= -1e20] = -np.inf
         self.xu[self.xu >= 1e20] = np.inf
-        self.cl = problem.cl
-        self.cu = problem.cu
         if self.m > 0:
+            self.cl = np.array(self._p.cl, copy=True)
+            self.cu = np.array(self._p.cu, copy=True)
             self.cl[self.cl <= -1e20] = -np.inf
             self.cu[self.cu >= 1e20] = np.inf
-        self.is_eq_cons = problem.is_eq_cons
-        self.is_linear_cons = problem.is_linear_cons
-
-        self.obj = problem.obj
-        self.cons = problem.cons
+        else:
+            self.cl = None
+            self.cu = None
 
         # The following attributes can be built from other attributes. However,
         # they may be time-consuming to build. Therefore, we construct them only
@@ -47,12 +44,6 @@ class Problem:
         # Project the initial guess only the feasible polyhedron (including the
         # bound and the linear constraints).
         self.project_x0()
-
-    def __getstate__(self):
-        return self.__dict__
-
-    def __setstate__(self, state):
-        self.__dict__.update(state)
 
     @property
     def aub(self):
@@ -84,7 +75,7 @@ class Problem:
             if self.m == 0:
                 self._m_linear_ub = 0
             else:
-                iub = self.is_linear_cons & ~self.is_eq_cons
+                iub = self._p.is_linear_cons & ~self._p.is_eq_cons
                 iub_cl = self.cl[iub] >= -np.inf
                 iub_cu = self.cu[iub] < np.inf
                 self._m_linear_ub = np.count_nonzero(iub_cl) + np.count_nonzero(iub_cu)
@@ -96,7 +87,7 @@ class Problem:
             if self.m == 0:
                 self._m_linear_eq = 0
             else:
-                ieq = self.is_linear_cons & self.is_eq_cons
+                ieq = self._p.is_linear_cons & self._p.is_eq_cons
                 self._m_linear_eq = np.count_nonzero(ieq)
         return self._m_linear_eq
 
@@ -106,7 +97,7 @@ class Problem:
             if self.m == 0:
                 self._m_nonlinear_ub = 0
             else:
-                iub = ~(self.is_linear_cons | self.is_eq_cons)
+                iub = ~(self._p.is_linear_cons | self._p.is_eq_cons)
                 iub_cl = self.cl[iub] > -np.inf
                 iub_cu = self.cu[iub] < np.inf
                 self._m_nonlinear_ub = np.count_nonzero(iub_cl) + np.count_nonzero(iub_cu)
@@ -118,7 +109,7 @@ class Problem:
             if self.m == 0:
                 self._m_nonlinear_eq = 0
             else:
-                ieq = ~self.is_linear_cons & self.is_eq_cons
+                ieq = ~self._p.is_linear_cons & self._p.is_eq_cons
                 self._m_nonlinear_eq = np.count_nonzero(ieq)
         return self._m_nonlinear_eq
 
@@ -129,7 +120,7 @@ class Problem:
 
     def fun(self, x, callback=None, *args, **kwargs):
         x = np.asarray(x, dtype=float)
-        f = self.obj(x)
+        f = self._p.obj(x)
 
         # If a noise function is supplied, return both the plain and the noisy function evaluations.
         if callback is not None:
@@ -140,12 +131,12 @@ class Problem:
         if self.m == 0:
             return np.empty(0)
         x = np.asarray(x, dtype=float)
-        iub = ~(self.is_linear_cons | self.is_eq_cons)
+        iub = ~(self._p.is_linear_cons | self._p.is_eq_cons)
         iub_cl = self.cl[iub] > -np.inf
         iub_cu = self.cu[iub] < np.inf
         c = []
         for i, index in enumerate(np.flatnonzero(iub)):
-            c_index = self.cons(x, index)
+            c_index = self._p.cons(x, index)
             if iub_cl[i]:
                 c.append(self.cl[index] - c_index)
             if iub_cu[i]:
@@ -156,10 +147,10 @@ class Problem:
         if self.m == 0:
             return np.empty(0)
         x = np.asarray(x, dtype=float)
-        ieq = np.logical_not(self.is_linear_cons) & self.is_eq_cons
+        ieq = np.logical_not(self._p.is_linear_cons) & self._p.is_eq_cons
         c = []
         for index in np.flatnonzero(ieq):
-            c_index = self.cons(x, index)
+            c_index = self._p.cons(x, index)
             c.append(c_index - 0.5 * (self.cl[index] + self.cu[index]))
         return np.array(c, dtype=float)
 
@@ -175,13 +166,13 @@ class Problem:
     def build_linear_ub_cons(self):
         if self.m == 0:
             return np.empty((0, self.n)), np.empty(0)
-        iub = self.is_linear_cons & np.logical_not(self.is_eq_cons)
+        iub = self._p.is_linear_cons & np.logical_not(self._p.is_eq_cons)
         iub_cl = self.cl[iub] > -np.inf
         iub_cu = self.cu[iub] < np.inf
         aub = []
         bub = []
         for i, index in enumerate(np.flatnonzero(iub)):
-            c_index, g_index = self.cons(np.zeros(self.n), index, True)
+            c_index, g_index = self._p.cons(np.zeros(self.n), index, True)
             if iub_cl[i]:
                 aub.append(-g_index)
                 bub.append(c_index - self.cl[index])
@@ -193,11 +184,11 @@ class Problem:
     def build_linear_eq_cons(self):
         if self.m == 0:
             return np.empty((0, self.n)), np.empty(0)
-        ieq = self.is_linear_cons & self.is_eq_cons
+        ieq = self._p.is_linear_cons & self._p.is_eq_cons
         aeq = []
         beq = []
         for index in np.flatnonzero(ieq):
-            c_index, g_index = self.cons(np.zeros(self.n), index, True)
+            c_index, g_index = self._p.cons(np.zeros(self.n), index, True)
             aeq.append(g_index)
             beq.append(c_index - 0.5 * (self.cl[index] + self.cu[index]))
         return np.reshape(aeq, (-1, self.n)), np.array(beq)
