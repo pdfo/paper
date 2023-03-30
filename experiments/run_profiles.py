@@ -1,3 +1,7 @@
+"""
+To run this script, you just need to run:
+>>> python run_profiles.py
+"""
 import os
 
 from copy_profiles import copy_all_figures

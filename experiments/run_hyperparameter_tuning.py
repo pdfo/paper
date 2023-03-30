@@ -1,3 +1,10 @@
+"""
+To run this script, you just need to run:
+>>> python run_hyperparameter_tuning.py
+You can also specify the datasets to run on the command line:
+>>> python run_hyperparameter_tuning.py splice svmguide1
+"""
+import sys
 import time
 from pathlib import Path
 
@@ -13,6 +20,11 @@ from sklearn.svm import SVC
 
 LIBSVM = Path("libsvm").resolve(strict=True)
 
+# Get the datasets from the command line.
+if len(sys.argv) > 1:
+    DATASETS = sys.argv[1:]
+else:
+    DATASETS = ["splice", "svmguide1", "ijcnn1"]
 
 def load_libsvm(dataset):
     try:
@@ -55,7 +67,7 @@ if __name__ == "__main__":
 
     scaler = MaxAbsScaler(copy=False)
     imputer = SimpleImputer(missing_values=np.nan, strategy="mean", copy=False)
-    for dataset in ["splice", "svmguide1", "ijcnn1"]:
+    for dataset in DATASETS:
         # Scale and impute the training and testing data.
         X_train, y_train, X_test, y_test = load_libsvm(dataset)
         scaler.fit_transform(X_train)
