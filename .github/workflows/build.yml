@@ -25,7 +25,7 @@ jobs:
         with:
           root_file: pdfo.tex
           args: -file-line-error -halt-on-error -interaction=nonstopmode
-          pre_compile: tlmgr update --self && tlmgr update --all
+          # pre_compile: tlmgr update --self && tlmgr update --all
 
       - name: Store artifacts
         uses: actions/upload-artifact@v3
