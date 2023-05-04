@@ -363,7 +363,8 @@ T.~M. Ragonneau.
 \bibitem{Ragonneau_Zhang_cobyqa}
 T.~M. Ragonneau and Z.~Zhang.
 \newblock {COBYQA}: {C}onstrained {O}ptimization {BY} {Q}uadratic
-  {A}pproximations, 2023.
+  {A}pproximations.
+\newblock \url{https://www.cobyqa.com}, 2023.
 
 \bibitem{Ragonneau_Zhang_2023a}
 T.~M. Ragonneau and Z.~Zhang.
@@ -457,6 +458,7 @@ Z.~Zhang.
 \bibitem{Zhang_prima}
 Z.~Zhang.
 \newblock {PRIMA}: {R}eference {I}mplementation for {P}owell's methods with
-  {M}odernization and {A}melioration., 2023.
+  {M}odernization and {A}melioration.
+\newblock \url{http://www.libprima.net}, 2023.
 
 \end{thebibliography}
