@@ -686,7 +686,7 @@ A caveat is that setting~$\obj(\tilde{x})$ to \hugefun may lead to extreme value
 
 The original extreme barrier approach~\cite[equation~(13.2)]{Conn_Scheinberg_Vicente_2009b} sets \hugefun to~$\infty$, which is inappropriate for methods based on interpolation.
 In fact, we also moderate~$\obj(\tilde{x})$ to~$\hugefun$ if it is actually evaluated to~$\infty$.
-Our approach is clearly naive, but it is better than terminating the solver once the function evaluation fails
+Our approach is clearly naive, but it is better than terminating the solver once the function evaluation fails.
 In our experiments, this simple approach significantly improves the robustness of \gls{pdfo} with respect to failures of function evaluation, as will be demonstrated in Subsection~\ref{subsec:nan}.
 There do exist other more sophisticated approaches~\cite{Audet_Caporossi_Jacquet_2020}, which will be explored in the future.
 

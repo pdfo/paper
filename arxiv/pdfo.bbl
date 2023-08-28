@@ -17,8 +17,7 @@ C.~Audet and W.~Hare.
 
 \bibitem{Bandeira_Scheinberg_Vicente_2012}
 A.~S. Bandeira, K.~Scheinberg, and L.~N. Vicente.
-\newblock Computation of sparse low degree interpolating polynomials and their
-  application to derivative-free optimization.
+\newblock Computation of sparse low degree interpolating polynomials and their application to derivative-free optimization.
 \newblock {\em Math. Program.}, 134:223--257, 2012.
 
 \bibitem{Bates_Etal_2015}
@@ -28,14 +27,12 @@ D.~M. Bates, M.~M\"{a}chler, B.~Bolker, and S.~Walker.
 
 \bibitem{Berahas_Byrd_Nocedal_2019}
 A.~S. Berahas, R.~H. Byrd, and J.~Nocedal.
-\newblock Derivative-free optimization of noisy functions via quasi-{Newton}
-  methods.
+\newblock Derivative-free optimization of noisy functions via quasi-{Newton} methods.
 \newblock {\em SIAM J. Optim.}, 29:965--993, 2019.
 
 \bibitem{Billups_Larson_Graf_2013}
 S.~C. Billups, J.~Larson, and P.~Graf.
-\newblock Derivative-free optimization of expensive functions with
-  computational error using weighted regression.
+\newblock Derivative-free optimization of expensive functions with computational error using weighted regression.
 \newblock {\em SIAM J. Optim.}, 23:27--53, 2013.
 
 \bibitem{Buhmann_Fletcher_Iserles_Toint_2018}
@@ -45,14 +42,12 @@ M.~D. Buhmann, R.~Fletcher, A.~Iserles, and {\relax Ph.L}~Toint.
 
 \bibitem{Cartis_Etal_2019}
 C.~Cartis, J.~Fiala, B.~Marteau, and L.~Roberts.
-\newblock Improving the flexibility and robustness of model-based
-  derivative-free optimization solvers.
+\newblock Improving the flexibility and robustness of model-based derivative-free optimization solvers.
 \newblock {\em ACM Trans. Math. Software}, 45:32:1--32:41, 2019.
 
 \bibitem{Cartis_Roberts_Sheridan-Methven_2022}
 C.~Cartis, L.~Roberts, and O.~Sheridan-Methven.
-\newblock Escaping local minima with local derivative-free methods: a numerical
-  investigation.
+\newblock Escaping local minima with local derivative-free methods: a numerical investigation.
 \newblock {\em Optimization}, 71:2343--2373, 2022.
 
 \bibitem{Chang_Lin_2011}
@@ -62,22 +57,17 @@ C.~C. Chang and C.~J. Lin.
 
 \bibitem{Conn_Digabel_2013}
 A.~R. Conn and S.~Le~Digabel.
-\newblock Use of quadratic models with mesh-adaptive direct search for
-  constrained black box optimization.
+\newblock Use of quadratic models with mesh-adaptive direct search for constrained black box optimization.
 \newblock {\em Optim. Methods Softw.}, 28:139--158, 2013.
 
 \bibitem{Conn_Scheinberg_Toint_1997a}
 A.~R. Conn, K.~Scheinberg, and {\relax Ph.L}~Toint.
-\newblock On the convergence of derivative-free methods for unconstrained
-  optimization.
-\newblock In M.~D. Buhmann and A.~Iserles, editors, {\em Approximation Theory
-  and Optimization: Tributes to M. J. D. Powell}, pages 83--108, Cambridge, UK,
-  1997. Cambridge University Press.
+\newblock On the convergence of derivative-free methods for unconstrained optimization.
+\newblock In M.~D. Buhmann and A.~Iserles, editors, {\em Approximation Theory and Optimization: Tributes to M. J. D. Powell}, pages 83--108, Cambridge, UK, 1997. Cambridge University Press.
 
 \bibitem{Conn_Scheinberg_Toint_1997b}
 A.~R. Conn, K.~Scheinberg, and {\relax Ph.L}~Toint.
-\newblock Recent progress in unconstrained nonlinear optimization without
-  derivatives.
+\newblock Recent progress in unconstrained nonlinear optimization without derivatives.
 \newblock {\em Math. Program.}, 79:397--414, 1997.
 
 \bibitem{Conn_Scheinberg_Vicente_2008a}
@@ -87,14 +77,12 @@ A.~R. Conn, K.~Scheinberg, and L.~N. Vicente.
 
 \bibitem{Conn_Scheinberg_Vicente_2008b}
 A.~R. Conn, K.~Scheinberg, and L.~N. Vicente.
-\newblock Geometry of sample sets in derivative-free optimization: polynomial
-  regression and underdetermined interpolation.
+\newblock Geometry of sample sets in derivative-free optimization: polynomial regression and underdetermined interpolation.
 \newblock {\em IMA J. Numer. Anal.}, 28:721--748, 2008.
 
 \bibitem{Conn_Scheinberg_Vicente_2009a}
 A.~R. Conn, K.~Scheinberg, and L.~N. Vicente.
-\newblock Global convergence of general derivative-free trust-region algorithms
-  to first- and second-order critical points.
+\newblock Global convergence of general derivative-free trust-region algorithms to first- and second-order critical points.
 \newblock {\em SIAM J. Optim.}, 20:387--415, 2009.
 
 \bibitem{Conn_Scheinberg_Vicente_2009b}
@@ -104,18 +92,13 @@ A.~R. Conn, K.~Scheinberg, and L.~N. Vicente.
 
 \bibitem{Conn_Toint_1996}
 A.~R. Conn and {\relax Ph.L}~Toint.
-\newblock An algorithm using quadratic interpolation for unconstrained
-  derivative free optimization.
-\newblock In G.~{Di Pillo} and F.~Giannessi, editors, {\em Nonlinear
-  Optimization and Applications}, pages 27--47, Boston, MA, USA, 1996.
-  Springer.
+\newblock An algorithm using quadratic interpolation for unconstrained derivative free optimization.
+\newblock In G.~{Di Pillo} and F.~Giannessi, editors, {\em Nonlinear Optimization and Applications}, pages 27--47, Boston, MA, USA, 1996. Springer.
 
 \bibitem{Custodio_Scheinberg_Vicente_2017}
 A.~L. Cust\'{o}dio, K.~Scheinberg, and L.~N. Vicente.
 \newblock Methodologies and software for derivative-free optimization.
-\newblock In T.~Terlaky, M.~F. Anjos, and S.~Ahmed, editors, {\em Advances and
-  Trends in Optimization with Engineering Applications}, pages 495--506,
-  Philadelphia, PA, USA, 2017. SIAM.
+\newblock In T.~Terlaky, M.~F. Anjos, and S.~Ahmed, editors, {\em Advances and Trends in Optimization with Engineering Applications}, pages 495--506, Philadelphia, PA, USA, 2017. SIAM.
 
 \bibitem{Dennis_Schnabel_1979}
 J.~E. {Dennis, Jr.} and R.~B. Schnabel.
@@ -134,33 +117,27 @@ R.~Fletcher and M.~J.~D. Powell.
 
 \bibitem{Fowkes_Roberts_Burmen_2022}
 J.~Fowkes, L.~Roberts, and \'{A}. B\H{u}rmen.
-\newblock {PyCUTEst}: an open source python package of optimization test
-  problems.
+\newblock {PyCUTEst}: an open source python package of optimization test problems.
 \newblock {\em J. Open Source Softw.}, 7:4377, 2022.
 
 \bibitem{Gallard_Etal_2018}
 F.~Gallard et~al.
-\newblock {GEMS}: a {Python} library for automation of multidisciplinary design
-  optimization process generation.
-\newblock In {\em 2018 AIAA/ASCE/AHS/ASC Structures, Structural Dynamics, and
-  Materials Conference}, Kissimmee, FL, USA, 2018. AIAA.
+\newblock {GEMS}: a {Python} library for automation of multidisciplinary design optimization process generation.
+\newblock In {\em 2018 AIAA/ASCE/AHS/ASC Structures, Structural Dynamics, and Materials Conference}, Kissimmee, FL, USA, 2018. AIAA.
 
 \bibitem{Garmanjani_Judice_Vicente_2016}
 R.~Garmanjani, D.~J\`{u}dice, and L.~N. Vicente.
-\newblock Trust-region methods without using derivatives: worst case complexity
-  and the nonsmooth case.
+\newblock Trust-region methods without using derivatives: worst case complexity and the nonsmooth case.
 \newblock {\em SIAM J. Optim.}, 26:1987--2011, 2016.
 
 \bibitem{Ghanbari_Scheinberg_2017}
 H.~Ghanbari and K.~Scheinberg.
-\newblock Black-box optimization in machine learning with trust region based
-  derivative free algorithm.
+\newblock Black-box optimization in machine learning with trust region based derivative free algorithm.
 \newblock Technical Report 17T-005, COR@L, Bethlehem, PA, USA, 2017.
 
 \bibitem{Gould_Orban_Toint_2015}
 N.~I.~M. Gould, D.~Orban, and {\relax Ph.L}~Toint.
-\newblock {CUTEst}: a constrained and unconstrained testing environment with
-  safe threads for mathematical optimization.
+\newblock {CUTEst}: a constrained and unconstrained testing environment with safe threads for mathematical optimization.
 \newblock {\em Comput. Optim. Appl.}, 60:545--557, 2015.
 
 \bibitem{Gratton_Etal_2015}
@@ -170,8 +147,7 @@ S.~Gratton, C.~W. Royer, L.~N. Vicente, and Z.~Zhang.
 
 \bibitem{Gratton_Etal_2019}
 S.~Gratton, C.~W. Royer, L.~N. Vicente, and Z.~Zhang.
-\newblock Direct search based on probabilistic feasible descent for bound and
-  linearly constrained problems.
+\newblock Direct search based on probabilistic feasible descent for bound and linearly constrained problems.
 \newblock {\em Comput. Optim. Appl.}, 72:525--559, 2019.
 
 \bibitem{Hager_1989}
@@ -181,15 +157,13 @@ W.~W. Hager.
 
 \bibitem{Hough_Roberts_2022}
 M.~Hough and L.~Roberts.
-\newblock Model-based derivative-free methods for convex-constrained
-  optimization.
+\newblock Model-based derivative-free methods for convex-constrained optimization.
 \newblock {\em SIAM J. Optim.}, 32:2552--2579, 2022.
 
 \bibitem{Izadinia_Shan_Seitz_2017}
 H.~Izadinia, Q.~Shan, and S.~M. Seitz.
 \newblock {IM2CAD}.
-\newblock In {\em Proceedings of the IEEE Conference on Computer Vision and
-  Pattern Recognition}, pages 5134--5143, San Juan, PR, USA, 2017. IEEE.
+\newblock In {\em Proceedings of the IEEE Conference on Computer Vision and Pattern Recognition}, pages 5134--5143, San Juan, PR, USA, 2017. IEEE.
 
 \bibitem{Kelley_2011}
 C.~T. Kelley.
@@ -198,8 +172,7 @@ C.~T. Kelley.
 
 \bibitem{Kolda_Lewis_Torczon_2003}
 T.~G. Kolda, R.~M. Lewis, and V.~Torczon.
-\newblock Optimization by direct search: New perspectives on some classical and
-  modern methods.
+\newblock Optimization by direct search: New perspectives on some classical and modern methods.
 \newblock {\em SIAM Rev.}, 45:385--482, 2003.
 
 \bibitem{Larson_Menickelly_Wild_2019}
@@ -209,8 +182,7 @@ J.~Larson, M.~Menickelly, and S.~M. Wild.
 
 \bibitem{Digabel_2011}
 S.~Le~Digabel.
-\newblock Algorithm 909: {NOMAD}: nonlinear optimization with the {MADS}
-  algorithm.
+\newblock Algorithm 909: {NOMAD}: nonlinear optimization with the {MADS} algorithm.
 \newblock {\em ACM Trans. Math. Software}, 37:44:1--44:15, 2011.
 
 \bibitem{LeDigabel_Wild_2015}
@@ -220,14 +192,12 @@ S.~{Le Digabel} and S.~M. Wild.
 
 \bibitem{Mamon_Biviano_Boue_2013}
 G.~A. Mamon, A.~Biviano, and G.~Bou\'{e}.
-\newblock {MAMPOSSt}: modelling anisotropy and mass profiles of observed
-  spherical systems {I.} {Gaussian} {3D} velocities.
+\newblock {MAMPOSSt}: modelling anisotropy and mass profiles of observed spherical systems {I.} {Gaussian} {3D} velocities.
 \newblock {\em Mon. Not. R. Astron. Soc.}, 429:3079--3098, 2013.
 
 \bibitem{Mombaur_Truong_Laumond_2010}
 K.~Mombaur, A.~Truong, and J.~P. Laumond.
-\newblock From human to humanoid locomotion---an inverse optimal control
-  approach.
+\newblock From human to humanoid locomotion---an inverse optimal control approach.
 \newblock {\em Auton. Robot.}, 28:369--383, 2010.
 
 \bibitem{More_Sorensen_1983}
@@ -247,21 +217,17 @@ J.~A. Nelder and R.~Mead.
 
 \bibitem{Oeuvray_Bierlaire_2009}
 R.~Oeuvray and M.~Bierlaire.
-\newblock {BOOSTERS}: a derivative-free algorithm based on radial basis
-  functions.
+\newblock {BOOSTERS}: a derivative-free algorithm based on radial basis functions.
 \newblock {\em Int. J. Model. Simul.}, 29:29--36, 2009.
 
 \bibitem{Porcelli_Toint_2017}
 M.~Porcelli and {\relax Ph.L}~Toint.
-\newblock {BFO}, a trainable derivative-free brute force optimizer for
-  nonlinear bound-constrained optimization and equilibrium computations with
-  continuous and discrete variables.
+\newblock {BFO}, a trainable derivative-free brute force optimizer for nonlinear bound-constrained optimization and equilibrium computations with continuous and discrete variables.
 \newblock {\em ACM Trans. Math. Software}, 44:6:1--6:25, 2017.
 
 \bibitem{Porcelli_Toint_2020}
 M.~Porcelli and {\relax Ph.L}~Toint.
-\newblock Global and local information in structured derivative free
-  optimization with {BFO}.
+\newblock Global and local information in structured derivative free optimization with {BFO}.
 \newblock arxiv:2001.04801, 2020.
 
 \bibitem{Porcelli_Toint_2022}
@@ -271,22 +237,18 @@ M.~Porcelli and {\relax Ph.L}~Toint.
 
 \bibitem{Powell_1964}
 M.~J.~D. Powell.
-\newblock An efficient method for finding the minimum of a function of several
-  variables without calculating derivatives.
+\newblock An efficient method for finding the minimum of a function of several variables without calculating derivatives.
 \newblock {\em Comput. J.}, 7:155--162, 1964.
 
 \bibitem{Powell_1970b}
 M.~J.~D. Powell.
 \newblock A new algorithm for unconstrained optimization.
-\newblock In J.~B. Rosen, O.~L. Mangasarian, and K.~Ritter, editors, {\em
-  Nonlinear Programming}, pages 31--65, London, UK, 1970. Academic Press.
+\newblock In J.~B. Rosen, O.~L. Mangasarian, and K.~Ritter, editors, {\em Nonlinear Programming}, pages 31--65, London, UK, 1970. Academic Press.
 
 \bibitem{Powell_1994}
 M.~J.~D. Powell.
-\newblock A direct search optimization method that models the objective and
-  constraint functions by linear interpolation.
-\newblock In S.~Gomez and J.~P. Hennart, editors, {\em Advances in Optimization
-  and Numerical Analysis}, pages 51--67, Dordrecht, NL, 1994. Springer.
+\newblock A direct search optimization method that models the objective and constraint functions by linear interpolation.
+\newblock In S.~Gomez and J.~P. Hennart, editors, {\em Advances in Optimization and Numerical Analysis}, pages 51--67, Dordrecht, NL, 1994. Springer.
 
 \bibitem{Powell_1998}
 M.~J.~D. Powell.
@@ -295,8 +257,7 @@ M.~J.~D. Powell.
 
 \bibitem{Powell_2001}
 M.~J.~D. Powell.
-\newblock On the {Lagrange} functions of quadratic models that are defined by
-  interpolation.
+\newblock On the {Lagrange} functions of quadratic models that are defined by interpolation.
 \newblock {\em Optim. Methods Softw.}, 16:289--309, 2001.
 
 \bibitem{Powell_2002}
@@ -306,23 +267,18 @@ M.~J.~D. Powell.
 
 \bibitem{Powell_2004b}
 M.~J.~D. Powell.
-\newblock Least {Frobenius} norm updating of quadratic models that satisfy
-  interpolation conditions.
+\newblock Least {Frobenius} norm updating of quadratic models that satisfy interpolation conditions.
 \newblock {\em Math. Program.}, 100:183--215, 2004.
 
 \bibitem{Powell_2004c}
 M.~J.~D. Powell.
 \newblock On updating the inverse of a {KKT} matrix.
-\newblock In Y.~Yuan, editor, {\em Numerical Linear Algebra and Optimization},
-  pages 56--78, Beijing, CN, 2004. Science Press.
+\newblock In Y.~Yuan, editor, {\em Numerical Linear Algebra and Optimization}, pages 56--78, Beijing, CN, 2004. Science Press.
 
 \bibitem{Powell_2006}
 M.~J.~D. Powell.
-\newblock The {NEWUOA} software for unconstrained optimization without
-  derivatives.
-\newblock In G.~{Di Pillo} and M.~Roma, editors, {\em Large-Scale Nonlinear
-  Optimization}, volume~83 of {\em Nonconvex Optimization and Its
-  Applications}, pages 255--297, Boston, MA, USA, 2006. Springer.
+\newblock The {NEWUOA} software for unconstrained optimization without derivatives.
+\newblock In G.~{Di Pillo} and M.~Roma, editors, {\em Large-Scale Nonlinear Optimization}, volume~83 of {\em Nonconvex Optimization and Its Applications}, pages 255--297, Boston, MA, USA, 2006. Springer.
 
 \bibitem{Powell_2008}
 M.~J.~D. Powell.
@@ -331,83 +287,68 @@ M.~J.~D. Powell.
 
 \bibitem{Powell_2009}
 M.~J.~D. Powell.
-\newblock The {BOBYQA} algorithm for bound constrained optimization without
-  derivatives.
-\newblock Technical Report DAMTP 2009/NA06, Department of Applied Mathematics
-  and Theoretical Physics, University of Cambridge, Cambridge, UK, 2009.
+\newblock The {BOBYQA} algorithm for bound constrained optimization without derivatives.
+\newblock Technical Report DAMTP 2009/NA06, Department of Applied Mathematics and Theoretical Physics, University of Cambridge, Cambridge, UK, 2009.
 
 \bibitem{Powell_2012}
 M.~J.~D. Powell.
-\newblock On the convergence of trust region algorithms for unconstrained
-  minimization without derivatives.
+\newblock On the convergence of trust region algorithms for unconstrained minimization without derivatives.
 \newblock {\em Comput. Optim. Appl.}, 53:527--555, 2012.
 
 \bibitem{Powell_2013}
 M.~J.~D. Powell.
-\newblock Beyond symmetric {Broyden} for updating quadratic models in
-  minimization without derivatives.
+\newblock Beyond symmetric {Broyden} for updating quadratic models in minimization without derivatives.
 \newblock {\em Math. Program.}, 138:475--500, 2013.
 
 \bibitem{Powell_2015}
 M.~J.~D. Powell.
-\newblock On fast trust region methods for quadratic models with linear
-  constraints.
+\newblock On fast trust region methods for quadratic models with linear constraints.
 \newblock {\em Math. Program. Comput.}, 7:237--267, 2015.
 
 \bibitem{Ragonneau_2022}
 T.~M. Ragonneau.
 \newblock {\em Model-Based Derivative-Free Optimization Methods and Software}.
-\newblock PhD thesis, Department of Applied Mathematics, The Hong Kong
-  Polytechnic University, Hong Kong, 2022.
+\newblock PhD thesis, Department of Applied Mathematics, The Hong Kong Polytechnic University, Hong Kong, 2022.
 
 \bibitem{Ragonneau_Zhang_cobyqa}
 T.~M. Ragonneau and Z.~Zhang.
-\newblock {COBYQA}: {C}onstrained {O}ptimization {BY} {Q}uadratic
-  {A}pproximations.
+\newblock {COBYQA}: {C}onstrained {O}ptimization {BY} {Q}uadratic {A}pproximations.
 \newblock \url{https://www.cobyqa.com}, 2023.
 
 \bibitem{Ragonneau_Zhang_2023a}
 T.~M. Ragonneau and Z.~Zhang.
-\newblock An optimal interpolation set for model-based derivative-free
-  optimization methods.
+\newblock An optimal interpolation set for model-based derivative-free optimization methods.
 \newblock arXiv:2302.09992, 2023.
 
 \bibitem{Regis_Wild_2017}
 R.~G. Regis and S.~M. Wild.
-\newblock {CONORBIT}: constrained optimization by radial basis function
-  interpolation in trust regions.
+\newblock {CONORBIT}: constrained optimization by radial basis function interpolation in trust regions.
 \newblock {\em Optim. Methods Softw.}, 32:552--580, 2017.
 
 \bibitem{Rios_Sahinidis_2013}
 L.~M. Rios and N.~V. Sahinidis.
-\newblock Derivative-free optimization: a review of algorithms and comparison
-  of software implementations.
+\newblock Derivative-free optimization: a review of algorithms and comparison of software implementations.
 \newblock {\em J. Global Optim.}, 56:1247--1293, 2013.
 
 \bibitem{Shi_Etal_2022a}
 H.~J.~M. Shi, Y.~Xie, M.~Q. Xuan, and J.~Nocedal.
-\newblock Adaptive finite-difference interval estimation for noisy
-  derivative-free optimization.
+\newblock Adaptive finite-difference interval estimation for noisy derivative-free optimization.
 \newblock {\em SIAM J. Sci. Comput.}, 44:A2302--A2321, 2022.
 
 \bibitem{Shi_Etal_2023}
 H.~J.~M. Shi, M.~Q. Xuan, F.~Oztoprak, and J.~Nocedal.
-\newblock On the numerical performance of derivative-free optimization methods
-  based on finite-difference approximations.
+\newblock On the numerical performance of derivative-free optimization methods based on finite-difference approximations.
 \newblock {\em Optim. Methods Softw.}, 38:289--311, 2023.
 
 \bibitem{Steihaug_1983}
 T.~Steihaug.
-\newblock The conjugate gradient method and trust regions in large scale
-  optimization.
+\newblock The conjugate gradient method and trust regions in large scale optimization.
 \newblock {\em IMA J. Numer. Anal.}, 20:626--637, 1983.
 
 \bibitem{Toint_1981}
 {\relax Ph.L}~Toint.
-\newblock Towards an efficient sparsity exploiting {Newton} method for
-  minimization.
-\newblock In I.~S. Duff, editor, {\em Sparse Matrices and Their Uses}, pages
-  57--88, London, UK, 1981. Academic Press.
+\newblock Towards an efficient sparsity exploiting {Newton} method for minimization.
+\newblock In I.~S. Duff, editor, {\em Sparse Matrices and Their Uses}, pages 57--88, London, UK, 1981. Academic Press.
 
 \bibitem{Torczon_1997}
 V.~Torczon.
@@ -421,21 +362,17 @@ L.~N. Vicente.
 
 \bibitem{Wild_2008}
 S.~M. Wild.
-\newblock {MNH}: a derivative-free optimization algorithm using minimal norm
-  {Hessians}.
-\newblock In {\em The Tenth Copper Mountain Conference on Iterative Methods},
-  2008.
+\newblock {MNH}: a derivative-free optimization algorithm using minimal norm {Hessians}.
+\newblock In {\em The Tenth Copper Mountain Conference on Iterative Methods}, 2008.
 
 \bibitem{Wild_Regis_Shoemaker_2008}
 S.~M. Wild, R.~G. Regis, and C.~A. Shoemaker.
-\newblock {ORBIT}: optimization by radial basis function interpolation in
-  trust-regions.
+\newblock {ORBIT}: optimization by radial basis function interpolation in trust-regions.
 \newblock {\em SIAM J. Sci. Comput.}, 30:3197--3219, 2008.
 
 \bibitem{Xie_Yuan_2023}
 P.~Xie and Y.~Yuan.
-\newblock Least ${H}^2$ norm updating quadratic interpolation model function
-  for derivative-free trust-region algorithms.
+\newblock Least ${H}^2$ norm updating quadratic interpolation model function for derivative-free trust-region algorithms.
 \newblock arxiv:2001.04801, 2023.
 
 \bibitem{Zhang_Conn_Scheinberg_2010}
@@ -445,20 +382,17 @@ H.~Zhang, A.~R. Conn, and K.~Scheinberg.
 
 \bibitem{Zhang_2012}
 Z.~Zhang.
-\newblock {\em On Derivative-Free Optimization Methods \textnormal{(in
-  Chinese)}}.
+\newblock {\em On Derivative-Free Optimization Methods \textnormal{(in Chinese)}}.
 \newblock PhD thesis, Chinese Academy of Sciences, Beijing, CN, 2012.
 
 \bibitem{Zhang_2014}
 Z.~Zhang.
-\newblock {Sobolev} seminorm of quadratic functions with applications to
-  derivative-free optimization.
+\newblock {Sobolev} seminorm of quadratic functions with applications to derivative-free optimization.
 \newblock {\em Math. Program.}, 146:77--96, 2014.
 
 \bibitem{Zhang_prima}
 Z.~Zhang.
-\newblock {PRIMA}: {R}eference {I}mplementation for {P}owell's methods with
-  {M}odernization and {A}melioration.
+\newblock {PRIMA}: {R}eference {I}mplementation for {P}owell's methods with {M}odernization and {A}melioration.
 \newblock \url{http://www.libprima.net}, 2023.
 
 \end{thebibliography}
