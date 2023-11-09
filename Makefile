@@ -3,12 +3,9 @@
 LC := latexmk
 LCFLAGS := -file-line-error -halt-on-error -interaction=nonstopmode
 
-latex: pdfo
-
-%: %.tex
+latex: pdfo.tex
 	$(LC) $(LCFLAGS) $^
 
 .PHONY: clean
 clean:
 	$(LC) -c
-	rm -f comment.cut

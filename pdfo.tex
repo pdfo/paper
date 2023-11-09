@@ -413,7 +413,7 @@ titled ``A parsimonious way of constructing quadratic models from values of the 
 derivative-free optimization'' at the National Center for Mathematics and Interdisciplinary Sciences,
 Beijing on November 4, 2011~\cite{Buhmann_Fletcher_Iserles_Toint_2018}.}
 samples the objective function~$\obj$ and chooses iterates by simple comparisons of function values, examples including
-the Nelder-Mead algorithm~\cite{Nelder_Mead_1965}, the MADS methods~\cite{Audet_Dennis_2006,Digabel_2011}, and BFO~\cite{Porcelli_Toint_2017,Porcelli_Toint_2020,Porcelli_Toint_2022}.
+the Nelder-Mead algorithm~\cite{Nelder_Mead_1965}, the MADS methods~\cite{Audet_Dennis_2006,LeDigabel_2011}, and BFO~\cite{Porcelli_Toint_2017,Porcelli_Toint_2020,Porcelli_Toint_2022}.
 See~\cite{Kolda_Lewis_Torczon_2003},~\cite[Chapters~7 and~8]{Conn_Scheinberg_Vicente_2009b},
 ~\cite[Part~3]{Audet_Hare_2017}, and~\cite[\S~2.1]{Larson_Menickelly_Wild_2019} for more discussions
 on this paradigm, and we refer to~\cite{Gratton_Etal_2015,Gratton_Etal_2019} for recent developments
@@ -434,7 +434,7 @@ but there are also methods exploiting \glspl{rbf}, such as ORBIT~\cite{Wild_Regi
 %Model-based \gls{dfo} is one of the motivations for studying trust-region and line-search methods with randomized models, for which we refer to~\cite{Bandeira_Scheinberg_Vicente_2014,Gratton_Etal_2018,Cartis_Scheinberg_2018} as examples.
 
 Hybrids between direct search and model-based approaches exist, for
-instance, Implicit Filtering~\cite[Algorithm~4.7]{Kelley_2011} and MADS with quadratic models~\cite{Conn_Digabel_2013}.
+instance, Implicit Filtering~\cite[Algorithm~4.7]{Kelley_2011} and MADS with quadratic models~\cite{Conn_LeDigabel_2013}.
 Theories of global convergence and convergence rate have been established for both
 direct search~\cite{Torczon_1997,Kolda_Lewis_Torczon_2003,Vicente_2013,Gratton_Etal_2015,Dodangeh_Vicente_2016}.
 and model-based methods~\cite{Conn_Scheinberg_Toint_1997a,Conn_Scheinberg_Vicente_2009a,Powell_2012,Garmanjani_Judice_Vicente_2016}.
@@ -934,7 +934,7 @@ indicate failures of function evaluations, which are common in applications of~\
 To cope with NaN values, \gls{pdfo} applies a \emph{moderated extreme barrier}.
 Suppose that~$\obj(\tilde{x})$ is evaluated to NaN at a certain~$\tilde{x}\in\R^n$.
 \gls{pdfo} takes the view that~$\tilde{x}$ violates a hidden
-constraint~\mbox{\cite{LeDigabel_Wild_2015,Audet_Caporossi_Jacquet_2020}}.
+constraint~\mbox{\cite{LeDigabel_Wild_2023,Audet_Caporossi_Jacquet_2020}}.
 Hence it replaces NaN with a large but finite number~\hugefun~(e.g., $10^{30}$)
 before passing~$\obj(\tilde{x})$ to the Fortran solver, so that the solver can continue to progress while
 penalizing~$\tilde{x}$. Indeed, since Powell's solvers construct trust-region models by interpolation,

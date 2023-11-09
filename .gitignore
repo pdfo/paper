@@ -1,6 +1,3 @@
-# Old version
-old/
-
 # LaTeX
 
 ## Core latex/pdflatex auxiliary files
@@ -278,9 +275,6 @@ TSWLatexianTemp*
 ### xwatermark package
 *.xwm
 
-## Document specific
-experiments/archives/storage/
-experiments/pycutest_cache_holder/
 
 # Python
 
@@ -378,18 +372,18 @@ ipython_config.py
 #   However, in case of collaboration, if having platform-specific dependencies or dependencies
 #   having no cross-platform support, pipenv may install dependencies that don't work, or not
 #   install all needed dependencies.
-#Pipfile.lock
+# Pipfile.lock
 
 ## poetry
 #   Similar to Pipfile.lock, it is generally recommended to include poetry.lock in version control.
 #   This is especially recommended for binary packages to ensure reproducibility, and is more
 #   commonly ignored for libraries.
 #   https://python-poetry.org/docs/basic-usage/#commit-your-poetrylock-file-to-version-control
-#poetry.lock
+# poetry.lock
 
 ## pdm
 #   Similar to Pipfile.lock, it is generally recommended to include pdm.lock in version control.
-#pdm.lock
+# pdm.lock
 #   pdm stores project-wide configurations in .pdm.toml, but it is recommended to not include it
 #   in version control.
 #   https://pdm.fming.dev/#use-with-ide
@@ -411,8 +405,8 @@ celerybeat.pid
 env/
 venv/
 ENV/
-#env.bak/
-#venv.bak/
+# env.bak/
+# venv.bak/
 *.bak/
 
 ## Spyder project settings
@@ -439,6 +433,7 @@ dmypy.json
 ## Cython debug symbols
 cython_debug/
 
+
 # Visual Studio Code
 
 ## General
@@ -450,7 +445,8 @@ cython_debug/
 ## Built Visual Studio Code Extensions
 *.vsix
 
-# Covers JetBrains IDEs: IntelliJ, RubyMine, PhpStorm, AppCode, PyCharm, CLion, Android Studio, WebStorm and Rider
+
+# JetBrains IDEs: IntelliJ, RubyMine, PhpStorm, AppCode, PyCharm, CLion, Android Studio, WebStorm and Rider
 # Reference: https://intellij-support.jetbrains.com/hc/en-us/articles/206544839
 
 ## User-specific stuff
@@ -484,6 +480,25 @@ crashlytics.properties
 crashlytics-build.properties
 fabric.properties
 
+
+# Linux
+
+## General
+*~
+
+# Temporary files which can be created if a process still has a handle open of a deleted file
+.fuse_hidden*
+
+# KDE directory preferences
+.directory
+
+# Linux trash folder which might appear on any partition or disk
+.Trash-*
+
+# .nfs files are created when an open file is removed but is still being accessed
+.nfs*
+
+
 # macOS
 
 ## General
@@ -513,3 +528,9 @@ Icon
 Network Trash Folder
 Temporary Items
 .apdisk
+
+
+## Project specific
+experiments/archives/storage/
+experiments/pycutest_cache_holder/
+old/
