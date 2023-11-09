@@ -11,7 +11,7 @@
 \usepackage{amsfonts}
 \usepackage{amsmath}
 \usepackage{amssymb}
-\usepackage{bbm}
+\usepackage[bb=dsfontserif]{mathalpha}
 \usepackage{booktabs}
 \usepackage{caption}
 \usepackage[acronym]{glossaries-extra}
@@ -49,7 +49,7 @@
 \DeclareMathOperator\rank{rank}
 \newcommand{\trs}{{\scriptscriptstyle{\mathsf{T}}}}
 \newcommand{\sn}{{\scriptscriptstyle{N}}}
-\newcommand{\ones}{\mathbbm{1}}
+\newcommand{\ones}{\mathbb{1}}
 \newcommand{\C}{\mathbb{C}}
 \newcommand{\F}{\mathbb{F}}
 \newcommand{\N}{\mathbb{N}}
@@ -247,12 +247,12 @@
 \authorrunning{}
 \institute{%
     T. M. Ragonneau \at
-        Department of Applied Mathematics, The Hong Kong Polytechnic University, Hong Kong\\
+        Department of Applied Mathematics, The Hong Kong Polytechnic University, Hong Kong, China\\
         \email{\href{mailto:tom.ragonneau@polyu.edu.hk}{tom.ragonneau@polyu.edu.hk}}\\
         ORCID: \href{https://orcid.org/0000-0003-2717-2876}{0000-0003-2717-2876}
     \and
     Z. Zhang (corresponding author)\at
-        Department of Applied Mathematics, The Hong Kong Polytechnic University, Hong Kong\\
+        Department of Applied Mathematics, The Hong Kong Polytechnic University, Hong Kong, China\\
         \email{\href{mailto:zaikun.zhang@polyu.edu.hk}{zaikun.zhang@polyu.edu.hk}}\\
         ORCID: \href{https://orcid.org/0000-0001-8934-8190}{0000-0001-8934-8190}
 }
@@ -394,7 +394,7 @@ stability under noise, tolerance of function evaluation failures, and potential 
 hyperparameter optimization.
 We conclude the paper with some remarks in Section~\ref{sec:conclude}.
 
-\section{A brief review of \glsfmtshort{dfo} methods}
+\section{A brief review of \texorpdfstring{\gls{dfo}}{DFO} methods}
 \label{sec:dfo}
 
 Consider a nonlinear optimization problem
@@ -407,7 +407,7 @@ As summarized in~\cite{Conn_Scheinberg_Vicente_2009b}, two strategies have been 
 problem~\eqref{eq:nlc} without using derivatives, which we will introduce in the following.
 
 The first strategy, known as direct search,\footnote{In some early papers (e.g.,~\cite{Powell_1994,Powell_1998})
-Powell and many other authors used ``direct search'' to mean what is known as ``\glsfmtlong{dfo}'' today. Powell rarely used the word ``derivative-free optimization.''
+Powell and many other authors used ``direct search'' to mean what is known as ``\glsxtrlong{dfo}'' today. Powell rarely used the word ``derivative-free optimization.''
 The only exceptions known to us are his last paper~\cite{Powell_2015} and his distinguished lecture
 titled ``A parsimonious way of constructing quadratic models from values of the objective function in
 derivative-free optimization'' at the National Center for Mathematics and Interdisciplinary Sciences,
@@ -799,7 +799,7 @@ subproblem and when setting up the initial interpolation set. Consequently, \gls
 an infeasible method, which requires~$\obj$ to be defined even when the linear constraints are not satisfied.
 
 
-\section{The \glsfmtshort{pdfo} package}
+\section{The \texorpdfstring{\gls{pdfo}}{PDFO} package}
 \label{sec:pdfo}
 
 This section details the main features of \gls{pdfo}, in particular the signature of the main
