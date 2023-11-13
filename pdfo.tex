@@ -149,14 +149,17 @@
 \spnewtheorem*{proof}{Proof}{\bfseries}{\rmfamily}
 \makeatother
 
-% Redefine the subsection headings to be bold.
+% Redefine the subsection and paragraphs headings to be bold.
 \makeatletter
 \def\subsection{\@startsection{subsection}{2}{\z@}%
     {-21dd plus-8pt minus-4pt}{10.5dd}
-     {\normalsize\bfseries}}
+    {\normalsize\bfseries}}
 \def\subsubsection{\@startsection{subsubsection}{2}{\z@}%
     {-21dd plus-8pt minus-4pt}{10.5dd}
-     {\normalsize\bfseries}}
+    {\normalsize\bfseries}}
+\def\paragraph{\@startsection{paragraph}{4}{\z@}%
+    {-13pt plus-8pt minus-4pt}{\z@}
+    {\normalsize\bfseries}}
 \makeatother
 
 % Cross-referencing
@@ -346,7 +349,7 @@ In this subproblem, the set~$\fsetm \subseteq \R^n$ is a local approximation of 
 \subsubsection{The interpolation problem}
 \label{ssec:iptprob}
 
-\paragraph{\textnormal{\textbf{Fully determined interpolation.}}}
+\paragraph{Fully determined interpolation.}
 
 The interpolation condition~\eqref{eq:itpls} is essentially a linear system.
 Given a base point~$y^{\base}\in \R^n$, which may depend on~$k$, a linear model~$\objm$ takes the form of~$\objm(x) = \obj(y^{\base}) + (x - y^{\base})^{\T} \nabla \objm(y^{\base})$, and hence~\eqref{eq:itpls} is equivalent to
@@ -367,7 +370,7 @@ To decide a quadratic model~$\objm$ completely by this system alone, \gls{uobyqa
 Even though most of these points will be reused at the subsequent iterations so that the number of function evaluations needed per iteration is tiny (see Section~\ref{ssec:iptset}), we must perform~$(n + 1)(n + 2) / 2$ function evaluations during the very first iteration.
 This is impracticable unless~$n$ is small, which motivates the underdetermined quadratic interpolation.
 
-\paragraph{\textnormal{\textbf{Underdetermined quadratic interpolation.}}}
+\paragraph{Underdetermined quadratic interpolation.}
 
 In this case, models are established according to the interpolation condition~\eqref{eq:itpls} with~$\abs{\xpt}$ being less than~$(n + 1)(n + 2) / 2$, the remaining degrees of freedom being taken up by minimizing a certain functional~$\func_k$ to promote the regularity of the quadratic model.
 More specifically, this means building~$\objm$ by solving
@@ -387,7 +390,7 @@ Powell~\cite{Powell_2013} referred to his approach as the \emph{symmetric Broyde
 It can be regarded as a derivative-free version of \gls{psb} quasi-Newton update~\cite{Powell_1970b}, which minimizes the functional~$\func_k$ among all quadratic polynomials that fulfill~$Q(\iter) = \obj(\iter)$, $\nabla Q(\iter) = \nabla \obj(\iter)$, and~$\nabla Q(\iter[k - 1]) = \nabla \obj(\iter[k - 1])$ (see~\cite[Theorem~4.2]{Dennis_Schnabel_1979}), with~$\iter$ and~$\iter[k - 1]$ being the current and the previous iterates, respectively.
 The interpolation problem~\eqref{eq:undqitp}--\eqref{eq:leastchange} is a convex quadratic programming problem with respect to the coefficients of the quadratic model.
 
-\paragraph{\textnormal{\textbf{Solving the interpolation problem.}}}
+\paragraph{Solving the interpolation problem.}
 
 Powell's algorithms do not solve the interpolation problems~\eqref{eq:litpls}, \eqref{eq:qitpls}, and~\eqref{eq:undqitp}--\eqref{eq:leastchange} from scratch.
 \Gls{cobyla} maintains the inverse of the coefficient matrix for~\eqref{eq:litpls} and updates it along the iterations.
@@ -398,7 +401,7 @@ The update is also done by the Sherman-Morrison-Woodbury formula as detailed in~
 In this case, each iteration modifies the coefficient matrix and its inverse by rank-$2$ updates.
 In addition, the columns of this inverse matrix readily provide the coefficients of Lagrange functions that make the interpolation problem~\eqref{eq:undqitp}--\eqref{eq:leastchange} easy to solve~(see~\cite[\S~3]{Powell_2004b})
 
-\paragraph{\textnormal{\textbf{The base point.}}}
+\paragraph{The base point.}
 
 The choice of the base point~$y^{\base}$ is also worth mentioning.
 \Gls{cobyla} sets~$y^{\base}$ to the center~$x_k$ of the current trust region.
@@ -958,16 +961,16 @@ The implementation of these solvers in Python, MATLAB, and other languages is a 
 
 \section*{Statements and declarations}
 
-\paragraph{\textnormal{\textbf{Funding.}}}
+\paragraph{Funding.}
 
 This work was funded by the University Grants Committee of Hong Kong under the projects PF18-24698 (Hong Kong PhD Fellowship Scheme), PolyU 253012/17P, PolyU 153054/20P, and PolyU 153066/21P.
 It was also supported by The Hong Kong Polytechnic University under project P0009767.
 
-\paragraph{\textnormal{\textbf{Competing interests.}}}
+\paragraph{Competing interests.}
 
 The authors have no relevant financial or non-financial interests to disclose.
 
-\paragraph{\textnormal{\textbf{Data availability.}}}
+\paragraph{Data availability.}
 
 The source code of the \gls{pdfo} package is available at \url{https://www.pdfo.net}\,.
 The source code of the numerical experiments is available at \url{https://www.github.com/pdfo/paper/blob/main/experiments}\,.
