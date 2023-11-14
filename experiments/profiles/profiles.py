@@ -32,34 +32,7 @@ plt.rc("font", family="serif", size=16)
 class Profiles:
     BASE_DIR = Path(__file__).resolve().parent.parent
     ARCH_DIR = Path(BASE_DIR, "archives")
-    EXCLUDED = {
-        # The compilation of the sources is prohibitively time-consuming.
-        "BA-L73", "BA-L73LS", "BDRY2", "CHANDHEU", "CHARDIS0", "CHARDIS1", "DMN15102", "DMN15102LS", "DMN15103", "DMN15103LS", "DMN15332", "DMN15332LS", "DMN15333", "DMN15333LS", "DMN37142", "DMN37142LS", "DMN37143", "DMN37143LS", "EIGENALS", "EIGENBLS", "GPP", "LEUVEN3", "LEUVEN4", "LEUVEN5", "LEUVEN6", "LIPPERT2", "LOBSTERZ", "PDE1", "PDE2", "PENALTY3", "RDW2D51F", "RDW2D51U", "RDW2D52B", "RDW2D52F", "RDW2D52U", "ROSEPETAL", "WALL100", "YATP1SQ", "YATP2SQ", "BA-L16LS", "BA-L21", "BA-L21LS", "BA-L49", "BA-L49LS", "BA-L52LS", "BA-L52", "YATP1LS", "YATP2LS",
-
-        # The starting points contain NaN values.
-        "LHAIFAM",
-
-        # The problems contain a lot of NaN.
-        "HS62", "HS112", "LIN",
-
-        # The problems seem not lower-bounded.
-        "INDEF",
-
-        # The problems are known infeasible.
-        "ARGLALE", "ARGLBLE", "ARGLCLE", "MODEL", "NASH",
-
-        # The problems seem infeasible.
-        "ANTWERP", "CRESC4", "CRESC50", "DEGENLPA", "DEGENLPB", "DIXCHLNG", "DUALC1", "DUALC2", "DUALC5", "DUALC8", "ELATTAR", "GOULDQP1", "HIMMELBJ", "HONG", "HS8", "HS13", "HS19", "HS55", "HS63", "HS64", "HS72", "HS73", "HS84", "HS86", "HS88", "HS89", "HS92", "HS101", "HS102", "HS103", "HS106", "HS107", "HS109", "HS119", "LOADBAL", "LOTSCHD", "LSNNODOC", "PORTFL1", "PORTFL2", "PORTFL3", "PORTFL4", "PORTFL6", "SNAKE", "SUPERSIM", "TAME", "WACHBIEG",
-
-        # The projection of the initial guess fails.
-        "LINCONT",
-
-        # Classical UOBYQA and COBYLA suffer from infinite cycling.
-        "GAUSS1LS", "GAUSS2LS", "GAUSS3LS", "MGH17LS", "MISRA1ALS", "MISRA1CLS", "NELSONLS", "OSBORNEA", "RAT43LS",
-
-        # Classical COBYLA suffers from infinite cycling.
-        "DANWOODLS", "KOEBHELB",
-    }
+    EXCLUDED = {}
 
     def __init__(self, n_min, n_max, constraints, m_min=0, m_max=sys.maxsize, feature="plain", callback=None, **kwargs):
         # All features:
@@ -255,7 +228,7 @@ class Profiles:
                 plt.plot(x, y, label=solver_names[j].replace("-", " "))
             plt.xlim(0, 1.1 * perf_ratio_max)
             plt.ylim(0, 1)
-            plt.xlabel(r"$\log_2(\text{Performance ratio})$")
+            plt.xlabel(r"$\log_2(\mathrm{Performance\ ratio})$")
             plt.ylabel(fr"Performance profiles")
             plt.legend(handlelength=1.25, handletextpad=0.25, labelspacing=0.3, loc="lower right")
             pdf_perf.savefig(fig, bbox_inches="tight")
