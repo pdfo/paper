@@ -3,8 +3,8 @@
 \RequirePackage{fix-cm}
 \documentclass[
     smallextended,  % one column (second format)
-    % draft,          % to make overfull boxes visible
-    final,        % the opposite of draft
+    draft,          % to make overfull boxes visible
+    % final,        % the opposite of draft
     % referee,      % required to produce a hardcopy for the referee with a special layout (bigger interline spacing)
 ]{svjour3}
 
@@ -186,12 +186,12 @@
 \authorrunning{}
 \institute{%
     T. M. Ragonneau \at
-        Department of Applied Mathematics, The Hong Kong Polytechnic University, Hong Kong, China\\
+        Department of Applied Mathematics, The Hong Kong Polytechnic University, Hong Kong\modified{, China}\\
         \email{\href{mailto:tom.ragonneau@polyu.edu.hk}{\texttt{tom.ragonneau@polyu.edu.hk}}}\\
         ORCID: \href{https://orcid.org/0000-0003-2717-2876}{0000-0003-2717-2876}
     \and
     Z. Zhang~(corresponding author)\at
-        Department of Applied Mathematics, The Hong Kong Polytechnic University, Hong Kong, China\\
+        Department of Applied Mathematics, The Hong Kong Polytechnic University, Hong Kong\modified{, China}\\
         \email{\href{mailto:zaikun.zhang@polyu.edu.hk}{\texttt{zaikun.zhang@polyu.edu.hk}}}\\
         ORCID: \href{https://orcid.org/0000-0001-8934-8190}{0000-0001-8934-8190}
 }
@@ -202,8 +202,8 @@
 \maketitle
 
 \begin{abstract}
-    \modified{The late} Professor M. J. D. Powell devised five trust-region derivative-free optimization methods, namely \gls{cobyla}, \gls{uobyqa}, \gls{newuoa}, \gls{bobyqa}, and \gls{lincoa}.
-    He also carefully implemented them into publicly available solvers, which are renowned for their robustness and efficiency.
+    \modified{The late} Professor M. J. D. Powell devised five trust-region \modified{methods for derivative-free optimization}, namely \gls{cobyla}, \gls{uobyqa}, \gls{newuoa}, \gls{bobyqa}, and \gls{lincoa}.
+    He carefully implemented them into publicly available solvers, renowned for their robustness and efficiency.
     However, the solvers were implemented in Fortran 77 and hence may not be easily accessible to some users.
     We introduce the \gls{pdfo} package, which provides user-friendly Python and MATLAB interfaces to Powell's code.
     With \gls{pdfo}, users of such languages can call Powell's Fortran solvers easily without dealing with the Fortran code.

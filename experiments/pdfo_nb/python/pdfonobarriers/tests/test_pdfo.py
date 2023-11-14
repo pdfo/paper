@@ -26,7 +26,7 @@ import unittest
 import warnings
 
 import numpy as np
-from pdfo import LinearConstraint, Bounds, pdfo
+from pdfonobarriers import LinearConstraint, Bounds, pdfonobarriers
 
 
 class TestPDFO(unittest.TestCase):
@@ -128,7 +128,7 @@ class TestPDFO(unittest.TestCase):
                             global_res = func_solver(**args)
 
                             args['method'] = solver
-                            pdfo_res = pdfo(**args)
+                            pdfo_res = pdfonobarriers(**args)
                             x = pdfo_res.x
                             fx = pdfo_res.fun
 

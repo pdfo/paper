@@ -310,7 +310,7 @@ class Profiles:
             with warnings.catch_warnings():
                 warnings.simplefilter("ignore")
                 fd_step = np.sqrt(np.finfo(float).eps)
-                if self.feature == "noisy":
+                if self.feature == "noisy" and solver.endswith("-adaptive"):
                     fd_step = max(fd_step, np.sqrt(self.feature_options["level"]))
                 optimizer = Minimizer(problem, solver, self.max_eval, options, self.noise, fd_step, k)
                 fun_history, maxcv_history = optimizer()
