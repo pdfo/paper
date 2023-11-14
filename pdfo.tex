@@ -10,7 +10,7 @@
 
 % Preliminaries
 \usepackage{ifthen}
-% \renewcommand{\baselinestretch}{1.05}
+\renewcommand{\baselinestretch}{1.05}
 
 % Colors
 \RequirePackage[dvipsnames]{xcolor}
@@ -680,10 +680,14 @@ We first compare \gls{pdfo} with finite-difference \gls{cg} and \gls{bfgs} on un
 We take the view that multiplicative noise makes more sense if the scale of the objective function changes widely, as is often the case in applications.
 
 SciPy provides both~\gls{cg} and \gls{bfgs} under the \texttt{minimize} function in the \texttt{scipy.optimize} module.
-Invoked with the default configurations in SciPy without derivatives, \gls{cg} and \gls{bfgs} approximate gradients by forward differences with the default difference parameter~$h = \sqrt{u} \approx 1.5\times 10^{-8}$, where~$u$ is the unit roundoff.
+\modified{
+    The methods \gls{cg} and \gls{bfgs} relies on derivatives of the objective function, which are not available in our experiments.
+    Therefore, we approximate the derivatives by forward differences, and try two difference parameters:~$h = \sqrt{u} \approx 1.5\times 10^{-8}$, where~$u$ is the unit roundoff, and~$h = \sqrt{\sigma}$, where~$\sigma$ is the noise level of the experiment.
+    The former is the default value of the \texttt{scipy.optimize} module, while the latter requires a priori knowledge of the noise level.
+}
 For \gls{pdfo}, we specify \gls{newuoa} as the solver, while setting all the other options to the default.
 In particular, the initial trust-region radius is~$1$, the final trust-region radius is~$10^{-6}$, and the number of interpolation points is~$2n + 1$, with~$n$ being the dimension of the problem being solved.
-We perform the comparison on~158 unconstrained problems with~$n \le 50$ from the CUTEst~\cite{Gould_Orban_Toint_2015} problem set using PyCUTEst~1.5~\cite{Fowkes_Roberts_Burmen_2022}.
+We perform the comparison on~\modified{\num{167}} unconstrained problems with~$n \le 50$ from the CUTEst~\cite{Gould_Orban_Toint_2015} problem set using PyCUTEst~\modified{1.5.1}~\cite{Fowkes_Roberts_Burmen_2022}.
 For each testing problem, the starting point is set to the one provided by CUTEst, and the maximal number of function evaluations is set to~$500n$.
 
 Let~$\sigma \ge 0$ be the noise level to test.
@@ -694,7 +698,7 @@ For a testing problem with the objective function~$\obj$, we define
 \end{equation}
 with $R(\iter[])\sim \NN(0, 1)$ being independent and identically distributed when~$x$ varies.
 If~$\sigma = 0$, then~$\tilde{f}_\sigma = f$, corresponding to the noise-free case.
-In general,~$\sigma$ equals the standard deviation of the noise.
+In general,~$\sigma$ \modified{is} the standard deviation of the noise.
 
 Given a noise level~$\sigma\ge 0$ and a convergence tolerance~$\tau\in(0,1)$, we will plot the performance profiles~\cite{More_Wild_2009} of the solvers on the testing problems.
 We run all the solvers on all the problems, every objective function being evaluated by its contaminated version~\eqref{eq:noisy-obj}.
@@ -715,6 +719,10 @@ Finally, for better scaling of the profiles, we plot the binary logarithm of the
 
 Figure~\ref{fig:noise} shows the performance profiles of the solvers for the noise levels~$\sigma = 0$, $\sigma = 10^{-10}$, and~$\sigma = 10^{-8}$.
 Two profiles are included for each noise level, with the convergence tolerance being~$\tau = 10^{-2}$ and~$\tau = 10^{-4}$ respectively.
+\modified{
+    In the legends, ``\gls{cg}'' and ``\gls{bfgs}'' denote the finite-difference methods with~$h = \sqrt{u}$, and ``\gls{cg} adaptive'' and ``\gls{bfgs} adaptive'' are the variations with~$h = \sqrt{\sigma}$.
+    Note that \gls{pdfo} does not use the value of~$\sigma$ and hence, can be used for solving noisy problems for which the noise level is unknown.
+}
 
 \begin{figure}[htbp]
     \begin{subfigure}{.48\textwidth}
@@ -758,7 +766,7 @@ Two profiles are included for each noise level, with the convergence tolerance b
 
 In the noise-free case ($\sigma = 0$), \gls{pdfo} is more efficient than finite-difference \gls{cg} and \gls{bfgs}, although the distinction is less visible when~$\tau$ is smaller, and~\gls{bfgs} can solve slightly more problems than~\gls{pdfo}.
 When there is noise~($\sigma >0$), the advantage of \gls{pdfo} becomes significant.
-The performances of \gls{cg} and \gls{bfgs} deteriorate considerably under noise, even if the noise level is not high and the convergence tolerance is not demanding.
+The performances of \modified{both variations of} \gls{cg} and \gls{bfgs} deteriorate considerably under noise, even if the noise level is not high and the convergence tolerance is not demanding.
 We do not include results with larger values of~$\sigma$, as \gls{cg} and \gls{bfgs} will barely solve any problem, while \gls{pdfo} can still tackle a significant proportion of them up to a reasonable precision.
 
 However, given the fact that \gls{cg} and \gls{bfgs} take the finite difference parameter~$h \approx 10^{-8}$, their unfavorable performance is not surprising.
@@ -777,8 +785,8 @@ We now test the robustness of the solvers when function evaluations fail from ti
 We assume that the objective function returns NaN if the evaluation fails, which occurs randomly with a certain probability.
 As mentioned in Section~\ref{ssec:barrier}, \gls{pdfo} uses a moderated extreme barrier to handle such failures.
 To verify the effectiveness of this approach, we compare \gls{pdfo} with its variant that does not apply the barrier.
-To make the experiment more informative, we also include the finite-difference \gls{cg} and~\gls{bfgs} tested before, which do not handle evaluation failures particularly.
-The solvers are set up in the same way as in the previous experiment, and we still employ the~$158$ unconstrained CUTEst problems used previously.
+To make the experiment more informative, we also include the finite-difference \gls{cg} and~\gls{bfgs} tested before, which do not handle evaluation failures \modified{explicitely}.
+The solvers are set up in the same way as in the previous experiment, and we still employ the~\modified{\num{167}} unconstrained CUTEst problems used previously.
 
 Let~$p \in [0,1]$ be the failure probability of function evaluations.
 For a testing problem with the objective function~$\obj$, we define
@@ -855,7 +863,7 @@ As suggested by~\cite[\S~9]{Chang_Lin_2011}, we tune~$C$ and~$\gamma$ for the pe
 We model this process as solving the problem
 \begin{equation}
     \label{eq:hypertune}
-    \max ~ P(C, \gamma) \quad \st \quad C > 0,~ \gamma > 0,
+    \max ~ P(C, \gamma) \quad \st \quad C > 0, ~ \gamma > 0,
 \end{equation}
 where~$P(C, \gamma)$ measures the performance corresponding to parameters~$(C, \gamma)$.
 In our experiment, we define~$P$ based on the AUC score~\cite[\S~3]{Ghanbari_Scheinberg_2017}, which lies in~$[0,1]$ and measures the quality of a classifier on a dataset, the higher the better.
@@ -876,11 +884,11 @@ For~\gls{rs} and~\gls{tpe}, we try both~$100$ and~$300$ for the maximal number o
     \caption{Datasets from LIBSVM}
     \label{tab:htdata}
     \centering
-    \begin{tabular}{cS[table-format=2]S[table-format=5]S[table-format=5]}
+    \begin{tabular}{ccS[table-format=5]S[table-format=5]}
         \toprule
         Dataset~$\mathcal{D}$   & {Number of features}  & {Size of~$\mathcal{S}$}   & {Size of~$\mathcal{T}$}\\
         \midrule
-        splice                  & 60                    & 1000                      &  2175\\
+        splice                  & 60                    & 1000                      & 2175\\
         svmguide1               & 4                     & 3088                      & 4000\\
         ijcnn1                  & 22                    & 49990                     & 91701\\
         \bottomrule
@@ -895,15 +903,15 @@ Tables~\ref{tab:splice}--\ref{tab:ijcnn1} present the results for this experimen
     \caption{Hyperparameter tuning on the dataset ``splice''}
     \label{tab:splice}
     \centering
-    \begin{tabular}{cSSS[table-format=3]S}
+    \begin{tabular}{cSScS}
         \toprule
         Solver      & {AUC Score ($10^{-1}$)}   & {Accuracy ($10^{-1}$)}    & {\#$P$}   & {Time (\si{\second})}\\
         \midrule
+        \gls{pdfo}  & 9.27                      & 7.37                      & 33        & 5.11\\
         \gls{rs}    & 5.00                      & 5.20                      & 100       & 8.23\\
         \gls{rs}    & 5.00                      & 5.20                      & 300       & 24.73\\
         \gls{tpe}   & 5.00                      & 5.20                      & 100       & 8.22\\
         \gls{tpe}   & 5.00                      & 5.20                      & 300       & 23.57\\
-        \gls{pdfo}  & 9.27                      & 7.37                      & 33        & 5.11\\
         \bottomrule
     \end{tabular}
 \end{table}
@@ -911,15 +919,15 @@ Tables~\ref{tab:splice}--\ref{tab:ijcnn1} present the results for this experimen
 \begin{table}[!ht]
     \caption{Hyperparameter tuning on the dataset ``svmguide1''}
     \centering
-    \begin{tabular}{cccS[table-format=3]S}
+    \begin{tabular}{cSScS}
         \toprule
         Solver      & {AUC Score ($10^{-1}$)}   & {Accuracy ($10^{-1}$)}    & {\#$P$}   & {Time (\si{\second})}\\
         \midrule
+        \gls{pdfo}  & 9.95                      & 9.66                      & 51        & 2.83\\
         \gls{rs}    & 9.94                      & 9.61                      & 100       & 10.22\\
         \gls{rs}    & 9.95                      & 9.68                      & 300       & 30.75\\
         \gls{tpe}   & 9.95                      & 9.65                      & 100       & 8.65\\
         \gls{tpe}   & 9.95                      & 9.68                      & 300       & 22.38\\
-        \gls{pdfo}  & 9.95                      & 9.66                      & 51        & 2.83\\
         \bottomrule
     \end{tabular}
 \end{table}
@@ -928,16 +936,16 @@ Tables~\ref{tab:splice}--\ref{tab:ijcnn1} present the results for this experimen
     \caption{Hyperparameter tuning on the dataset ``ijcnn1''}
     \label{tab:ijcnn1}
     \centering
-    \begin{tabular}{cccS[table-format=3]S}
+    \begin{tabular}{cSScS}
         \toprule
         Solver      & {AUC Score ($10^{-1}$)}   & {Accuracy ($10^{-1}$)}    &{\#$P$}    & {Time (\SI{}
         [10^3]{\second})}\\
         \midrule
+        \gls{pdfo}  & 9.97                      & 9.80                      & 44        & 2.48\\
         \gls{rs}    & 9.97                      & 9.82                      & 100       & 3.99\\
         \gls{rs}    & 9.97                      & 9.77                      & 300       & 11.52\\
         \gls{tpe}   & 9.98                      & 9.79                      & 100       & 3.42\\
         \gls{tpe}   & 9.98                      & 9.79                      & 300       & 8.81\\
-        \gls{pdfo}  & 9.97                      & 9.80                      & 44        & 2.48\\
         \bottomrule
     \end{tabular}
 \end{table}
@@ -947,7 +955,7 @@ However, \gls{pdfo} always uses much fewer function evaluations, and hence, much
 The difference in the computing time is particularly visible on the dataset ``ijcnn1'' in Table~\ref{tab:ijcnn1}, as each evaluation of~$P$ takes much time due to the large data size.
 
 Note that our intention is not to manifest that \gls{pdfo} outperforms standard solvers for general hyperparameter optimization problems, which is unlikely the case.
-Indeed, \gls{pdfo} is not applicable unless the hyperparameters are continuous variables.
+Indeed, \gls{pdfo} is not \modified{directly} applicable unless the hyperparameters are continuous variables.
 Our objective is rather to provide an example that shows the possibility of applying Powell's methods to hyperparameter optimization, which is not well studied up to now.
 In doing so, we also hope to call for more investigation on \gls{dfo} methods for machine learning problems in general, as is suggested in~\cite{Ghanbari_Scheinberg_2017}.
 
