@@ -310,7 +310,7 @@ class Profiles:
             with warnings.catch_warnings():
                 warnings.simplefilter("ignore")
                 adaptive = re.compile(r"(?P<solver>\w+)-adaptive")
-                adaptive_match = adaptive.match(self.solver.lower())
+                adaptive_match = adaptive.match(solver.lower())
                 fd_step = np.sqrt(np.finfo(float).eps)
                 if self.feature == "noisy" and adaptive_match:
                     fd_step = max(fd_step, np.sqrt(self.feature_options["level"]))
