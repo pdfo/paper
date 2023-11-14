@@ -32,7 +32,10 @@ plt.rc("font", family="serif", size=16)
 class Profiles:
     BASE_DIR = Path(__file__).resolve().parent.parent
     ARCH_DIR = Path(BASE_DIR, "archives")
-    EXCLUDED = {}
+    EXCLUDED = {
+        # The compilation of the sources is prohibitively time-consuming.
+        "EIGENALS",
+    }
 
     def __init__(self, n_min, n_max, constraints, m_min=0, m_max=sys.maxsize, feature="plain", callback=None, **kwargs):
         # All features:
