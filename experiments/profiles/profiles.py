@@ -309,7 +309,10 @@ class Profiles:
                 return None
             with warnings.catch_warnings():
                 warnings.simplefilter("ignore")
-                optimizer = Minimizer(problem, solver, self.max_eval, options, self.noise, k)
+                fd_step = np.sqrt(np.finfo(float).eps)
+                if self.feature == "noisy":
+                    fd_step = max(fd_step, np.sqrt(self.feature_options["level"]))
+                optimizer = Minimizer(problem, solver, self.max_eval, options, self.noise, fd_step, k)
                 fun_history, maxcv_history = optimizer()
                 n_eval = min(fun_history.size, self.max_eval)
                 merits = self.merit(fun_history[:n_eval], maxcv_history[:n_eval], **kwargs)

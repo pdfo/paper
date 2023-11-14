@@ -3,8 +3,8 @@
 \RequirePackage{fix-cm}
 \documentclass[
     smallextended,  % one column (second format)
-    draft,          % to make overfull boxes visible
-    % final,        % the opposite of draft
+    % draft,          % to make overfull boxes visible
+    final,        % the opposite of draft
     % referee,      % required to produce a hardcopy for the referee with a special layout (bigger interline spacing)
 ]{svjour3}
 
@@ -149,7 +149,7 @@
 \spnewtheorem*{proof}{Proof}{\bfseries}{\rmfamily}
 \makeatother
 
-% Redefine the subsection and paragraphs headings to be bold.
+% Redefine the subsection and paragraph headings to be bold.
 \makeatletter
 \def\subsection{\@startsection{subsection}{2}{\z@}%
     {-21dd plus-8pt minus-4pt}{10.5dd}
@@ -173,6 +173,9 @@
     urlcolor=black,
 }
 
+% Reviewing
+\newcommand{\modified}[1]{\texorpdfstring{{\color{NavyBlue}#1}}{#1}}
+
 % Headings
 \journalname{Mathematical Programming Computation}
 \title{PDFO: A Cross-Platform Package for Powell's Derivative-Free Optimization Solvers}
@@ -183,12 +186,12 @@
 \authorrunning{}
 \institute{%
     T. M. Ragonneau \at
-        Department of Applied Mathematics, The Hong Kong Polytechnic University, Hung Hom, Kowloon, Hong Kong, China\\
+        Department of Applied Mathematics, The Hong Kong Polytechnic University, Hong Kong, China\\
         \email{\href{mailto:tom.ragonneau@polyu.edu.hk}{\texttt{tom.ragonneau@polyu.edu.hk}}}\\
         ORCID: \href{https://orcid.org/0000-0003-2717-2876}{0000-0003-2717-2876}
     \and
     Z. Zhang~(corresponding author)\at
-        Department of Applied Mathematics, The Hong Kong Polytechnic University, Hung Hom, Kowloon, Hong Kong, China\\
+        Department of Applied Mathematics, The Hong Kong Polytechnic University, Hong Kong, China\\
         \email{\href{mailto:zaikun.zhang@polyu.edu.hk}{\texttt{zaikun.zhang@polyu.edu.hk}}}\\
         ORCID: \href{https://orcid.org/0000-0001-8934-8190}{0000-0001-8934-8190}
 }
@@ -199,14 +202,14 @@
 \maketitle
 
 \begin{abstract}
-    The late Professor M. J. D. Powell devised five trust-region derivative-free optimization methods, namely \gls{cobyla}, \gls{uobyqa}, \gls{newuoa}, \gls{bobyqa}, and \gls{lincoa}.
+    \modified{The late} Professor M. J. D. Powell devised five trust-region derivative-free optimization methods, namely \gls{cobyla}, \gls{uobyqa}, \gls{newuoa}, \gls{bobyqa}, and \gls{lincoa}.
     He also carefully implemented them into publicly available solvers, which are renowned for their robustness and efficiency.
     However, the solvers were implemented in Fortran 77 and hence may not be easily accessible to some users.
     We introduce the \gls{pdfo} package, which provides user-friendly Python and MATLAB interfaces to Powell's code.
     With \gls{pdfo}, users of such languages can call Powell's Fortran solvers easily without dealing with the Fortran code.
     Moreover, \gls{pdfo} includes bug fixes and improvements, which are particularly important for handling problems that suffer from ill-conditioning or failures of function evaluations.
     In addition to the \gls{pdfo} package, we provide an overview of Powell's methods, sketching them from a uniform perspective, summarizing their main features, and highlighting the similarities and interconnections among them.
-    We also present experiments on \gls{pdfo} to demonstrate its stability under noise, tolerance of failures in function evaluations, and potential in solving certain hyperparameter optimization problems.
+    We also present experiments on \gls{pdfo} to demonstrate its stability under noise, tolerance of failures in function evaluations, and potential \modified{to solve} certain hyperparameter optimization problems.
 
     \keywords{Derivative-free optimization \and COBYLA \and UOBYQA \and NEWUOA \and BOBYQA \and LINCOA}
     \subclass{65K05 \and 90C30 \and 90C56 \and 90-04}
@@ -224,13 +227,13 @@ Powell devised five algorithms to tackle unconstrained and constrained problems 
 He did not only propose these algorithms but also implemented them into publicly available solvers, paying great attention to the stability and complexity of their numerical linear algebra computations.
 Renowned for their robustness and efficiency, these solvers are used in a wide spectrum of applications, for instance, aeronautical engineering~\cite{Gallard_Etal_2018}, astronomy~\cite{Mamon_Biviano_Boue_2013}, computer vision~\cite{Izadinia_Shan_Seitz_2017}, robotics~\cite{Mombaur_Truong_Laumond_2010}, and statistics~\cite{Bates_Etal_2015}.
 
-However, Powell coded the solvers in Fortran 77, an old-fashion language that damps the enthusiasm of many users to exploit these solvers in their projects.
+However, Powell coded the solvers in Fortran 77, an \modified{old-fashioned} language that damps the enthusiasm of many users to exploit these solvers in their projects.
 There has been a continued demand from both researchers and practitioners for the availability of Powell's solvers in more user-friendly languages such as Python and MATLAB.
 
 Responding to such a demand, this paper presents a package named \gls{pdfo}, an acronym for ``\glsxtrlong{pdfo}.''
 \Gls{pdfo} interfaces Powell's Fortran solvers with other languages, enabling users of such languages to call Powell's solvers without dealing with the Fortran code.
 For each supported language, \gls{pdfo} provides a simple function that can invoke one of Powell's solvers according to the user's request~(if any) or according to the type of the problem to solve.
-The current release~(Version~1.2) of \gls{pdfo} supports Python and MATLAB, with more languages to be covered in the future.
+The current release~(Version~\modified{2.0.0}) of \gls{pdfo} supports Python and MATLAB, with more languages to be covered in the future.
 The signature of the Python function is consistent with the \texttt{minimize} function of the SciPy optimization library, and that of the MATLAB function is consistent with the \texttt{fmincon} function of the MATLAB Optimization Toolbox.
 \Gls{pdfo} is cross-platform, available on Linux, macOS, and Windows at
 \begin{center}
@@ -309,7 +312,7 @@ For more extensive discussions on \gls{dfo} methods and theory, see the monograp
 \label{sec:powell}
 
 Powell published in 1964 his first \gls{dfo} algorithm based on conjugate directions~\cite{Powell_1964}.\footnote{According to Google Scholar, this is Powell's second published paper and also the second most cited work.
-The earliest and meanwhile most cited one is his paper on the DFP method~\cite{Fletcher_Powell_1963} co-authored with Fletcher and published in 1963.
+The earliest and most cited one is his paper on the DFP method~\cite{Fletcher_Powell_1963} co-authored with Fletcher and published in 1963.
 DFP is not a DFO algorithm but the first quasi-Newton method.
 The least-change property~\cite{Dennis_Schnabel_1979} of quasi-Newton methods is a major motivation for Powell to investigate the least Frobenius norm updating~\cite{Powell_2004b} of quadratic models in DFO, which is the backbone of \gls{newuoa}, \gls{bobyqa}, and \gls{lincoa}.}
 His code for this algorithm is contained in the HSL Mathematical Software Library as subroutine \texttt{VA24}.\footnote{\url{https://www.hsl.rl.ac.uk}\,.}
@@ -658,8 +661,8 @@ Instead of repeating such comparisons, which is unnecessary, the purpose of our 
         This is done in Subsection~\ref{ssec:hypertune} by comparing~\gls{pdfo} with two solvers from the Python package~\texttt{hyperopt}.\footnote{\url{https://hyperopt.github.io/hyperopt}\,.}
 \end{enumerate}
 
-Our experiments are carried out in double precision based on the Python version of \gls{pdfo}~1.2.
-The finite-difference \gls{cg} and \gls{bfgs} are provided by SciPy~1.10.0.
+Our experiments are carried out in double precision based on the Python version of \gls{pdfo}~\modified{2.0.0}.
+The finite-difference \gls{cg} and \gls{bfgs} are provided by SciPy~\modified{1.10.1}.
 The version of~\texttt{hyperopt} is~0.2.7.
 All these packages are tested with the latest stable version at the time of writing.
 We conduct the test on a ThinkStation P620 with an AMD Ryzen Threadripper PRO 3975WX CPU and 64 GB of memory, the operating system being Ubuntu~22.04, and the Python version being~3.10.6.
@@ -674,7 +677,7 @@ SciPy provides both~\gls{cg} and \gls{bfgs} under the \texttt{minimize} function
 Invoked with the default configurations in SciPy without derivatives, \gls{cg} and \gls{bfgs} approximate gradients by forward differences with the default difference parameter~$h = \sqrt{u} \approx 1.5\times 10^{-8}$, where~$u$ is the unit roundoff.
 For \gls{pdfo}, we specify \gls{newuoa} as the solver, while setting all the other options to the default.
 In particular, the initial trust-region radius is~$1$, the final trust-region radius is~$10^{-6}$, and the number of interpolation points is~$2n + 1$, with~$n$ being the dimension of the problem being solved.
-We perform the comparison on~158 unconstrained problems with~$n \le 50$ from the CUTEst~\cite{Gould_Orban_Toint_2015} problem set using PyCUTEst~1.4~\cite{Fowkes_Roberts_Burmen_2022}.
+We perform the comparison on~158 unconstrained problems with~$n \le 50$ from the CUTEst~\cite{Gould_Orban_Toint_2015} problem set using PyCUTEst~1.5~\cite{Fowkes_Roberts_Burmen_2022}.
 For each testing problem, the starting point is set to the one provided by CUTEst, and the maximal number of function evaluations is set to~$500n$.
 
 Let~$\sigma \ge 0$ be the noise level to test.

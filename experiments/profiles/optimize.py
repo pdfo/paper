@@ -1,3 +1,5 @@
+import re
+
 import numpy as np
 import pdfo
 import pdfonobarriers
@@ -5,12 +7,13 @@ from scipy import optimize
 
 
 class Minimizer:
-    def __init__(self, problem, solver, max_eval, options, callback, *args, **kwargs):
+    def __init__(self, problem, solver, max_eval, options, callback, fd_step, *args, **kwargs):
         self.problem = problem
         self.solver = solver
         self.max_eval = max_eval
         self.options = dict(options)
         self.callback = callback
+        self.fd_step = fd_step
         self.args = args
         self.kwargs = kwargs
         if not self.validate():
@@ -24,19 +27,22 @@ class Minimizer:
         self.fun_history = []
         self.maxcv_history = []
 
+        adaptive = re.compile(r"(?P<solver>\w+)-adaptive")
+        adaptive_match = adaptive.match(self.solver.lower())
+
         options = dict(self.options)
         if self.solver.lower() in pdfo.__all__:
             method = self.solver if self.solver.lower() != "pdfo" else None
-            bounds = pdfo.Bounds(self.problem.xl, self.problem.xu)
+            bounds = optimize.Bounds(self.problem.xl, self.problem.xu)
             constraints = []
             if self.problem.m_linear_ub > 0:
-                constraints.append(pdfo.LinearConstraint(self.problem.aub, -np.inf, self.problem.bub))
+                constraints.append(optimize.LinearConstraint(self.problem.aub, -np.inf, self.problem.bub))
             if self.problem.m_linear_eq > 0:
-                constraints.append(pdfo.LinearConstraint(self.problem.aeq, self.problem.beq, self.problem.beq))
+                constraints.append(optimize.LinearConstraint(self.problem.aeq, self.problem.beq, self.problem.beq))
             if self.problem.m_nonlinear_ub > 0:
-                constraints.append(pdfo.NonlinearConstraint(self.problem.cub, -np.inf, np.zeros(self.problem.m_nonlinear_ub)))
+                constraints.append(optimize.NonlinearConstraint(self.problem.cub, -np.inf, np.zeros(self.problem.m_nonlinear_ub)))
             if self.problem.m_nonlinear_eq > 0:
-                constraints.append(pdfo.NonlinearConstraint(self.problem.ceq, np.zeros(self.problem.m_nonlinear_eq), np.zeros(self.problem.m_nonlinear_eq)))
+                constraints.append(optimize.NonlinearConstraint(self.problem.ceq, np.zeros(self.problem.m_nonlinear_eq), np.zeros(self.problem.m_nonlinear_eq)))
             options["maxfev"] = self.max_eval
             options["eliminate_lin_eq"] = False
             pdfo.pdfo(self.eval, self.problem.x0, method=method, bounds=bounds, constraints=constraints, options=options)
@@ -61,12 +67,19 @@ class Minimizer:
                 constraints.append(optimize.LinearConstraint(self.problem.aub, -np.inf, self.problem.bub))
             if self.problem.m_linear_eq > 0:
                 constraints.append(optimize.LinearConstraint(self.problem.aeq, self.problem.beq, self.problem.beq))
-            if self.problem.m_nonlinear_ub > 0:
-                constraints.append(optimize.NonlinearConstraint(self.problem.cub, -np.inf, np.zeros(self.problem.m_nonlinear_ub)))
-            if self.problem.m_nonlinear_eq > 0:
-                constraints.append(optimize.NonlinearConstraint(self.problem.ceq, np.zeros(self.problem.m_nonlinear_eq), np.zeros(self.problem.m_nonlinear_eq)))
             options["maxiter"] = self.max_eval
-            optimize.minimize(self.eval, self.problem.x0, method=self.solver, bounds=bounds, constraints=constraints, options=options)
+            if adaptive_match:
+                if self.problem.m_nonlinear_ub > 0:
+                    constraints.append(optimize.NonlinearConstraint(self.problem.cub, -np.inf, np.zeros(self.problem.m_nonlinear_ub)))
+                if self.problem.m_nonlinear_eq > 0:
+                    constraints.append(optimize.NonlinearConstraint(self.problem.ceq, np.zeros(self.problem.m_nonlinear_eq), np.zeros(self.problem.m_nonlinear_eq)))
+                optimize.minimize(self.eval, self.problem.x0, method=adaptive_match.group("solver"), jac=self.grad, bounds=bounds, constraints=constraints, options=options)
+            else:
+                if self.problem.m_nonlinear_ub > 0:
+                    constraints.append(optimize.NonlinearConstraint(self.problem.cub, -np.inf, np.zeros(self.problem.m_nonlinear_ub)))
+                if self.problem.m_nonlinear_eq > 0:
+                    constraints.append(optimize.NonlinearConstraint(self.problem.ceq, np.zeros(self.problem.m_nonlinear_eq), np.zeros(self.problem.m_nonlinear_eq)))
+                optimize.minimize(self.eval, self.problem.x0, method=self.solver, jac=self.grad, bounds=bounds, constraints=constraints, options=options)
         return np.array(self.fun_history, copy=True), np.array(self.maxcv_history, copy=True)
 
     def validate(self):
@@ -76,7 +89,7 @@ class Minimizer:
             if self.problem.type not in "adjacency linear":
                 valid_solvers.update({"bobyqa"})
                 if self.problem.type not in "equality bound":
-                    valid_solvers.update({"bfgs", "cg", "newuoa", "uobyqa"})
+                    valid_solvers.update({"bfgs", "bfgs-adaptive", "cg", "cg-adaptive", "newuoa", "uobyqa"})
         return self.solver.lower() in valid_solvers
 
     def eval(self, x):
@@ -89,3 +102,14 @@ class Minimizer:
             self.fun_history.append(f)
         self.maxcv_history.append(self.problem.maxcv(x))
         return f
+    
+    def grad(self, x):
+        f = self.problem.fun(x, self.callback, *self.args, **self.kwargs)
+        if self.callback is not None:
+            f = f[1]
+        g = np.empty(x.size)
+        for i in range(x.size):
+            coord_vec = np.squeeze(np.eye(1, x.size, i))
+            f_forward = self.eval(x + self.fd_step * coord_vec)
+            g[i] = (f_forward - f) / self.fd_step
+        return g
