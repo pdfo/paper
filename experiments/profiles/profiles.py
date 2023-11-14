@@ -255,7 +255,7 @@ class Profiles:
                 plt.plot(x, y, label=solver_names[j].replace("-", " "))
             plt.xlim(0, 1.1 * perf_ratio_max)
             plt.ylim(0, 1)
-            plt.xlabel(r"$\log_2(\mathrm{Performance ratio})$")
+            plt.xlabel(r"$\log_2(\text{Performance ratio})$")
             plt.ylabel(fr"Performance profiles")
             plt.legend(handlelength=1.25, handletextpad=0.25, labelspacing=0.3, loc="lower right")
             pdf_perf.savefig(fig, bbox_inches="tight")
