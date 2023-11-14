@@ -309,10 +309,15 @@ class Profiles:
                 return None
             with warnings.catch_warnings():
                 warnings.simplefilter("ignore")
+                adaptive = re.compile(r"(?P<solver>\w+)-adaptive")
+                adaptive_match = adaptive.match(self.solver.lower())
                 fd_step = np.sqrt(np.finfo(float).eps)
-                if self.feature == "noisy" and solver.endswith("-adaptive"):
+                if self.feature == "noisy" and adaptive_match:
                     fd_step = max(fd_step, np.sqrt(self.feature_options["level"]))
-                optimizer = Minimizer(problem, solver, self.max_eval, options, self.noise, fd_step, k)
+                backend_solver = solver
+                if adaptive_match:
+                    backend_solver = adaptive_match.group("solver")
+                optimizer = Minimizer(problem, backend_solver, self.max_eval, options, self.noise, fd_step, k)
                 fun_history, maxcv_history = optimizer()
                 n_eval = min(fun_history.size, self.max_eval)
                 merits = self.merit(fun_history[:n_eval], maxcv_history[:n_eval], **kwargs)
