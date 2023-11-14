@@ -21,8 +21,8 @@ from .problem import Problem
 _log = logging.getLogger(__name__)
 
 # Set up matplotlib for plotting the profiles.
-std_cycle = cycler(color=["#1f77b4", "#2ca02c", "#000000", "#d62728"])
-std_cycle += cycler(linestyle=[(0, (1, 1)), (0, (5, 3)), (0, ()), (0, (5, 3, 1, 3))])
+std_cycle = cycler(color=["#000000", "#1f77b4", "#ff7f0e", "#2ca02c", "#d62728", "#9467bd", "#8c564b", "#e377c2", "#7f7f7f", "#bcbd22", "#17becf"])
+std_cycle += cycler(linestyle=[(0, ()), (0, (5, 3)), (0, (1, 1)), (0, (5, 3, 1, 3))])
 plt.rc("axes", prop_cycle=std_cycle)
 plt.rc("lines", linewidth=1)
 plt.rc("text", usetex=True)
