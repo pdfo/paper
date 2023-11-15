@@ -26,7 +26,7 @@ if __name__ == "__main__":
     # Generate the performance and data profiles on the problems containing NaNs.
     for nan_rate in [0.01, 0.05]:
         profiles = Profiles(1, 50, "unconstrained", feature="nan", nan_rate=nan_rate)
-        profiles(["NEWUOA", "CG", "BFGS", "PDFO-(no-barrier)"], ["PDFO", "CG", "BFGS", "PDFO-(no-barrier)"], load=False)
+        profiles(["PDFO", "CG", "BFGS", "PDFO-(no-barrier)"], load=False)
 
     # Generate the profiles for the paper.
     os.chdir(cwd)
