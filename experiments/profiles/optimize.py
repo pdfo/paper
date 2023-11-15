@@ -5,13 +5,14 @@ from scipy import optimize
 
 
 class Minimizer:
-    def __init__(self, problem, solver, max_eval, options, callback, fd_step, *args, **kwargs):
+    def __init__(self, problem, solver, max_eval, options, callback, fd_step, adapt_to_noise, *args, **kwargs):
         self.problem = problem
         self.solver = solver
         self.max_eval = max_eval
         self.options = dict(options)
         self.callback = callback
         self.fd_step = fd_step
+        self.adapt_to_noise = adapt_to_noise
         self.args = args
         self.kwargs = kwargs
         if not self.validate():
@@ -101,6 +102,9 @@ class Minimizer:
         g = np.empty(x.size)
         for i in range(x.size):
             coord_vec = np.squeeze(np.eye(1, x.size, i))
-            f_forward = self.eval(x + self.fd_step * max(np.sqrt(f_plain), 1.0) * coord_vec)
-            g[i] = (f_forward - f) / self.fd_step
+            fd_step = self.fd_step
+            if self.adapt_to_noise:
+                fd_step = fd_step * max(np.sqrt(abs(f_plain)), 1.0)
+            f_forward = self.eval(x + fd_step * coord_vec)
+            g[i] = (f_forward - f) / fd_step
         return g
