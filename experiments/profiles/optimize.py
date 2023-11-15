@@ -94,10 +94,13 @@ class Minimizer:
     def grad(self, x):
         f = self.problem.fun(x, self.callback, *self.args, **self.kwargs)
         if self.callback is not None:
+            f_plain = f[0]
             f = f[1]
+        else:
+            f_plain = f
         g = np.empty(x.size)
         for i in range(x.size):
             coord_vec = np.squeeze(np.eye(1, x.size, i))
-            f_forward = self.eval(x + self.fd_step * coord_vec)
+            f_forward = self.eval(x + self.fd_step * max(np.sqrt(f_plain), 1.0) * coord_vec)
             g[i] = (f_forward - f) / self.fd_step
         return g
