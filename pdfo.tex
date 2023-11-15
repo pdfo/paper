@@ -681,12 +681,16 @@ We take the view that multiplicative noise makes more sense if the scale of the 
 
 SciPy provides both~\gls{cg} and \gls{bfgs} under the \texttt{minimize} function in the \texttt{scipy.optimize} module.
 \modified{
-    The methods \gls{cg} and \gls{bfgs} relies on derivatives of the objective function, which are not available in our experiments.
-    Therefore, we approximate the derivatives by forward differences, and try two difference parameters:~$h = \sqrt{u} \approx 1.5\times 10^{-8}$, where~$u$ is the unit roundoff, and~$h = \sqrt{\sigma}$, where~$\sigma$ is the noise level of the experiment.
-    The former is the default value of the \texttt{scipy.optimize} module, while the latter requires a priori knowledge of the noise level.
+    These methods rely on gradient of the objective function, which is not available in our experiments.
+    Therefore, we approximate it by forward differences, testing two difference parameters~$h$.
+    First, we take~$h = \sqrt{u} \approx 1.5\times 10^{-8}$, where~$u$ is the unit roundoff.
+    This is the default value employed by SciPy.
+    The second difference parameter we test is~$h = \sqrt{\sigma}$, where~$\sigma$ is the noise level of the experiment.
+    This difference parameter, and hence, the resulting algorithms, relies on the knowledge of the noise level of the experiment.
 }
 For \gls{pdfo}, we specify \gls{newuoa} as the solver, while setting all the other options to the default.
 In particular, the initial trust-region radius is~$1$, the final trust-region radius is~$10^{-6}$, and the number of interpolation points is~$2n + 1$, with~$n$ being the dimension of the problem being solved.
+\modified{We emphasize that \gls{pdfo} does not require the knowledge of the noise level.}
 We perform the comparison on~\modified{\num{167}} unconstrained problems with~$n \le 50$ from the CUTEst~\cite{Gould_Orban_Toint_2015} problem set using PyCUTEst~\modified{1.5.1}~\cite{Fowkes_Roberts_Burmen_2022}.
 For each testing problem, the starting point is set to the one provided by CUTEst, and the maximal number of function evaluations is set to~$500n$.
 
@@ -721,7 +725,7 @@ Figure~\ref{fig:noise} shows the performance profiles of the solvers for the noi
 Two profiles are included for each noise level, with the convergence tolerance being~$\tau = 10^{-2}$ and~$\tau = 10^{-4}$ respectively.
 \modified{
     In the legends, ``\gls{cg}'' and ``\gls{bfgs}'' denote the finite-difference methods with~$h = \sqrt{u}$, and ``\gls{cg} adaptive'' and ``\gls{bfgs} adaptive'' are the variations with~$h = \sqrt{\sigma}$.
-    Note that \gls{pdfo} does not use the value of~$\sigma$ and hence, can be used for solving noisy problems for which the noise level is unknown.
+    Let us stress again that \gls{pdfo} does not require the value of~$\sigma$ and can be used for solving noisy problems for which the noise level is unknown.
 }
 
 \begin{figure}[htbp]
@@ -766,12 +770,19 @@ Two profiles are included for each noise level, with the convergence tolerance b
 
 In the noise-free case ($\sigma = 0$), \gls{pdfo} is more efficient than finite-difference \gls{cg} and \gls{bfgs}, although the distinction is less visible when~$\tau$ is smaller, and~\gls{bfgs} can solve slightly more problems than~\gls{pdfo}.
 When there is noise~($\sigma >0$), the advantage of \gls{pdfo} becomes significant.
-The performances of \modified{both variations of} \gls{cg} and \gls{bfgs} deteriorate considerably under noise, even if the noise level is not high and the convergence tolerance is not demanding.
-We do not include results with larger values of~$\sigma$, as \gls{cg} and \gls{bfgs} will barely solve any problem, while \gls{pdfo} can still tackle a significant proportion of them up to a reasonable precision.
+The performances of \gls{cg} and \gls{bfgs} \modified{with~$h = \sqrt{u}$} deteriorate considerably under noise, even if the noise level is not high and the convergence tolerance is not demanding.
+\modified{
+    As expected, the adaptive difference parameter~$h = \sqrt{\sigma}$ improves the performance of \gls{cg} and \gls{bfgs} by a large margin, but they are still inferior to \gls{pdfo}.
+    This shows the performance of \gls{pdfo} in noisy settings, even when compared to methods that explicitely use a priori knowledge about the noise level.
+}
+We do not include results with larger values of~$\sigma$, as \gls{cg} and \gls{bfgs} \modified{with~$h = \sqrt{u}$} will barely solve any problem, while \gls{pdfo} can still tackle a significant proportion of them up to a reasonable precision\modified{, and continues to outperform \gls{cg} and \gls{bfgs} with~$h = \sqrt{\sigma}$}.
 
-However, given the fact that \gls{cg} and \gls{bfgs} take the finite difference parameter~$h \approx 10^{-8}$, their unfavorable performance is not surprising.
-It does not contradict the observations in~\cite{Shi_Etal_2022a,Shi_Etal_2023}, where~$h$ is chosen more carefully according to the noise level and the smoothness of the problems.
-Our experiment does not include such fine-tuning but adopts the default settings of \gls{cg} and \gls{bfgs} in SciPy, as well as the default configurations of~\gls{pdfo}.
+\modified{
+    The fact that \gls{cg} and \gls{bfgs} with~$h = \sqrt{u}$ have unfavorable performance is not surprising.
+    As mentioned, for example, by~\cite{Shi_Etal_2022a,Shi_Etal_2023}, the difference parameter must be chosen carefully according to the noise level and the smoothness of the problems.
+    In the above experiment, we used the only knowledge we had: the noise level.
+    In contrast, \gls{pdfo} has satisfactory performance without any modification.
+}
 
 To summarize, the performance of finite-difference \gls{cg} and \gls{bfgs} is encouraging when there is no noise, yet much more care is needed when the problems are noisy.
 In contrast, \gls{pdfo} adapts to noise automatically in our experiment, demonstrating good stability under noise without requiring knowledge about the noise level.
