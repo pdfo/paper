@@ -21,12 +21,12 @@ if __name__ == "__main__":
     # Generate the performance and data profiles on the noisy problems with n <= 50 and different noise levels.
     for noise_level in [1e-10, 1e-8]:
         profiles = Profiles(1, 50, "unconstrained", feature="noisy", noise_level=noise_level)
-        profiles(["NEWUOA", "CG", "CG-adaptive", "BFGS", "BFGS-adaptive"], ["PDFO", "CG", "CG-adaptive", "BFGS", "BFGS-adaptive"], load=False)
+        profiles(["NEWUOA", "CG", "BFGS", "CG-adaptive", "BFGS-adaptive"], ["PDFO", "CG", "BFGS", "CG-adaptive", "BFGS-adaptive"], load=False)
 
     # Generate the performance and data profiles on the problems containing NaNs.
     for nan_rate in [0.01, 0.05]:
         profiles = Profiles(1, 50, "unconstrained", feature="nan", nan_rate=nan_rate)
-        profiles(["PDFO", "PDFO-(no-barrier)", "CG", "BFGS"], load=False)
+        profiles(["NEWUOA", "CG", "BFGS", "PDFO-(no-barrier)"], ["PDFO", "CG", "BFGS", "PDFO-(no-barrier)"], load=False)
 
     # Generate the profiles for the paper.
     os.chdir(cwd)
