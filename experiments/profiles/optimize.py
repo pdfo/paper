@@ -103,7 +103,7 @@ class Minimizer:
         for i in range(x.size):
             coord_vec = np.squeeze(np.eye(1, x.size, i))
             fd_step = self.fd_step
-            if self.adapt_to_noise:
+            if self.adapt_to_noise and np.isfinite(f_plain):
                 fd_step *= max(np.sqrt(abs(f_plain)), 1.0)
             f_forward = self.eval(x + fd_step * coord_vec)
             g[i] = (f_forward - f) / fd_step
