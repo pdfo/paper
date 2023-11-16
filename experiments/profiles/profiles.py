@@ -34,7 +34,7 @@ class Profiles:
     ARCH_DIR = Path(BASE_DIR, "archives")
     EXCLUDED = {
         # The COMPILATION of the sources is prohibitively time-consuming.
-        "BA-L73", "BA-L73LS", "BDRY2", "CHANDHEU", "CHARDIS0", "CHARDIS1", "DMN15102", "DMN15102LS", "DMN15103", "DMN15103LS", "DMN15332", "DMN15332LS", "DMN15333", "DMN15333LS", "DMN37142", "DMN37142LS", "DMN37143", "DMN37143LS", "EIGENALS", "EIGENBLS", "GPP", "LEUVEN3", "LEUVEN4", "LEUVEN5", "LEUVEN6", "LIPPERT2", "LOBSTERZ", "PDE1", "PDE2", "PENALTY3", "RDW2D51F", "RDW2D51U", "RDW2D52B", "RDW2D52F", "RDW2D52U", "ROSEPETAL", "WALL100", "YATP1SQ", "YATP2SQ", "BA-L16LS", "BA-L21", "BA-L21LS", "BA-L49", "BA-L49LS", "BA-L52LS", "BA-L52", "YATP1LS", "YATP2LS",
+        "EIGENALS", "EIGENBLS", "PENALTY3", "YATP1LS", "YATP2LS",
     }
 
     def __init__(self, n_min, n_max, constraints, m_min=0, m_max=sys.maxsize, feature="plain", callback=None, **kwargs):

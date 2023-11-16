@@ -10,7 +10,7 @@
 
 % Preliminaries
 \usepackage{ifthen}
-\renewcommand{\baselinestretch}{1.05}
+% \renewcommand{\baselinestretch}{1.05}
 
 % Colors
 \RequirePackage[dvipsnames]{xcolor}
@@ -94,6 +94,7 @@
 \usepackage{caption}
 \usepackage{subcaption}
 \usepackage{booktabs}
+\usepackage{multirow}
 \graphicspath{{figures/}}
 \def\figurename{Figure}
 
@@ -141,38 +142,30 @@
 \binoppenalty=10000
 \relpenalty=10000
 
-% Redefine the remark environments to have bold titles.
+% Redefine different headings
 \makeatletter
-\let\remark\@undefined
-\let\endremark\@undefined
-\spn@wtheorem{remark}{Remark}{\bfseries}{\rmfamily}
-\makeatother
-
-% Redefine the proof environment to have bold titles.
-\makeatletter
-\let\proof\@undefined
-\let\endproof\@undefined
-\spnewtheorem*{proof}{Proof}{\bfseries}{\rmfamily}
-\makeatother
-
-% Redefine the subsection and paragraph headings to be bold.
-\makeatletter
+\def\section{\@startsection{section}{1}{\z@}%
+    {-21dd plus-8pt minus-4pt}{10.5dd}
+    {\sffamily\normalsize\bfseries\boldmath}}
 \def\subsection{\@startsection{subsection}{2}{\z@}%
     {-21dd plus-8pt minus-4pt}{10.5dd}
-    {\normalsize\bfseries}}
+    {\sffamily\normalsize\bfseries}}
 \def\subsubsection{\@startsection{subsubsection}{2}{\z@}%
     {-21dd plus-8pt minus-4pt}{10.5dd}
-    {\normalsize\bfseries}}
+    {\sffamily\normalsize\bfseries}}
 \def\paragraph{\@startsection{paragraph}{4}{\z@}%
     {-13pt plus-8pt minus-4pt}{\z@}
-    {\normalsize\bfseries}}
+    {\sffamily\normalsize\bfseries}}
 \makeatother
+\def\abstractname{\sffamily Abstract}
+\def\keywordname{{\sffamily\bfseries Keywords}}
+\def\subclassname{{\sffamily\bfseries Mathematics Subject Classification}\enspace}
+\def\ackname{\sffamily Acknowledgements}
 
 % Cross-referencing
 \usepackage[hyperfootnotes=false]{hyperref}
 \usepackage{url}
 \hypersetup{
-    final,
     colorlinks=true,
     linkcolor=Berry,
     citecolor=Basil,
@@ -184,24 +177,24 @@
 
 % Headings
 \journalname{Mathematical Programming Computation}
-\title{PDFO: A Cross-Platform Package for Powell's Derivative-Free Optimization Solvers}
+\title{\sffamily PDFO: A Cross-Platform Package for Powell's Derivative-Free Optimization Solvers}
 \subtitle{}
 \titlerunning{PDFO: Powell's Derivative-Free Optimization solvers}
-\dedication{To the memory of the late Professor M. J. D. Powell FRS}
-\author{Tom M. Ragonneau \and Zaikun Zhang}
-\authorrunning{}
+\dedication{\sffamily To the memory of \modified{the} late Professor M. J. D. Powell FRS}
+\author{\sffamily Tom M. Ragonneau \and Zaikun Zhang}
+\authorrunning{T. M. Ragonneau \and Z. Zhang}
 \institute{%
     T. M. Ragonneau \at
-        Department of Applied Mathematics, The Hong Kong Polytechnic University, Hong Kong\modified{, China}\\
+        \modified{Dept.}\ of Applied Mathematics, The Hong Kong Polytechnic University, Hong Kong\modified{, China}\\
         \email{\href{mailto:tom.ragonneau@polyu.edu.hk}{\texttt{tom.ragonneau@polyu.edu.hk}}}\\
         ORCID: \href{https://orcid.org/0000-0003-2717-2876}{0000-0003-2717-2876}
     \and
     Z. Zhang~(corresponding author)\at
-        Department of Applied Mathematics, The Hong Kong Polytechnic University, Hong Kong\modified{, China}\\
+        \modified{Dept.}\ of Applied Mathematics, The Hong Kong Polytechnic University, Hong Kong\modified{, China}\\
         \email{\href{mailto:zaikun.zhang@polyu.edu.hk}{\texttt{zaikun.zhang@polyu.edu.hk}}}\\
         ORCID: \href{https://orcid.org/0000-0001-8934-8190}{0000-0001-8934-8190}
 }
-\date{Received: date / Accepted: date}
+\date{\sffamily Received: date / Accepted: date}
 
 \begin{document}
 
@@ -748,7 +741,7 @@ Two profiles are included for each noise level, with the convergence tolerance b
     Therefore, it can be used for solving noisy problems for which these quantities are unknown.
 }
 
-\begin{figure}[htbp]
+\begin{figure}[!htb]
     \begin{subfigure}{.48\textwidth}
         \centering
         \includegraphics[width=\textwidth]{perf-plain-bfgs_cg_pdfo-50-2.pdf}
@@ -837,7 +830,7 @@ For each problem, the value~$\obj_{\ast}$ in the convergence test~\eqref{eq:cvt}
 Figure~\ref{fig:nan} shows the performance profiles of the solvers with~$p = 0.01$ and~$p=0.05$.
 Two profiles are included for each~$p$, with the convergence tolerance being~$\tau = 10^{-2}$ and~$\tau = 10^{-4}$ respectively.
 
-\begin{figure}[htbp]
+\begin{figure}[!htb]
     \begin{subfigure}{.48\textwidth}
         \centering
         \includegraphics[width=\textwidth]{perf-nan-bfgs_cg_pdfo-50-0.01-2}
@@ -911,79 +904,65 @@ For better scaling of the problem, we perform the maximization with respect to~$
 The solver of~\gls{pdfo} is \gls{bobyqa}, for which we set the maximal number of function evaluations to~$100$.
 For~\gls{rs} and~\gls{tpe}, we try both~$100$ and~$300$ for the maximal number of function evaluations, and they do not terminate until this number is reached.
 
-\begin{table}[ht]
+\begin{table}[!htb]
     \caption{Datasets from LIBSVM}
     \label{tab:htdata}
     \centering
-    \begin{tabular}{lcS[table-format=5]S[table-format=5]}
+    \begin{tabular}{lcS[table-format=5.0]S[table-format=5.0]}
         \toprule
-        Dataset~$\mathcal{D}$   & {Number of features}  & {Size of~$\mathcal{S}$}   & {Size of~$\mathcal{T}$}\\
+        \multicolumn{1}{c}{Dataset} & {Number of features}  & {Size of~$\mathcal{S}$}   & {Size of~$\mathcal{T}$}\\
         \midrule
-        splice                  & 60                    & 1000                      & 2175\\
-        svmguide1               & 4                     & 3088                      & 4000\\
-        ijcnn1                  & 22                    & 49990                     & 91701\\
+        splice                      & 60                    & 1000                      & 2175\\
+        svmguide1                   & 4                     & 3088                      & 4000\\
+        ijcnn1                      & 22                    & 49990                     & 91701\\
         \bottomrule
     \end{tabular}
 \end{table}
 
 To assess the quality of the tuned parameters~$(\bar{C}, \bar{\gamma})$, we \modified{train our model} on~$\mathcal{S}$ with~$(C, \gamma)=(\bar{C}, \bar{\gamma})$, and calculate both the AUC score and accuracy of the resulting classifier on~$\mathcal{T}$, the latter being the fraction of correctly classified data points.
 Note that~$\mathcal{T}$ is not involved in the tuning process.
-Tables~\ref{tab:splice}--\ref{tab:ijcnn1} present the results for this experiment, where \#$P$ denotes the number of \modified{evaluations of} the function~$P$ and ``Time'' \modified{is} the computing time for obtaining~$(\bar{C}, \bar{\gamma})$.
+Table~\ref{tab:ht} presents the results for this experiment, where \#$P$ denotes the number of \modified{evaluations of} the function~$P$ and ``Time'' \modified{is} the computing time for obtaining~$(\bar{C}, \bar{\gamma})$.
 
-\begin{table}[!ht]
-    \caption{Hyperparameter tuning on the dataset ``splice''}
-    \label{tab:splice}
+\begin{table}[!htb]
+    \caption{\modified{Hyperparameter tuning using \gls{pdfo}, \gls{rs}, and \gls{tpe}}}
+    \label{tab:ht}
     \centering
-    \begin{tabular}{lSScS}
-        \toprule
-        Solver      & {AUC Score ($10^{-1}$)}   & {Accuracy ($10^{-1}$)}    & {\#$P$}   & {Time (\si{\second})}\\
-        \midrule
-        \gls{pdfo}  & 9.27                      & 7.37                      & 33        & 5.11\\
-        \gls{rs}    & 5.00                      & 5.20                      & 100       & 8.23\\
-        \gls{rs}    & 5.00                      & 5.20                      & 300       & 24.73\\
-        \gls{tpe}   & 5.00                      & 5.20                      & 100       & 8.22\\
-        \gls{tpe}   & 5.00                      & 5.20                      & 300       & 23.57\\
-        \bottomrule
-    \end{tabular}
-\end{table}
-
-\begin{table}[!ht]
-    \caption{Hyperparameter tuning on the dataset ``svmguide1''}
-    \centering
-    \begin{tabular}{lSScS}
-        \toprule
-        Solver      & {AUC Score ($10^{-1}$)}   & {Accuracy ($10^{-1}$)}    & {\#$P$}   & {Time (\si{\second})}\\
-        \midrule
-        \gls{pdfo}  & 9.95                      & 9.66                      & 51        & 2.83\\
-        \gls{rs}    & 9.94                      & 9.61                      & 100       & 10.22\\
-        \gls{rs}    & 9.95                      & 9.68                      & 300       & 30.75\\
-        \gls{tpe}   & 9.95                      & 9.65                      & 100       & 8.65\\
-        \gls{tpe}   & 9.95                      & 9.68                      & 300       & 22.38\\
-        \bottomrule
-    \end{tabular}
-\end{table}
-
-\begin{table}[!ht]
-    \caption{Hyperparameter tuning on the dataset ``ijcnn1''}
-    \label{tab:ijcnn1}
-    \centering
-    \begin{tabular}{lSScS}
-        \toprule
-        Solver      & {AUC Score ($10^{-1}$)}   & {Accuracy ($10^{-1}$)}    &{\#$P$}    & {Time (\SI{}
-        [10^3]{\second})}\\
-        \midrule
-        \gls{pdfo}  & 9.97                      & 9.80                      & 44        & 2.48\\
-        \gls{rs}    & 9.97                      & 9.82                      & 100       & 3.99\\
-        \gls{rs}    & 9.97                      & 9.77                      & 300       & 11.52\\
-        \gls{tpe}   & 9.98                      & 9.79                      & 100       & 3.42\\
-        \gls{tpe}   & 9.98                      & 9.79                      & 300       & 8.81\\
-        \bottomrule
-    \end{tabular}
+    \modified{
+        \begin{tabular}{llS[table-format=1.3]S[table-format=1.3]cS[scientific-notation=true,round-mode=places,table-format=1.2e1]}
+            \toprule
+            \multicolumn{1}{c}{Dataset} & \multicolumn{1}{c}{Solver}    & {AUC Score} & {Accuracy}    & {\#$P$}   & {Time (\si{\second})}\\
+            \midrule
+            \multirow{5}{*}{splice}     & \gls{pdfo}                    & 0.927       & 0.737         & 33        & 6.56\\
+            \cmidrule{2-6}
+                                        & \multirow{2}{*}{\gls{rs}}     & 0.500       & 0.520         & 100       & 9.16\\
+                                        &                               & 0.500       & 0.520         & 300       & 27.4\\
+            \cmidrule{2-6}
+                                        & \multirow{2}{*}{\gls{tpe}}    & 0.500       & 0.520         & 100       & 8.89\\
+                                        &                               & 0.500       & 0.520         & 300       & 26.4\\
+            \midrule
+            \multirow{5}{*}{svmguide1}  & \gls{pdfo}                    & 0.995       & 0.966         & 51        & 3.45\\
+            \cmidrule{2-6}
+                                        & \multirow{2}{*}{\gls{rs}}     & 0.994       & 0.961         & 100       & 11.3\\
+                                        &                               & 0.995       & 0.968         & 300       & 34.0\\
+            \cmidrule{2-6}
+                                        & \multirow{2}{*}{\gls{tpe}}    & 0.995       & 0.965         & 100       & 9.53\\
+                                        &                               & 0.995       & 0.968         & 300       & 25.3\\
+            \midrule
+            \multirow{5}{*}{ijcnn1}     & \gls{pdfo}                    & 0.997       & 0.980         & 44        & 2440\\
+            \cmidrule{2-6}
+                                        & \multirow{2}{*}{\gls{rs}}     & 0.997       & 0.982         & 100       & 3939\\
+                                        &                               & 0.997       & 0.977         & 300       & 11520\\
+            \cmidrule{2-6}
+                                        & \multirow{2}{*}{\gls{tpe}}    & 0.998       & 0.979         & 100       & 3420\\
+                                        &                               & 0.998       & 0.979         & 300       & 8810\\
+            \bottomrule
+        \end{tabular}
+    }
 \end{table}
 
 In terms of the AUC score and accuracy, \gls{pdfo} achieves a clearly better result than \gls{rs} and \gls{tpe} on the ``splice'' dataset, and they all attain comparable results on the other datasets.
 However, \gls{pdfo} always uses much fewer function evaluations, and hence, much less computing time.
-The difference in the computing time is particularly visible on the dataset ``ijcnn1'' in Table~\ref{tab:ijcnn1}, as each evaluation of~$P$ takes much time due to the large data size.
+The difference in the computing time is particularly visible on the \modified{``ijcnn1'' dataset}, as each evaluation of~$P$ takes much time due to the large data size.
 
 Note that our intention is not to manifest that \gls{pdfo} outperforms standard solvers for general hyperparameter optimization problems, which is unlikely the case.
 Indeed, \gls{pdfo} is not \modified{directly} applicable unless the hyperparameters are continuous variables.
@@ -1015,6 +994,10 @@ The implementation of these solvers in Python, MATLAB, and other languages is a 
     \end{acknowledgements}
 }
 
+\bibliography{pdfo}
+
+\newpage
+
 \section*{Statements and declarations}
 
 \paragraph{Funding.}
@@ -1028,9 +1011,7 @@ The authors have no relevant financial or non-financial interests to disclose.
 
 \paragraph{Data availability.}
 
-The source code of the \gls{pdfo} package is available at \url{https://www.pdfo.net}\,.
+The source code \modified{and documentation of \gls{pdfo} are} available at \url{https://www.pdfo.net}\,.
 The source code of the numerical experiments is available at \url{https://www.github.com/pdfo/paper/blob/main/experiments}\,.
-
-\bibliography{pdfo}
 
 \end{document}

@@ -10,7 +10,8 @@ from pathlib import Path
 
 import numpy as np
 from hyperopt import hp, fmin, tpe, rand
-from pdfo import pdfo, Bounds
+from pdfo import pdfo
+from scipy.optimize import Bounds
 from sklearn.datasets import load_svmlight_file
 from sklearn.impute import SimpleImputer
 from sklearn.metrics import accuracy_score, roc_auc_score
