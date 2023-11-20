@@ -93,18 +93,37 @@ class Minimizer:
         return f
 
     def grad(self, x):
+        # Evaluate the objective function at x. If a callback if provided, two
+        # values are returned: the original value and the modified (noisy)
+        # value.
+        # N.B.: The original value is needed below for defining the finite
+        # difference step size in the adaptive case. This is done only for
+        # experimental purposes. The true value of the objective function is of
+        # course unknown in practice.
         f = self.problem.fun(x, self.callback, *self.args, **self.kwargs)
         if self.callback is not None:
-            f_plain = f[0]
+            f_orig = f[0]
             f = f[1]
         else:
-            f_plain = f
+            f_orig = f
+
+        # Compute the gradient using finite differences.
         g = np.empty(x.size)
         for i in range(x.size):
-            coord_vec = np.squeeze(np.eye(1, x.size, i))
+            # Compute the finite difference step size.
             fd_step = self.fd_step
-            if self.adapt_to_noise and np.isfinite(f_plain):
-                fd_step *= max(np.sqrt(abs(f_plain)), 1.0)
+            if self.adapt_to_noise:
+                fd_step *= max(np.sqrt(abs(f_orig)), 1.0)
+            else:
+                # This value of fd_step is the default of Scipy 1.11.3. See:
+                # https://github.com/scipy/scipy/blob/v1.11.3/scipy/optimize/_optimize.py#L363-L366
+                # https://github.com/scipy/scipy/blob/v1.11.3/scipy/optimize/_numdiff.py#L479-L485
+                # https://github.com/scipy/scipy/blob/v1.11.3/scipy/optimize/_numdiff.py#L574-L576
+                sign_x = 1 if x[i] >= 0 else -1
+                fd_step *= sign_x * max(abs(x[i]), 1.0)
+
+            # Compute the i-th component of the gradient.
+            coord_vec = np.squeeze(np.eye(1, x.size, i))
             f_forward = self.eval(x + fd_step * coord_vec)
             g[i] = (f_forward - f) / fd_step
         return g

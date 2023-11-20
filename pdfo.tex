@@ -143,23 +143,17 @@
 
 % Redefine different headings
 \makeatletter
-\def\section{\@startsection{section}{1}{\z@}%
-    {-21dd plus-8pt minus-4pt}{10.5dd}
-    {\sffamily\normalsize\bfseries\boldmath}}
 \def\subsection{\@startsection{subsection}{2}{\z@}%
     {-21dd plus-8pt minus-4pt}{10.5dd}
-    {\sffamily\normalsize\bfseries}}
+    {\normalsize\bfseries}}
 \def\subsubsection{\@startsection{subsubsection}{2}{\z@}%
     {-21dd plus-8pt minus-4pt}{10.5dd}
-    {\sffamily\normalsize\bfseries}}
+    {\normalsize\bfseries}}
 \def\paragraph{\@startsection{paragraph}{4}{\z@}%
     {-13pt plus-8pt minus-4pt}{\z@}
-    {\sffamily\normalsize\bfseries}}
+    {\normalsize\bfseries}}
 \makeatother
-\def\abstractname{\sffamily Abstract}
-\def\keywordname{{\sffamily\bfseries Keywords}}
-\def\subclassname{{\sffamily\bfseries Mathematics Subject Classification}\enspace}
-\def\ackname{\sffamily Acknowledgements}
+\def\subclassname{{\bfseries Mathematics Subject Classification}\enspace}
 
 % Cross-referencing
 \usepackage[hyperfootnotes=false]{hyperref}
@@ -248,7 +242,7 @@ However, \gls{pdfo} has several features that distinguish it from others.
         To the best of our knowledge, \gls{pdfo} is the only package that provides all of \gls{cobyla}, \gls{uobyqa}, \gls{newuoa}, \gls{bobyqa}, and \gls{lincoa} with a \emph{uniform interface}.
     \item \emph{Solver selection.}
         \Gls{pdfo} can automatically select a solver for a given problem.
-        The selection \modified{is based on the Powell solver's requirements and their performance} on the CUTEst~\cite{Gould_Orban_Toint_2015} problem set.
+        The selection takes into account the performance of the solvers on the CUTEst~\cite{Gould_Orban_Toint_2015} problem set.
     \item \emph{Problem preprocessing.}
         \Gls{pdfo} preprocesses the inputs to simplify the problem and reformulate it to meet the requirements of Powell's solvers.
     \item \emph{Code patching.}
@@ -324,7 +318,7 @@ This section provides an overview of these five algorithms, starting with a sket
 \label{ssec:sketch}
 
 Powell's model-based \gls{dfo} algorithms are trust-region methods.
-At iteration~$k$, \modified{they} construct a linear~(for \gls{cobyla}) or quadratic~(for the other methods) model~$\objm$ for the objective function~$f$ according to the interpolation \modified{conditions}
+At iteration~$k$, the algorithms construct a linear~(for \gls{cobyla}) or quadratic~(for the other methods) model~$\objm$ for the objective function~$f$ according to the interpolation condition
 \begin{equation}
     \label{eq:itpls}
     \objm(y) = \obj(y), \quad y \in \xpt,
@@ -364,7 +358,7 @@ Similarly, if~$\objm$ is a quadratic model, then~\eqref{eq:itpls} is equivalent 
     \label{eq:qitpls}
     \objm(y^{\base}) + (y -y^{\base})^{\T} \nabla \objm(y^{\base}) + \frac{1}{2}(y-y^{\base})^{\T} \nabla^2 \objm(y^{\base}) (y-y^{\base}) = \obj(y), ~ y \in \xpt,
 \end{equation}
-a linear system \modified{of}~$\objm(y^\base) \in \R$, $\nabla \objm(y^\base) \in \R^n$, and~$\nabla^2 \objm(y^{\base}) \in \R^{n \times n}$, the degrees of freedom being~$(n + 1)(n + 2) / 2$ due to the symmetry of~$\nabla^2 \objm(y^\base)$.
+a linear system with unknowns~$\objm(y^\base) \! \in \! \R$, $\nabla \objm(y^\base) \! \in \! \R^n$, and~$\nabla^2 \objm(y^{\base}) \! \in \! \R^{n \times n}$, the degrees of freedom being~$(n + 1)(n + 2) / 2$ due to the symmetry of~$\nabla^2 \objm(y^\base)$.
 \Gls{uobyqa} constructs quadratic models by the system~\eqref{eq:qitpls}.
 To decide a quadratic model~$\objm$ completely by this system alone, \gls{uobyqa} requires that~$\xpt$ contains~$(n+1)(n+2)/2$ points, and~$f$ should have been evaluated at all these points before the system can be formed.
 Even though most of these points will be reused at the subsequent iterations so that the number of function evaluations needed per iteration is tiny~(see Section~\ref{ssec:iptset}), we must perform~$(n + 1)(n + 2) / 2$ function evaluations during the very first iteration.
@@ -386,7 +380,7 @@ where~$\qspace$ is the space of polynomials on~$\R^n$ of degree at most~$2$.
 \end{equation}
 which is inspired by the least-change property of quasi-Newton updates~\cite{Dennis_Schnabel_1979}, although other functionals are possible~(see\modified{, e.g.,}~\cite{Conn_Toint_1996,Bandeira_Scheinberg_Vicente_2012,Powell_2013,Zhang_2014,Xie_Yuan_2023}).
 The first model~$\objm[1]$ is obtained by setting~$\objm[0] = 0$.
-Powell~\cite{Powell_2013} referred to \modified{this} approach as the \emph{symmetric Broyden update} of quadratic models~(see also~\cite[\S~3.6]{Zhang_2012} and~\cite[\S~2.4.2]{Ragonneau_2022}).
+Powell~\cite{Powell_2013} referred to his approach as the \emph{symmetric Broyden update} of quadratic models~(see also~\cite[\S~3.6]{Zhang_2012} and~\cite[\S~2.4.2]{Ragonneau_2022}).
 It can be regarded as a derivative-free version of \gls{psb} quasi-Newton update~\cite{Powell_1970b}, which minimizes the functional~$\func_k$ among all quadratic polynomials that fulfill~$Q(\iter) = \obj(\iter)$, $\nabla Q(\iter) = \nabla \obj(\iter)$, and~$\nabla Q(\iter[k - 1]) = \nabla \obj(\iter[k - 1])$~(see~\cite[Theorem~4.2]{Dennis_Schnabel_1979}), with~$\iter$ and~$\iter[k - 1]$ being the current and the previous iterates, respectively.
 The interpolation problem~\eqref{eq:undqitp}--\eqref{eq:leastchange} is a convex quadratic programming problem with respect to the coefficients of the quadratic model.
 
