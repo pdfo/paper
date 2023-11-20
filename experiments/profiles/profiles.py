@@ -371,6 +371,7 @@ class Profiles:
         return merits
 
     def noise(self, x, f, k=0):
+        x = np.nan_to_num(x)
         if self.feature in ["Lq", "Lh", "L1"]:
             f += self.feature_options["level"] * np.linalg.norm(x, self.feature_options["p"])
         elif self.feature == "noisy":

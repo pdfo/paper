@@ -40,6 +40,7 @@
 % Operators
 \DeclareMathOperator*\argmin{arg\,min}
 \DeclareMathOperator{\rank}{rank}
+\DeclareMathOperator{\sgn}{sign}
 % Macros
 \newcommand{\abs}[2][]{#1\lvert#2#1\rvert}
 \newcommand{\norm}[2][]{#1\lVert#2#1\rVert}
@@ -666,8 +667,8 @@ We take the view that multiplicative noise makes more sense if the scale of the 
 
 SciPy provides both~\gls{cg} and \gls{bfgs} under the \texttt{minimize} function in the \texttt{scipy.optimize} module.
 \modified{
-    These methods rely on the gradient of the objective function, which is not available in our experiments.
-    We approximate it by finite differences.
+    These methods rely on the gradient of the objective function.
+    If we do not provide such information, SciPy approximates it by finite differences, and we do the same in our experiments.
     % First, we take~$h = \sqrt{u} \approx 1.5\times 10^{-8}$, where~$u$ is the unit roundoff.
     % This is the default value employed by SciPy.
     % The second difference parameter we test is~$h = \sqrt{\sigma}$, where~$\sigma$ is the noise level of the experiment.
@@ -690,18 +691,19 @@ If~$\sigma = 0$, then~$\tilde{f}_\sigma = f$, corresponding to the noise-free ca
 In general,~$\sigma$ \modified{is} the standard deviation of the noise.
 \modified{
     The function~$\tilde{\obj}_\sigma$ is the one received by the optimization solvers.
-    In particular, the \gls{cg} and \gls{bfgs} methods approximate the components of~$\nabla \tilde{\obj}_\sigma(\iter[])$ by the forward finite difference
+    In particular, the \gls{cg} and \gls{bfgs} methods of SciPy approximate the components of~$\nabla \tilde{\obj}_\sigma(\iter[])$ by the finite difference
     \begin{equation*}
-        \frac{\partial \tilde{\obj}_\sigma}{\partial [{\iter[]}]_i}(\iter[]) \approx \frac{\tilde{\obj}_\sigma(\iter[] + h_{\iter[]} e_i) - \tilde{\obj}_\sigma(\iter[])}{h_{\iter[]}},
+        \frac{\partial \tilde{\obj}_\sigma}{\partial [{\iter[]}]_i}(\iter[]) \approx \frac{\tilde{\obj}_\sigma(\iter[] + h e_i) - \tilde{\obj}_\sigma(\iter[])}{h},
     \end{equation*}
-    where~$[{\iter[]}]_i$ denotes the~$i$th component of~$\iter[]$,~$e_i \in \R^n$ is the~$i$th standard coordinate vector, and~$h_{\iter[]} > 0$ is a difference parameter.
-    We test two different values of~$h_{\iter[]}$.
-    First, we take~$h_{\iter[]} = \sqrt{u} \approx 1.5\times 10^{-8}$, where~$u$ is the unit roundoff.
-    This is the default value employed by SciPy.
-    Second, we take
+    where~$[{\iter[]}]_i$ denotes the~$i$th component of~$\iter[]$,~$e_i \in \R^n$ is the~$i$th standard coordinate vector, and~$h > 0$ is the difference parameter
+    \begin{equation*}
+        h = \sgn([{\iter[]}]_i) \sqrt{u} \max \set{\abs{[{\iter[]}]_i}, 1},
+    \end{equation*}
+    where~$u \approx 2.2 \times 10^{-16}$ is the unit roundoff.
+    In our experiment, we also test another value of~$h$, namely
     \begin{equation}
         \label{eq:adaptive-h}
-        h_{\iter[]} = \sqrt{\sigma \max \set{\abs{\obj(\iter[])}, 1}}.
+        h = \sqrt{\sigma \max \set{\abs{\obj(\iter[])}, 1}}.
     \end{equation}
     This adaptive difference parameter is expected to provide better numerical results than the default one.
     However, it relies on the knowledge of the noise level~$\sigma$ and of the true objective function value~$\obj(\iter[])$.
@@ -728,7 +730,7 @@ Finally, for better scaling of the profiles, we plot the binary logarithm of the
 Figure~\ref{fig:noise} shows the performance profiles of the solvers for the noise levels~$\sigma = 0$, $\sigma = 10^{-10}$, and~$\sigma = 10^{-8}$.
 Two profiles are included for each noise level, with the convergence tolerance being~$\tau = 10^{-2}$ and~$\tau = 10^{-4}$ respectively.
 \modified{
-    In the legends, ``\gls{cg}'' and ``\gls{bfgs}'' denote the default methods, whereas ``\gls{cg} adaptive'' and ``\gls{bfgs} adaptive'' are the variations where~$h_{\iter[]}$ is given by~\eqref{eq:adaptive-h}.
+    In the legends, ``\gls{cg}'' and ``\gls{bfgs}'' denote the default methods, whereas ``\gls{cg} adaptive'' and ``\gls{bfgs} adaptive'' are the variations where~$h$ is given by~\eqref{eq:adaptive-h}.
     Let us stress again that \gls{pdfo} does not require any knowledge about the noise and the true objective function.
     Therefore, it can be used for solving noisy problems for which these quantities are unknown.
 }
