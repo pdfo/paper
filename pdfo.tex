@@ -704,11 +704,11 @@ In general,~$\sigma$ \modified{is} the standard deviation of the noise.
     When there is noise ($\sigma > 0$), we also test another value of~$h$, namely
     \begin{equation}
         \label{eq:adaptive-h}
-        h = \sqrt{\sigma \max \set{\abs{\obj(\iter[])}, 1}}.
+        h = \sqrt{\sigma \max \set[\big]{\abs[\big]{\tilde{\obj}_\sigma(\iter[])}, 1}}.
     \end{equation}
     This adaptive difference parameter is inspired by the optimal choice that depends on the second-order information of~$\obj$ (see, e.g.,~\cite{More_Wild_2012} and~\cite[Equation~(2.2)]{Shi_Etal_2022a}).
-    However, it relies on the knowledge of the noise level~$\sigma$ and of the true objective function value~$\obj(\iter[])$.
-    In contrast, \gls{pdfo} does not require the knowledge of~$\sigma$ and~$\obj(\iter[])$ and as we will see, provides better performance.
+    However, it relies on the knowledge of the noise level~$\sigma$.
+    In contrast, \gls{pdfo} does not require the knowledge of~$\sigma$ and as we will see, provides better performance.
 }
 
 Given a noise level~$\sigma\ge 0$ and a convergence tolerance~$\tau\in(0,1)$, we will plot the performance profiles~\cite{More_Wild_2009} of the solvers on the testing problems.
