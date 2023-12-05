@@ -102,10 +102,7 @@ class Minimizer:
         # course unknown in practice.
         f = self.problem.fun(x, self.callback, *self.args, **self.kwargs)
         if self.callback is not None:
-            f_orig = f[0]
             f = f[1]
-        else:
-            f_orig = f
 
         # Compute the gradient using finite differences.
         g = np.empty(x.size)
@@ -113,7 +110,7 @@ class Minimizer:
             # Compute the finite difference step size.
             fd_step = self.fd_step
             if self.adapt_to_noise:
-                fd_step *= max(np.sqrt(abs(f_orig)), 1.0)
+                fd_step *= max(np.sqrt(abs(f)), 1.0)
             else:
                 # This value of fd_step is the default of Scipy 1.11.3. See:
                 # https://github.com/scipy/scipy/blob/v1.11.3/scipy/optimize/_optimize.py#L363-L366
