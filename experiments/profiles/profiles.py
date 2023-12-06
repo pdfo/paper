@@ -33,11 +33,11 @@ class Profiles:
     BASE_DIR = Path(__file__).resolve().parent.parent
     ARCH_DIR = Path(BASE_DIR, "archives")
     EXCLUDED = {
-        # The COMPILATION of the sources is prohibitively time-consuming.
-        "EIGENALS", "EIGENBLS", "PENALTY3", "YATP1LS", "YATP2LS",
-
-        # The following problem seems not lower-bounded and CG takes a VERY LONG time to solve it. 
-        # N.B.: PDFO solves this problem in a very reasonnable amount of time.
+        # The following problem seems not lower-bounded. Moreover, CG takes a
+        # VERY LONG time to return, because it does not have a "maxfev" option
+        # and performs a lot of function evaluations per iteration.
+        # N.B.: In our experiment, PDFO reduces the objective function to
+        #       -5192165.763565696 after using 25000 function evaluations.
         "INDEF",
     }
 

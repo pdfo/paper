@@ -195,7 +195,7 @@ class Problem:
 
     def project_x0(self):
         if self.m == 0:
-            self.x0 = np.minimum(self.xu, np.maximum(self.xl, self.x0))
+            self.x0 = np.clip(self.x0, self.xl, self.xu)
         elif self.m_linear_ub == 0 and self.m_linear_eq > 0 and np.all(self.xl == -np.inf) and np.all(self.xu == np.inf):
             self.x0 += lstsq(self.aeq, self.beq - np.dot(self.aeq, self.x0))[0]
         else:

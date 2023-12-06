@@ -677,7 +677,7 @@ SciPy provides both~\gls{cg} and \gls{bfgs} under the \texttt{minimize} function
 For \gls{pdfo}, we specify \gls{newuoa} as the solver, while setting all the other options to the default ones.
 In particular, the initial trust-region radius is~$1$, the final trust-region radius is~$10^{-6}$, and the number of interpolation points is~$2n + 1$, \modified{where}~$n$ \modified{is} the dimension of the problem being solved.
 % \modified{We emphasize that \gls{pdfo} does not require the knowledge of the noise level.}
-We perform the comparison on~\modified{\num{167}} unconstrained problems with~$n \le 50$ from the CUTEst~\cite{Gould_Orban_Toint_2015} problem set using PyCUTEst~\modified{1.5.1}~\cite{Fowkes_Roberts_Burmen_2022}.
+We perform the comparison on~\modified{\num{166}} unconstrained problems with~$n \le 50$ from the CUTEst~\cite{Gould_Orban_Toint_2015} problem set using PyCUTEst~\modified{1.5.1}~\cite{Fowkes_Roberts_Burmen_2022}.
 For each testing problem, the starting point is set to the one provided by CUTEst, and the maximal number of function evaluations is~$500n$.
 
 Let~$\sigma \ge 0$ be the noise level to test.
@@ -810,7 +810,7 @@ We assume that the objective function returns NaN if the evaluation fails, which
 As mentioned in Section~\ref{ssec:barrier}, \gls{pdfo} uses a moderated extreme barrier to handle such failures.
 To verify the effectiveness of this approach, we compare \gls{pdfo} with its variant that does not apply the barrier.
 To make the experiment more informative, we also include the finite-difference \gls{cg} and~\gls{bfgs} tested before, which do not handle evaluation failures particularly.
-The solvers are set up in the same way as in the previous experiment, and we still employ the~\modified{\num{167}} unconstrained CUTEst problems used previously.
+The solvers are set up in the same way as in the previous experiment, and we still employ the~\modified{\num{166}} unconstrained CUTEst problems used previously.
 
 Let~$p \in [0,1]$ be the failure probability of function evaluations.
 For a testing problem with the objective function~$\obj$, we define
