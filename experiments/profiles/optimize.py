@@ -58,7 +58,7 @@ class Minimizer:
             pdfonobarriers.pdfonobarriers(self.eval, self.problem.x0, bounds=bounds, constraints=constraints, options=options)
         else:
             def eval_scipy(x):
-                if self.fun_history.size >= self.max_eval:
+                if len(self.fun_history) >= self.max_eval:
                     return np.nan
                 return self.eval(x)
 
