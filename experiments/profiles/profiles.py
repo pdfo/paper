@@ -35,6 +35,10 @@ class Profiles:
     EXCLUDED = {
         # The COMPILATION of the sources is prohibitively time-consuming.
         "EIGENALS", "EIGENBLS", "PENALTY3", "YATP1LS", "YATP2LS",
+
+        # The following problem seems not lower-bounded and CG takes a VERY LONG time to solve it. 
+        # N.B.: PDFO solves this problem in a very reasonnable amount of time.
+        "INDEF",
     }
 
     def __init__(self, n_min, n_max, constraints, m_min=0, m_max=sys.maxsize, feature="plain", callback=None, **kwargs):
