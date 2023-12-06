@@ -316,6 +316,7 @@ class Profiles:
         return merits
 
     def load(self, problem_name):
+        problem = None
         try:
             if problem_name not in self.EXCLUDED:
                 _log.info(f"Loading {problem_name}")
@@ -324,9 +325,9 @@ class Profiles:
                 if pycutest.problem_properties(problem_name)["n"] == "variable":
                     sif_n_max = self.get_sif_n_max(problem_name)
                     if sif_n_max is not None:
-                        return Problem(problem_name, sifParams={"N": sif_n_max})
+                        problem = Problem(problem_name, sifParams={"N": sif_n_max})
                 else:
-                    return Problem(problem_name)
+                    problem = Problem(problem_name)
         except (AttributeError, FileNotFoundError, ModuleNotFoundError, RuntimeError) as err:
             _log.warning(f"{problem_name}: {err}")
         finally:
@@ -334,6 +335,10 @@ class Profiles:
             # corresponding cache folder. However, it does not restore the current working directory, which is now
             # set to an unexisting folder. This causes the next problem to fail to load.
             os.chdir(self.top_cwd)
+        if problem is not None and (problem.n < self.n_min or problem.n > self.n_max):
+            _log.warning(f"{problem_name}: dimension {problem.n} is out of [{self.n_min}, {self.n_max}]")
+            problem = None
+        return problem
 
     def get_sif_n_max(self, name):
         # Get all the available SIF parameters for all variables.
