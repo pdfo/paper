@@ -62,6 +62,11 @@ class Minimizer:
                     return np.nan
                 return self.eval(x)
 
+            def grad_scipy(x):
+                if len(self.fun_history) >= self.max_eval:
+                    return np.full(x.size, np.nan)
+                return self.grad(x)
+
             bounds = optimize.Bounds(self.problem.xl, self.problem.xu)
             constraints = []
             if self.problem.m_linear_ub > 0:
@@ -72,7 +77,7 @@ class Minimizer:
                 constraints.append(optimize.NonlinearConstraint(self.problem.cub, -np.inf, np.zeros(self.problem.m_nonlinear_ub)))
             if self.problem.m_nonlinear_eq > 0:
                 constraints.append(optimize.NonlinearConstraint(self.problem.ceq, np.zeros(self.problem.m_nonlinear_eq), np.zeros(self.problem.m_nonlinear_eq)))
-            optimize.minimize(eval_scipy, self.problem.x0, method=self.solver, jac=self.grad, bounds=bounds, constraints=constraints, options=options)
+            optimize.minimize(eval_scipy, self.problem.x0, method=self.solver, jac=grad_scipy, bounds=bounds, constraints=constraints, options=options)
         return np.array(self.fun_history, copy=True), np.array(self.maxcv_history, copy=True)
 
     def validate(self):
