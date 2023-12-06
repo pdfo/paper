@@ -57,6 +57,11 @@ class Minimizer:
             options["eliminate_lin_eq"] = False
             pdfonobarriers.pdfonobarriers(self.eval, self.problem.x0, bounds=bounds, constraints=constraints, options=options)
         else:
+            def eval_scipy(x):
+                if self.fun_history.size >= self.max_eval:
+                    return np.nan
+                return self.eval(x)
+
             bounds = optimize.Bounds(self.problem.xl, self.problem.xu)
             constraints = []
             if self.problem.m_linear_ub > 0:
@@ -67,8 +72,7 @@ class Minimizer:
                 constraints.append(optimize.NonlinearConstraint(self.problem.cub, -np.inf, np.zeros(self.problem.m_nonlinear_ub)))
             if self.problem.m_nonlinear_eq > 0:
                 constraints.append(optimize.NonlinearConstraint(self.problem.ceq, np.zeros(self.problem.m_nonlinear_eq), np.zeros(self.problem.m_nonlinear_eq)))
-            options["maxiter"] = self.max_eval
-            optimize.minimize(self.eval, self.problem.x0, method=self.solver, jac=self.grad, bounds=bounds, constraints=constraints, options=options)
+            optimize.minimize(eval_scipy, self.problem.x0, method=self.solver, jac=self.grad, bounds=bounds, constraints=constraints, options=options)
         return np.array(self.fun_history, copy=True), np.array(self.maxcv_history, copy=True)
 
     def validate(self):

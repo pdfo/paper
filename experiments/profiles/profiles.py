@@ -32,14 +32,6 @@ plt.rc("font", family="serif", size=18)
 class Profiles:
     BASE_DIR = Path(__file__).resolve().parent.parent
     ARCH_DIR = Path(BASE_DIR, "archives")
-    EXCLUDED = {
-        # The following problem seems not lower-bounded. Moreover, CG takes a
-        # VERY LONG time to return, because it does not have a "maxfev" option
-        # and performs a lot of function evaluations per iteration.
-        # N.B.: In our experiment, PDFO reduces the objective function to
-        #       -5192165.763565696 after using 25000 function evaluations.
-        "INDEF",
-    }
 
     def __init__(self, n_min, n_max, constraints, m_min=0, m_max=sys.maxsize, feature="plain", callback=None, **kwargs):
         # All features:
@@ -318,16 +310,15 @@ class Profiles:
     def load(self, problem_name):
         problem = None
         try:
-            if problem_name not in self.EXCLUDED:
-                _log.info(f"Loading {problem_name}")
+            _log.info(f"Loading {problem_name}")
 
-                # If the problem's dimension is not fixed, we select the largest possible dimension.
-                if pycutest.problem_properties(problem_name)["n"] == "variable":
-                    sif_n_max = self.get_sif_n_max(problem_name)
-                    if sif_n_max is not None:
-                        problem = Problem(problem_name, sifParams={"N": sif_n_max})
-                else:
-                    problem = Problem(problem_name)
+            # If the problem's dimension is not fixed, we select the largest possible dimension.
+            if pycutest.problem_properties(problem_name)["n"] == "variable":
+                sif_n_max = self.get_sif_n_max(problem_name)
+                if sif_n_max is not None:
+                    problem = Problem(problem_name, sifParams={"N": sif_n_max})
+            else:
+                problem = Problem(problem_name)
         except (AttributeError, FileNotFoundError, ModuleNotFoundError, RuntimeError) as err:
             _log.warning(f"{problem_name}: {err}")
         finally:
