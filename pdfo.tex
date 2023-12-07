@@ -225,7 +225,7 @@ There has been a continued demand from both researchers and practitioners for th
 Responding to such a demand, this paper presents a package named \gls{pdfo}, an acronym for ``\glsxtrlong{pdfo}.''
 \Gls{pdfo} interfaces Powell's Fortran solvers with other languages, enabling users of such languages to call Powell's solvers without dealing with the Fortran code.
 For each supported language, \gls{pdfo} provides a simple function that can invoke one of Powell's solvers according to the user's request~(if any) or according to the type of the problem to solve.
-The current release~(Version~\modified{2.0.0}) of \gls{pdfo} supports Python and MATLAB, with more languages to be covered in the future.
+The current release~(Version~\modified{2.0.1}) of \gls{pdfo} supports Python and MATLAB, with more languages to be covered in the future.
 The signature of the Python function is consistent with the \texttt{minimize} function of the SciPy optimization library, and that of the MATLAB function is consistent with the \texttt{fmincon} function of the MATLAB Optimization Toolbox.
 \Gls{pdfo} is cross-platform, available on Linux, macOS, and Windows at
 \begin{center}
@@ -653,7 +653,7 @@ Instead of repeating such comparisons, the purpose of our experiments is the fol
         This is done in Subsection~\ref{ssec:hypertune} by comparing~\gls{pdfo} with two solvers from the Python package~\texttt{hyperopt}.\footnote{\url{https://hyperopt.github.io/hyperopt}\,.}
 \end{enumerate}
 
-Our experiments are carried out in double precision based on the Python version of \gls{pdfo}~\modified{2.0.0}.
+Our experiments are carried out in double precision based on the Python version of \gls{pdfo}~\modified{2.0.1}.
 The finite-difference \gls{cg} and \gls{bfgs} are provided by SciPy~\modified{1.11.3}.
 The version of~\texttt{hyperopt} is~0.2.7.
 All these packages are tested with the latest stable version at the time of writing.
