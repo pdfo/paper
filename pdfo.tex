@@ -568,7 +568,10 @@ In both Python and MATLAB, users can check the detailed syntax of~\pdfofun by th
 \label{subsec:solver-selection}
 
 When invoking the~\pdfofun function, the user may specify which solver to call in the backend.
-However, if the user does not do so or chooses a solver that is incapable of solving the problem~(e.g., \gls{uobyqa} cannot solve constrained problems), then \pdfofun selects the solver as follows.
+\modified{%
+    In the Python and MATLAB versions, this can be done by setting the argument~\texttt{method} and the option~\texttt{solver}, respectively.
+    These names are consistent with those used in \texttt{scipy.optimize.minimize} and \texttt{fmincon}.}
+However, if the user does not \modified{specify a solver} or chooses a solver that is incapable of solving the problem~(e.g., \gls{uobyqa} cannot solve constrained problems), then \pdfofun selects the solver as follows.
 \begin{enumerate}
     \item If the problem is unconstrained, then \gls{uobyqa} is selected when~$2 \le n \le 8$, and \gls{newuoa} is selected when~$n = 1$ or~$n > 8$.
     \item If the problem is bound-constrained, then \gls{bobyqa} is selected.
