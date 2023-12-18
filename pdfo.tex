@@ -167,8 +167,8 @@
 }
 
 % Reviewing
-%\newcommand{\modified}[1]{\texorpdfstring{{\color{RoyalBlue}#1}}{#1}}
-\newcommand{\modified}[1]{#1}
+\newcommand{\modified}[1]{\texorpdfstring{{\color{RoyalBlue}#1}}{#1}}
+% \newcommand{\modified}[1]{#1}
 
 % Headings
 \journalname{Mathematical Programming Computation}
@@ -969,8 +969,9 @@ In terms of the AUC score and accuracy, \gls{pdfo} achieves a clearly better res
 However, \gls{pdfo} always uses much fewer function evaluations, and hence, much less computing time.
 The difference in the computing time is particularly visible on the \modified{``ijcnn1'' dataset}, as each evaluation of~$P$ takes much time due to the large data size.
 
-Note that our intention is not to manifest that \gls{pdfo} outperforms standard solvers for general hyperparameter optimization problems, which is unlikely the case.
-Indeed, \gls{pdfo} is not \modified{directly} applicable unless the hyperparameters are continuous variables.
+Note that our intention is not to manifest that \gls{pdfo} outperforms \modified{existing approaches for hyperparameter tuning in general}, which is unlikely the case.
+% Indeed, \gls{pdfo} is not \modified{directly} applicable unless the hyperparameters are continuous variables.
+\modified{Indeed, \gls{pdfo} has limitations in handling hyperparameter tuning problems, as many such problems contain discrete variables and cannot be handled by \gls{pdfo} directly.}
 Our objective is rather to provide an example that shows the possibility of applying Powell's methods to hyperparameter optimization, which is not well studied up to now.
 In doing so, we also hope to call for more investigation on \gls{dfo} methods for machine learning problems in general, as is suggested in~\cite{Ghanbari_Scheinberg_2017}.
 
