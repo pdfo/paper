@@ -1,18 +1,13 @@
 %% pdfo.tex
 %% Copyright 2023 Tom M. Ragonneau and Zaikun Zhang
 \RequirePackage{fix-cm}
-\documentclass[
-    smallextended,  % one column (second format)
-    % draft,        % to make overfull boxes visible
-    final,          % the opposite of draft
-    % referee,      % required to produce a hardcopy for the referee with a special layout (bigger interline spacing)
-]{svjour3}
+\documentclass[smallextended,final]{svjour3}
 
 % Preliminaries
 \usepackage{ifthen}
 
 % Colors
-\RequirePackage[dvipsnames]{xcolor}
+\usepackage[dvipsnames]{xcolor}
 \definecolor{Basil}{HTML}{32612D}
 \definecolor{Berry}{HTML}{7A1712}
 
@@ -23,7 +18,7 @@
 \usepackage[bb=dsfontserif]{mathalpha}
 \usepackage{relsize}
 \usepackage{xargs}
-% Get back the upright capital Greek letters
+% get back the upright capital Greek letters
 \DeclareMathSymbol{\Gamma}{\mathalpha}{operators}{"00}
 \DeclareMathSymbol{\Delta}{\mathalpha}{operators}{"01}
 \DeclareMathSymbol{\Theta}{\mathalpha}{operators}{"02}
@@ -35,13 +30,13 @@
 \DeclareMathSymbol{\Phi}{\mathalpha}{operators}{"08}
 \DeclareMathSymbol{\Psi}{\mathalpha}{operators}{"09}
 \DeclareMathSymbol{\Omega}{\mathalpha}{operators}{"0A}
-% Make @ behave as per catcode 13 (active). The TeXbook, p. 155.
+% make @ behave as per catcode 13 (active). The TeXbook, p. 155.
 \mathcode`@="8000{\catcode`\@=\active\gdef@{\mkern1mu}}
-% Operators
+% operators
 \DeclareMathOperator*\argmin{arg\,min}
 \DeclareMathOperator{\rank}{rank}
 \DeclareMathOperator{\sgn}{sign}
-% Macros
+% macros
 \newcommand{\abs}[2][]{#1\lvert#2#1\rvert}
 \newcommand{\norm}[2][]{#1\lVert#2#1\rVert}
 \newcommand{\set}[2][]{#1\{#2#1\}}
@@ -78,16 +73,6 @@
 \newcommand{\xl}{l}
 \newcommand{\xpt}[1][k]{\mathcal{Y}\ifthenelse{\equal{#1}{}}{}{_{#1}}}
 \newcommand{\xu}{u}
-
-% Text-mode macros
-\usepackage{xspace}
-\newcommand{\hugefun}{\texttt{HUGEFUN}\xspace}
-\newcommand{\pdfofun}{\texttt{pdfo}\xspace}
-\newcommand{\cobylafun}{\texttt{cobyla}\xspace}
-\newcommand{\uobyqafun}{\texttt{uobyqa}\xspace}
-\newcommand{\newuoafun}{\texttt{newuoa}\xspace}
-\newcommand{\bobyqafun}{\texttt{bobyqa}\xspace}
-\newcommand{\lincoafun}{\texttt{lincoa}\xspace}
 
 % Graphics, figures, and tables
 \usepackage{graphicx}
@@ -127,7 +112,7 @@
 \newacronym{prima}{{PRIMA}}{Reference Implementation for Powell's methods with Modernization and Amelioration}
 
 % Bibliography
-\usepackage{cite}  % nosort
+\usepackage{cite}
 \bibliographystyle{spmpsci}
 
 % Hyphenation exceptions for US English
@@ -226,13 +211,13 @@ There has been a continued demand from both researchers and practitioners for th
 Responding to such a demand, this paper presents a package named \gls{pdfo}, an acronym for ``\glsxtrlong{pdfo}.''
 \Gls{pdfo} interfaces Powell's Fortran solvers with other languages, enabling users of such languages to call Powell's solvers without dealing with the Fortran code.
 For each supported language, \gls{pdfo} provides a simple function that can invoke one of Powell's solvers according to the user's request~(if any) or according to the type of the problem to solve.
-The current release~(Version~\modified{2.0.1}) of \gls{pdfo} supports Python and MATLAB, with more languages to be covered in the future.
+The current release~(Version~\modified{2.0.2}) of \gls{pdfo} supports Python and MATLAB, with more languages to be covered in the future.
 The signature of the Python function is consistent with the \texttt{minimize} function of the SciPy optimization library, and that of the MATLAB function is consistent with the \texttt{fmincon} function of the MATLAB Optimization Toolbox.
 \Gls{pdfo} is cross-platform, available on Linux, macOS, and Windows at
 \begin{center}
     \url{https://www.pdfo.net}\,.
 \end{center}
-It has been downloaded more than \modified{\num{70000}} times as of \modified{November} 2023, mirror downloads excluded.
+It has been downloaded more than \modified{\num{75000}} times as of \modified{December} 2023, mirror downloads excluded.
 Moreover, it is one of the optimization engines in GEMSEO~\cite{Gallard_Etal_2018},\footnote{\url{https://gemseo.readthedocs.io}\,.} an industrial software package for \gls{mdo}.
 
 \Gls{pdfo} is not the first attempt to facilitate the usage of Powell's solvers in languages other than Fortran.
@@ -374,7 +359,7 @@ More specifically, this means building~$\objm$ by solving
     \label{eq:undqitp}
         \min_{Q \in \qspace} ~ \func_k(Q) \quad \st \quad Q(y) = \obj(y), ~ y \in \xpt,
 \end{equation}
-where~$\qspace$ is the space of polynomials on~$\R^n$ of degree at most~$2$.
+where~$\qspace$ is the space of polynomials on~$\R^n$ of degree at most~\num{2}.
 \Gls{newuoa}, \gls{bobyqa}, and \gls{lincoa} construct quadratic models in this way, with
 \begin{equation}
     \label{eq:leastchange}
@@ -543,7 +528,7 @@ At a low level, it uses F2PY\footnote{\url{https://numpy.org/doc/stable/f2py}\,.
 
 \subsection{Signature of the main function}
 
-The philosophy of \gls{pdfo} is simple: providing a single function named~\pdfofun to solve \gls{dfo} problems with or without constraints, calling Powell's Fortran solvers in the backend.
+The philosophy of \gls{pdfo} is simple: providing a single function named~\texttt{pdfo} to solve \gls{dfo} problems with or without constraints, calling Powell's Fortran solvers in the backend.
 It takes for input an optimization problem of the form
 \begin{subequations}
     \label{eq:pdfo}
@@ -560,19 +545,19 @@ The linear constraints are formulated by real matrices~$\aeq$ and~$\aub$ togethe
 We allow one or more of the constraints~\eqref{eq:pdfo-b}--\eqref{eq:pdfo-nl} to be absent.
 Being a specialization of~\eqref{eq:nlc}, problem~\eqref{eq:pdfo} is broad enough to cover numerous applications of~\gls{dfo}.
 
-In the Python version of~\gls{pdfo}, the signature of the~\pdfofun function is compatible with the \texttt{minimize} function available in the \texttt{scipy.optimize} module of SciPy.
-It can be invoked in exactly the same way as \texttt{minimize} except that \pdfofun does not accept derivative arguments.
-The MATLAB version of~\gls{pdfo} designs the~\pdfofun function following the signature of the \texttt{fmincon} function available in the Optimization Toolbox of MATLAB.
-In both Python and MATLAB, users can check the detailed syntax of~\pdfofun by the standard~\texttt{help} command.
+In the Python version of~\gls{pdfo}, the signature of the~\texttt{pdfo} function is compatible with the \texttt{minimize} function available in the \texttt{scipy.optimize} module of SciPy.
+It can be invoked in exactly the same way as \texttt{minimize} except that \texttt{pdfo} does not accept derivative arguments.
+The MATLAB version of~\gls{pdfo} designs the~\texttt{pdfo} function following the signature of the \texttt{fmincon} function available in the Optimization Toolbox of MATLAB.
+In both Python and MATLAB, users can check the detailed syntax of~\texttt{pdfo} by the standard~\texttt{help} command.
 
 \subsection{Automatic selection of the solver}
 \label{subsec:solver-selection}
 
-When invoking the~\pdfofun function, the user may specify which solver to call in the backend.
+When invoking the~\texttt{pdfo} function, the user may specify which solver to call in the backend.
 \modified{%
     In the Python and MATLAB versions, this can be done by setting the argument~\texttt{method} and the option~\texttt{solver}, respectively.
     These names are consistent with those used in \texttt{scipy.optimize.minimize} and \texttt{fmincon}.}
-However, if the user does not \modified{specify a solver} or chooses a solver that is incapable of solving the problem~(e.g., \gls{uobyqa} cannot solve constrained problems), then \pdfofun selects the solver as follows.
+However, if the user does not \modified{specify a solver} or chooses a solver that is incapable of solving the problem~(e.g., \gls{uobyqa} cannot solve constrained problems), then \texttt{pdfo} selects the solver as follows.
 \begin{enumerate}
     \item If the problem is unconstrained, then \gls{uobyqa} is selected when~$2 \le n \le 8$, and \gls{newuoa} is selected when~$n = 1$ or~$n > 8$.
     \item If the problem is bound-constrained, then \gls{bobyqa} is selected.
@@ -580,10 +565,10 @@ However, if the user does not \modified{specify a solver} or chooses a solver th
     \item Otherwise, \gls{cobyla} is selected.
 \end{enumerate}
 The problem type is detected automatically according to the input.
-In the unconstrained case, we select \gls{uobyqa} for small problems because it is more efficient, and the number~$8$ is set according to our experiments on the CUTEst~\cite{Gould_Orban_Toint_2015} problems.
+In the unconstrained case, we select \gls{uobyqa} for small problems because it is more efficient, and the number~\num{8} is set according to our experiments on the CUTEst~\cite{Gould_Orban_Toint_2015} problems.
 Note that Powell's implementation of \gls{uobyqa} cannot handle univariate unconstrained problems, for which \gls{newuoa} is chosen.
 
-In addition to the \pdfofun function, \gls{pdfo} provides functions named~\cobylafun, \texttt{uobyqa}, \newuoafun, \bobyqafun, and~\lincoafun, which invoke the corresponding solvers directly, but it is highly recommended to call the solvers via the~\pdfofun function.
+In addition to the \texttt{pdfo} function, \gls{pdfo} provides functions named~\texttt{cobyla}, \texttt{uobyqa}, \texttt{newuoa}, \texttt{bobyqa}, and~\\texttt{lincoa}, which invoke the corresponding solvers directly, but it is highly recommended to call the solvers via the~\texttt{pdfo} function.
 
 \subsection{Problem preprocessing}
 \label{subsec:pdfo-preprocessing}
@@ -631,13 +616,13 @@ Such a value can be used to indicate failures of function evaluations, which are
 To cope with NaN values, \gls{pdfo} applies a \emph{moderated extreme barrier}.
 Suppose that~$\obj(\tilde{x})$ is evaluated to NaN at a certain~$\tilde{x}\in\R^n$.
 \Gls{pdfo} takes the view that~$\tilde{x}$ violates a hidden constraint~\cite{LeDigabel_Wild_2023,Audet_Caporossi_Jacquet_2020}.
-Hence it replaces NaN with a large but finite number~\hugefun~(e.g., $10^{30}$) before passing~$\obj(\tilde{x})$ to the Fortran solver, so that the solver can continue to progress while penalizing~$\tilde{x}$.
+Hence it replaces NaN with a large but finite number~\texttt{HUGEFUN}~(e.g., $10^{30}$) before passing~$\obj(\tilde{x})$ to the Fortran solver, so that the solver can continue to progress while penalizing~$\tilde{x}$.
 Indeed, since Powell's solvers construct trust-region models by interpolation, all points that are close to~$\tilde{x}$ will be penalized.
 Similar things are done when the constraint functions return NaN.
-A caveat is that setting~$\obj(\tilde{x})$ to \hugefun may lead to extreme values or even NaN in the coefficients of the interpolation models, but Powell's solvers turn out to be quite tolerant of such values.
+A caveat is that setting~$\obj(\tilde{x})$ to \texttt{HUGEFUN} may lead to extreme values or even NaN in the coefficients of the interpolation models, but Powell's solvers turn out to be quite tolerant of such values.
 
-The original extreme barrier approach~\cite[Equation~(13.2)]{Conn_Scheinberg_Vicente_2009b} sets~\hugefun to~$\infty$, which is inappropriate for methods based on interpolation.
-In fact, we also moderate~$\obj(\tilde{x})$ to~$\hugefun$ if it is actually evaluated to~$\infty$.
+The original extreme barrier approach~\cite[Equation~(13.2)]{Conn_Scheinberg_Vicente_2009b} sets~\texttt{HUGEFUN} to~$\infty$, which is inappropriate for methods based on interpolation.
+In fact, we also moderate~$\obj(\tilde{x})$ to~$\texttt{HUGEFUN}$ if it is actually evaluated to~$\infty$.
 Our approach is clearly naive, but it is better than terminating the solver once the function evaluation fails.
 In our experiments, this simple approach significantly improves the robustness of~\gls{pdfo} with respect to failures of function evaluation, as will be demonstrated in Subsection~\ref{ssec:nan}.
 There do exist other more sophisticated approaches~\cite{Audet_Caporossi_Jacquet_2020}, which will be explored in the future.
@@ -657,7 +642,7 @@ Instead of repeating such comparisons, the purpose of our experiments is the fol
         This is done in Subsection~\ref{ssec:hypertune} by comparing~\gls{pdfo} with two solvers from the Python package~\texttt{hyperopt}.\footnote{\url{https://hyperopt.github.io/hyperopt}\,.}
 \end{enumerate}
 
-Our experiments are carried out in double precision based on the Python version of \gls{pdfo}~\modified{2.0.1}.
+Our experiments are carried out in double precision based on the Python version of \gls{pdfo}~\modified{2.0.2}.
 The finite-difference \gls{cg} and \gls{bfgs} are provided by SciPy~\modified{1.11.3}.
 The version of~\texttt{hyperopt} is~0.2.7.
 All these packages are tested with the latest stable version at the time of writing.
@@ -906,8 +891,8 @@ LIBSVM divides each dataset~$\mathcal{D}$ into two disjoint subsets, namely a tr
 We solve~\eqref{eq:hypertune} by~\gls{pdfo}, \gls{rs}, \modified{and}~\gls{tpe} to obtain the tuned parameters~$(\bar{C}, \bar{\gamma})$.
 As in~\cite[\S~5.3]{Ghanbari_Scheinberg_2017}, we modify the constraints of~\eqref{eq:hypertune} to~$C\in[10^{-6}, 1]$ and~$\gamma\in [1, 10^{3}]$.
 For better scaling of the problem, we perform the maximization with respect to~$(\log_{10}C,\, \log_{10}\gamma)$ instead of~$(C, \gamma)$, the initial guess being chosen randomly from~$[-6, 0]\times[0, 3]$.
-The solver of~\gls{pdfo} is \gls{bobyqa}, for which we set the maximal number of function evaluations to~$100$.
-For~\gls{rs} and~\gls{tpe}, we try both~$100$ and~$300$ for the maximal number of function evaluations, and they do not terminate until this number is reached.
+The solver of~\gls{pdfo} is \gls{bobyqa}, for which we set the maximal number of function evaluations to~\num{100}.
+For~\gls{rs} and~\gls{tpe}, we try both~\num{100} and~\num{300} for the maximal number of function evaluations, and they do not terminate until this number is reached.
 
 \begin{table}[!htb]
     \caption{Datasets from LIBSVM}
