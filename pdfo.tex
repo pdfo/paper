@@ -114,6 +114,7 @@
 % Bibliography
 \usepackage{cite}
 \bibliographystyle{spmpsci}
+\newcommand*{\doi}[1]{DOI~\href{https://doi.org/#1}{\ttfamily\detokenize{#1}}}
 
 % Hyphenation exceptions for US English
 \input{ushyphex}
@@ -488,7 +489,7 @@ See~\cite[\S~3]{Powell_2002} for more information on the updates of~$\rad$ and~$
 \label{ssec:nbloa}
 
 Later on, based on the underdetermined quadratic interpolation introduced in Subsection~\ref{ssec:iptprob}, Powell developed his last three \gls{dfo} solvers, namely \gls{newuoa}~\cite{Powell_2006,Powell_2008}, \gls{bobyqa}~\cite{Powell_2009}, and \gls{lincoa}.
-\Gls{bobyqa} and \gls{lincoa} are named respectively after ``\glsxtrlong{bobyqa}'' and ``\glsxtrlong{lincoa}'', but Powell~\cite{Powell_2006,Powell_2008} did not specify the meaning of~\gls{newuoa}, which is likely an acronym for ``\glsxtrlong{newuoa}.''
+\Gls{bobyqa} and \gls{lincoa} are named respectively after ``\glsxtrlong{bobyqa}'' and ``\glsxtrlong{lincoa},'' but Powell~\cite{Powell_2006,Powell_2008} did not specify the meaning of~\gls{newuoa}, which is likely an acronym for ``\glsxtrlong{newuoa}.''
 It is worth mentioning that Powell \emph{never} published a paper to introduce \gls{lincoa}, and~\cite{Powell_2015} discusses only how to solve its trust-region subproblem.
 
 \Gls{newuoa}, \gls{bobyqa}, and \gls{lincoa} aim at solving unconstrained, bound-constrained, and linearly constrained problems, respectively.
@@ -994,9 +995,7 @@ The implementation of these solvers in Python, MATLAB, and other languages is a 
 \paragraph{Funding.}
 
 This work was funded by the University Grants Committee of Hong Kong under the projects PF18-24698~(Hong Kong PhD Fellowship Scheme), PolyU 253012/17P, PolyU 153054/20P, and PolyU 153066/21P.
-It was also supported by The Hong Kong Polytechnic University under project P0009767, \modified{and
-the CAS-Croucher Funding Scheme for ``CAS AMSS-PolyU Joint Laboratory of Applied
-Mathematics: Nonlinear Optimization Theory, Algorithms and Applications''}.
+It was also supported by The Hong Kong Polytechnic University under project P0009767, \modified{and the CAS-Croucher Funding Scheme for ``CAS AMSS-PolyU Joint Laboratory of Applied Mathematics: Nonlinear Optimization Theory, Algorithms and Applications.''}
 
 \paragraph{Competing interests.}
 
@@ -1004,7 +1003,7 @@ The authors have no relevant financial or non-financial interests to disclose.
 
 \paragraph{Data availability.}
 
-The source code \modified{and documentation of \gls{pdfo} are} available at \url{https://www.pdfo.net}\,.
+The \modified{code and documentation of \gls{pdfo} are} available at \url{https://www.pdfo.net}\,.
 The source code of the numerical experiments is available at \url{https://www.github.com/pdfo/paper/blob/main/experiments}\,.
 
 \end{document}
