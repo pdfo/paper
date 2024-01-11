@@ -1,10 +1,11 @@
 %% pdfo.tex
 %% Copyright 2023 Tom M. Ragonneau and Zaikun Zhang
 \RequirePackage{fix-cm}
-\documentclass[smallextended,final]{svjour3}
+\documentclass[smallextended]{svjour3}
 
 % Preliminaries
 \usepackage{ifthen}
+\usepackage{lmodern}
 
 % Colors
 \usepackage[dvipsnames]{xcolor}
@@ -140,7 +141,6 @@
     {-13pt plus-8pt minus-4pt}{\z@}
     {\normalsize\bfseries}}
 \makeatother
-\def\subclassname{{\bfseries Mathematics Subject Classification}\enspace}
 
 % Cross-referencing
 \usepackage[hyperfootnotes=false]{hyperref}
@@ -149,7 +149,7 @@
     colorlinks=true,
     linkcolor=Berry,
     citecolor=Basil,
-    urlcolor=black,
+    urlcolor=RedViolet,
 }
 
 % Reviewing
@@ -168,12 +168,12 @@
     T. M. Ragonneau \at
         \modified{Dept.}\ of Applied Mathematics, The Hong Kong Polytechnic University, Hong Kong\modified{, China}\\
         \email{\href{mailto:tom.ragonneau@polyu.edu.hk}{\texttt{tom.ragonneau@polyu.edu.hk}}}\\
-        ORCID: \href{https://orcid.org/0000-0003-2717-2876}{0000-0003-2717-2876}
+        ORCID: \href{https://orcid.org/0000-0003-2717-2876}{\texttt{0000-0003-2717-2876}}
     \and
     Z. Zhang~(corresponding author)\at
         \modified{Dept.}\ of Applied Mathematics, The Hong Kong Polytechnic University, Hong Kong\modified{, China}\\
         \email{\href{mailto:zaikun.zhang@polyu.edu.hk}{\texttt{zaikun.zhang@polyu.edu.hk}}}\\
-        ORCID: \href{https://orcid.org/0000-0001-8934-8190}{0000-0001-8934-8190}
+        ORCID: \href{https://orcid.org/0000-0001-8934-8190}{\texttt{0000-0001-8934-8190}}
 }
 \date{Received: date / Accepted: date}
 
