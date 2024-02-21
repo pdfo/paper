@@ -40,7 +40,6 @@
 *.run.xml
 
 ## Build tool auxiliary files
-arxiv/latexmkrc
 *.fdb_latexmk
 *.synctex
 *.synctex(busy)
