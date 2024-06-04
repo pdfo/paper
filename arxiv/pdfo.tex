@@ -484,7 +484,7 @@ There has been a continued demand from both researchers and practitioners for th
 Responding to such a demand, this paper presents a package named \gls{pdfo}, an acronym for ``\glsdesc{pdfo}.''
 \Gls{pdfo} interfaces Powell's Fortran solvers with other languages, enabling users of such languages to call Powell's solvers without dealing with the Fortran code.
 For each supported language, \gls{pdfo} provides a simple function that can invoke one of Powell's solvers according to the user's request (if any) or according to the type of the problem to solve.
-The current release (Version~2.0.2) of \gls{pdfo} supports Python and MATLAB, with more languages to be covered in the future.
+The current release (Version~2.2.0) of \gls{pdfo} supports Python and MATLAB, with more languages to be covered in the future.
 The signature of the Python function is consistent with the \texttt{minimize} function of the SciPy optimization library, and that of the MATLAB function is consistent with the \texttt{fmincon} function of the MATLAB Optimization Toolbox.
 \Gls{pdfo} is cross-platform, available on Linux, macOS, and Windows at
 \begin{center}
@@ -753,7 +753,7 @@ See~\cite[\S~2]{Powell_2002} for more details.
 
 \Gls{uobyqa} updates the trust-region radius~$\rad$ in a noteworthy way.
 The update is typical for trust-region methods, except that a lower bound~$\radlb$ is imposed on~$\rad$.
-The value of~$\radlb[k]$ can be regarded as an indicator for the current \emph{accuracy} of the algorithm.
+The value of~$\radlb[k]$ can be regarded as an indicator for the current accuracy of the algorithm.
 Without imposing~$\rad[k] \ge \radlb[k]$, the trust-region radius~$\rad[k]$ may be reduced to a value that is too small for the current accuracy, making the interpolation points concentrate too much.
 The value of~$\radlb[k]$ is never increased and is decreased when the \gls{uobyqa} decides that the work for the current value of~$\radlb[k]$ is finished.
 It decides so if~$\rad[k]$ reaches its lower bound~$\radlb[k]$, the current trust-region trial step does not perform well, and the current interpolation set seems adequate for the current accuracy.
@@ -916,7 +916,7 @@ Instead of repeating such comparisons, the purpose of our experiments is the fol
         This is done in Subsection~\ref{ssec:hypertune} by comparing~\gls{pdfo} with two solvers from the Python package \texttt{hyperopt}.\footnote{\url{https://hyperopt.github.io/hyperopt}\,.}
 \end{enumerate}
 
-Our experiments are carried out in double precision based on the Python version of \gls{pdfo}~2.0.2.
+Our experiments are carried out in double precision based on the Python version of \gls{pdfo}~2.2.0.
 The finite-difference \gls{cg} and \gls{bfgs} are provided by SciPy~1.11.3.
 The version of \texttt{hyperopt} is~0.2.7.
 All these packages are tested with the latest stable version at the time of writing.
@@ -1225,7 +1225,7 @@ The implementation of these solvers in Python, MATLAB, and other languages is a 
 This paper corresponds to Chapter~3 of the PhD thesis of Tom M.\break Ragonneau~\cite{Ragonneau_2022}, co-supervised by Zaikun Zhang and Professor Xiaojun Chen from The Hong Kong Polytechnic University.
 Both authors are very grateful to Professor Chen for her support, encouragement, and guidance during the PhD studies.
 Also, the authors would like to thank Professor Ya-xiang Yuan for his everlasting encouragement and support.
-Finally, the authors thank the referees for their suggestions, which have substantially improved the software and manuscript.
+Finally, the authors thank the editors and referees for their suggestions, which have substantially improved the software and manuscript.
 
 \printbibliography
 
