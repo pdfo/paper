@@ -153,8 +153,8 @@
 }
 
 % Reviewing
-\newcommand{\modified}[1]{\texorpdfstring{{\color{blue}#1}}{#1}}
-% \newcommand{\modified}[1]{#1}
+% \newcommand{\modified}[1]{\texorpdfstring{{\color{blue}#1}}{#1}}
+\newcommand{\modified}[1]{#1}
 
 % Headings
 \journalname{Mathematical Programming Computation}
@@ -216,14 +216,15 @@ The current release~(Version~\modified{2.0.2}) of \gls{pdfo} supports Python and
 The signature of the Python function is consistent with the \texttt{minimize} function of the SciPy optimization library, and that of the MATLAB function is consistent with the \texttt{fmincon} function of the MATLAB Optimization Toolbox.
 \Gls{pdfo} is cross-platform, available on Linux, macOS, and Windows at
 \begin{center}
-    \url{https://www.pdfo.net}\,.
+    \url{https://www.pdfo.net} \quad and \quad \url{https://github.com/pdfo/pdfo}\,,
 \end{center}
-It has been downloaded more than \modified{\num{75000}} times as of \modified{December} 2023, mirror downloads excluded.
+with the DOI \href{https://doi.org/10.5281/zenodo.3887568}{\texttt{10.5281/zenodo.3887568}}.
+It has been downloaded more than \modified{\num{120000}} times as of \modified{June} 2024, mirror downloads excluded.
 Moreover, it is one of the optimization engines in GEMSEO~\cite{Gallard_Etal_2018},\footnote{\url{https://gemseo.readthedocs.io}\,.} an industrial software package for \gls{mdo}.
 
 \Gls{pdfo} is not the first attempt to facilitate the usage of Powell's solvers in languages other than Fortran.
 Various efforts have been made in this direction.
-Py-BOBYQA~\cite{Cartis_Etal_2019,Cartis_Roberts_Sheridan-Methven_2022} provides a Python implementation of \gls{bobyqa}; NLopt includes multi-language interfaces for \gls{cobyla}, \gls{newuoa}, and \gls{bobyqa};\footnote{\url{https://github.com/stevengj/nlopt}\,.} minqa wraps \gls{uobyqa}, \gls{newuoa}, and \gls{bobyqa} in R;\footnote{\url{https://cran.r-project.org/package=minqa}\,.} SciPy makes \gls{cobyla} available in Python under its optimization library.\footnote{\url{https://docs.scipy.org/doc/scipy/reference/optimize.minimize-cobyla.html}\,.}
+Py-BOBYQA~\cite{Cartis_Etal_2019,Cartis_Roberts_Sheridan-Methven_2022} provides a Python implementation of \gls{bobyqa} (although it is not meant to be a faithful re-implementation of Powell's version); NLopt includes multi-language interfaces for \gls{cobyla}, \gls{newuoa}, and \gls{bobyqa};\footnote{\url{https://github.com/stevengj/nlopt}\,.} minqa wraps \gls{uobyqa}, \gls{newuoa}, and \gls{bobyqa} in R;\footnote{\url{https://cran.r-project.org/package=minqa}\,.} SciPy makes \gls{cobyla} available in Python under its optimization library.\footnote{\url{https://docs.scipy.org/doc/scipy/reference/optimize.minimize-cobyla.html}\,.}
 However, \gls{pdfo} has several features that distinguish it from others.
 \begin{enumerate}
     \item \emph{Comprehensiveness.}
@@ -411,7 +412,7 @@ to enlarge the magnitude of the denominator in this formula, which is also the r
     The number~$\det(I+V^\T W^{-1}U)$ is the only denominator involved in the numerical computation of the formula.
 }
 In the fully determined interpolation, this denominator is~$\ell_k^{@\drop}(\iter^{\trust})$, where~$\ell_k^{@\drop}$ is the Lagrange function associated with~$\xpt$ corresponding to~$y_k^\drop$~(see equations~(10)--(13) and~\S~2 of~\cite{Powell_2001}).
-In the underdetermined case, the denominator is lower bounded by~$[\ell_k^{@\drop}(\iter^{\trust})]^2$~(see equation~(2.12), Lemma~1, and~\S~2 of~\cite{Powell_2004c}, where the denominator is $\sigma$, and~$\ell_k^{@\drop}(\iter^{\trust})$ is~$\tau$).
+In the underdetermined case, the denominator is lower bounded by~$[\ell_k^{@\drop}(\iter^{\trust})]^2$~(see equation~(2.12), Lemma~1, and~\S~2 of~\cite{Powell_2004c}, where the denominator is denoted by $\sigma$, and~$\ell_k^{@\drop}(\iter^{\trust})$ by~$\tau$).
 However, Powell's methods do not choose the point~$y_k^\drop$ merely according to this denominator, but also take into account its distance to the trust-region center, giving a higher priority to farther points, as we can see in~\cite[Equation~(56)]{Powell_2002} and~\cite[Equations~(7.4)--(7.5)]{Powell_2006}, for example.
 
 An alternative update of the interpolation set takes place when the methods detect that~$\objm$ does not represent~$\obj$ well enough, attempting to improve the geometry of the interpolation set.
@@ -421,7 +422,7 @@ In this case, the methods first select a point~$y_k^{\drop} \in \xpt$ to drop fr
     \xpt[k + 1] = \big(\xpt \setminus \set{y_k^{\drop}}\big) \cup \set{\iter^{@\geo}},
 \end{equation}
 where~$\iter^{@\geo} \in \R^n$ is chosen to improve the well-poisedness of~$\xpt[k + 1]$.
-In \gls{cobyla}, the choice of~$y_k^{\drop}$ and~$\iter^{@\geo}$ is guided by the geometrical fact that the interpolation set forms a simplex in~$\R^n$, trying to keep~$\xpt[k+1]$ away from falling into an~$(n-1)$-dimensional subspace, as is detailed in~\cite[Equations~(15)--(17)]{Powell_1994}.
+In \gls{cobyla}, the choice of~$y_k^{\drop}$ and~$\iter^{@\geo}$ is guided by the fact that the interpolation set forms a simplex in~$\R^n$, trying to keep~$\xpt[k+1]$ away from falling into an~$(n-1)$-dimensional subspace, as is detailed in~\cite[Equations~(15)--(17)]{Powell_1994}.
 The other four methods select~$y_k^{\drop}$ from~$\xpt$ by maximizing its distance to the current trust-region center~$\iter$, and then obtain~$\iter^{@\geo}$ by solving
 \begin{equation}
     \label{eq:biglag}
@@ -479,10 +480,10 @@ See~\cite[\S~2]{Powell_2002} for more details.
 
 \Gls{uobyqa} updates the trust-region radius~$\rad$ in a noteworthy way.
 The update is typical for trust-region methods, except that a lower bound~$\radlb$ is imposed on~$\rad$.
-The value of~$\radlb[k]$ can be regarded as an indicator for the current \emph{resolution} of the algorithm.
-Without imposing~$\rad[k] \ge \radlb[k]$, the trust-region radius~$\rad[k]$ may be reduced to a value that is too small for the current resolution, making the interpolation points concentrate too much.
+The value of~$\radlb[k]$ can be regarded as an indicator for the current \emph{accuracy} of the algorithm.
+Without imposing~$\rad[k] \ge \radlb[k]$, the trust-region radius~$\rad[k]$ may be reduced to a value that is too small for the current accuracy, making the interpolation points concentrate too much.
 The value of~$\radlb[k]$ is never increased and is decreased when the \gls{uobyqa} decides that the work for the current value of~$\radlb[k]$ is finished.
-It decides so if~$\rad[k]$ reaches its lower bound~$\radlb[k]$, the current trust-region trial step does not perform well, and the current interpolation set seems adequate for the current resolution.
+It decides so if~$\rad[k]$ reaches its lower bound~$\radlb[k]$, the current trust-region trial step does not perform well, and the current interpolation set seems adequate for the current accuracy.
 See~\cite[\S~3]{Powell_2002} for more information on the updates of~$\rad$ and~$\radlb[k]$.
 
 \subsection{\glsfmtshort{newuoa}, \glsfmtshort{bobyqa}, and \glsfmtshort{lincoa}}
@@ -983,6 +984,7 @@ The implementation of these solvers in Python, MATLAB, and other languages is a 
         This paper corresponds to Chapter 3 of the PhD thesis of Tom M. Ragonneau~\cite{Ragonneau_2022}, co-supervised by Zaikun Zhang and Professor Xiaojun Chen from The Hong Kong Polytechnic University.
         Both authors are very grateful to Professor Chen for her support, encouragement, and guidance during the PhD studies.
         Also, the authors would like to thank Professor Ya-xiang Yuan for his everlasting encouragement and support.
+        Finally, the authors thank the referees for their suggestions, which have substantially improved the software and manuscript.
     \end{acknowledgements}
 }
 
