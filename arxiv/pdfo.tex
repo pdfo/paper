@@ -655,7 +655,9 @@ Since each iteration of \gls{cobyla} alters the interpolation set~$\xpt$ by only
 For the underdetermined quadratic interpolation~\eqref{eq:undqitp}--\eqref{eq:leastchange}, \gls{newuoa}, \gls{bobyqa}, and \gls{lincoa} maintain and update the inverse of the coefficient matrix for the KKT system of~\eqref{eq:undqitp}--\eqref{eq:leastchange}.
 The update is also done by the Sherman-Morrison-Woodbury formula as detailed in~\cite[\S~2]{Powell_2004c}.
 In this case, each iteration modifies the coefficient matrix and its inverse by rank-$2$ updates.
-In addition, the columns of this inverse matrix readily provide the coefficients of Lagrange functions that make the interpolation problem~\eqref{eq:undqitp}--\eqref{eq:leastchange} easy to solve (see~\cite[\S~3]{Powell_2004b})
+In addition, the columns of this inverse matrix readily provide the coefficients of Lagrange
+functions that make the interpolation problem~\eqref{eq:undqitp}--\eqref{eq:leastchange} easy to
+solve (see~\cite[\S~3]{Powell_2004b}).
 
 \paragraph{The base point.}
 
