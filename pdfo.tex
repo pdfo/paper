@@ -340,7 +340,7 @@ Given a base point~$y^{\base}\in \R^n$, which may depend on~$k$, a linear model~
     \label{eq:litpls}
     \objm(y^{\base}) + (y -y^{\base})^{\T} \nabla \objm(y^{\base}) = \obj(y), ~ y \in \xpt,
 \end{equation}
-which is a linear system with respect to~$\obj(y^\base) \in \R$ and~$\nabla \obj(y^\base) \in \R^n$, the degrees of freedom being~$n + 1$.
+which is a linear system with respect to~$\objm(y^\base) \in \R$ and~$\nabla \objm(y^\base) \in \R^n$, the degrees of freedom being~$n + 1$.
 \Gls{cobyla} builds linear models by the system~\eqref{eq:litpls}, with~$\xpt$ being an interpolation set of~$n+1$ points updated along the iterations.
 Similarly, if~$\objm$ is a quadratic model, then~\eqref{eq:itpls} is equivalent to
 \begin{equation}
