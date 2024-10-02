@@ -777,12 +777,9 @@ The performances of \gls{cg} and \gls{bfgs} \modified{using~\eqref{eq:scipy-h}} 
     As expected, the adaptive difference parameter~\eqref{eq:adaptive-h} improves the performance of \gls{cg} and \gls{bfgs} by a large margin, but they are still inferior to \gls{pdfo}.
     This shows the advantage of \gls{pdfo} in noisy settings, even when compared to methods that explicitly use the magnitude of the noise.
 }
-\modified{For conciseness,} we do not include results with larger values of~$\sigma$.
-\modified{%
     We have conducted similar experiments with larger values of~$\sigma$.
     The results are similar to those shown in Figure~\ref{fig:noise}, except that the advantage of \gls{pdfo} over \gls{cg} and \gls{bfgs} with~\eqref{eq:adaptive-h} is even more visible, and the other two methods barely solve any problem.
     For conciseness, we do not include these results.
-}
 
 \modified{
     It is not surprising that \gls{cg} and \gls{bfgs} perform unfavorably when using~\eqref{eq:scipy-h}.

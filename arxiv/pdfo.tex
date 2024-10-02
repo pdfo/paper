@@ -213,7 +213,7 @@
 \usepackage{xargs}
 \usepackage{relsize}
 % equation numbering hierarchy
-\numberwithin{equation}{section}
+%\numberwithin{equation}{section}
 % mathematical environments (theorems, proofs, ...)
 \theoremstyle{definition}
 \newtheorem{assumption}{Assumption}[section]
@@ -1034,7 +1034,6 @@ When there is noise ($\sigma >0$), the advantage of \gls{pdfo} becomes significa
 The performances of \gls{cg} and \gls{bfgs} using~\eqref{eq:scipy-h} deteriorate considerably under noise, even though the noise level is not high and the convergence tolerance is not demanding.
 As expected, the adaptive difference parameter~\eqref{eq:adaptive-h} improves the performance of \gls{cg} and \gls{bfgs} by a large margin, but they are still inferior to \gls{pdfo}.
 This shows the advantage of \gls{pdfo} in noisy settings, even when compared to methods that explicitly use the magnitude of the noise.
-For conciseness, we do not include results with larger values of~$\sigma$.
 We have conducted similar experiments with larger values of~$\sigma$.
 The results are similar to those shown in Figure~\ref{fig:noise}, except that the advantage of \gls{pdfo} over \gls{cg} and \gls{bfgs} with~\eqref{eq:adaptive-h} is even more visible, and the other two methods barely solve any problem.
 For conciseness, we do not include these results.
